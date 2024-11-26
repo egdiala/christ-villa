@@ -19,7 +19,7 @@
 }
 
 .ego-input {
-  @apply rounded-md z-0 text-sm w-full block py-3 border border-blue-4 bg-grey-dark-4 focus:border-light-blue-1 focus:bg-light-blue-4 text-text-primary placeholder:text-text-tertiary disabled:bg-grey-dark-4 disabled:border-transparent disabled:text-text-tertiary caret-text-primary transition-all duration-300 ease-out !important;
+  @apply rounded-none z-0 text-sm w-full block py-3 border border-blue-4 bg-grey-dark-4 focus:border-light-blue-1 focus:bg-light-blue-4 text-text-primary placeholder:text-text-tertiary disabled:bg-grey-dark-4 disabled:border-transparent disabled:text-text-tertiary caret-text-primary transition-all duration-300 ease-out !important;
 }
 
 .toggle-password-icon {
@@ -39,15 +39,15 @@
 }
 
 .ego-otp-input {
-  @apply rounded-md w-full lg:w-20 lg:h-20 text-3xl font-semibold text-center py-5 px-5 border border-grey-dark-3 bg-white focus:border-green-base focus:bg-light-green text-grey-dark-1 focus:ring focus:ring-green-base/[0.24] disabled:bg-grey-dark-4 disabled:border-grey-dark-3 disabled:text-grey-dark-3 caret-grey-dark-1 transition-all duration-300 ease-out !important;
+  @apply rounded-md w-full lg:w-20 lg:h-20 text-3xl font-semibold text-center py-5 px-5 border border-grey-dark-3 bg-white focus:border-light-blue-1 focus:bg-light-blue-4 text-text-primary placeholder:text-text-tertiary disabled:bg-grey-dark-4 disabled:border-transparent disabled:text-text-tertiary caret-text-primary transition-all duration-300 ease-out !important;
 }
 
 .ego-search-input {
-  @apply rounded-md w-full text-base block py-[0.4379rem] pl-8 border border-blue-4 bg-grey-dark-4 focus:border-green-base focus:bg-light-green text-grey-dark-1 focus:ring focus:ring-green-base/[0.24] disabled:bg-grey-dark-4 disabled:border-grey-dark-3 disabled:text-grey-dark-3 caret-grey-dark-1 transition-all duration-300 ease-out placeholder:text-grey-dark-3 placeholder:font-medium !important;
+  @apply rounded-none w-full text-sm block py-2.5 pl-8 border border-blue-4 bg-grey-dark-4 focus:border-light-blue-1 focus:bg-light-blue-4 text-text-primary placeholder:text-text-tertiary disabled:bg-grey-dark-4 disabled:border-transparent disabled:text-text-tertiary caret-text-primary transition-all duration-300 ease-out placeholder:text-grey-dark-3 placeholder:font-medium !important;
 }
 
 .PhoneInputInput {
-  @apply rounded-md rounded-l-none w-full flex p-2.5 border border-grey-dark-3 bg-white focus:border-green-base focus:bg-light-green text-grey-dark-1 focus:ring focus:ring-green-base/[0.24] disabled:bg-grey-dark-4 disabled:border-grey-dark-3 disabled:text-grey-dark-3 caret-grey-dark-1 transition-all duration-300 ease-out !important;
+  @apply rounded-md rounded-l-none w-full flex p-2.5 border border-grey-dark-3 bg-white focus:border-light-blue-1 focus:bg-light-blue-4 text-text-primary placeholder:text-text-tertiary disabled:bg-grey-dark-4 disabled:border-transparent disabled:text-text-tertiary caret-text-primary transition-all duration-300 ease-out !important;
 }
 
 .PhoneInputCountry {
