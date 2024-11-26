@@ -18,7 +18,7 @@ export const Header: React.FC<HeaderProps> = ({ close }) => {
                 <h1 className="font-bold text-white text-xl md:text-2xl">{routeTitle}</h1>
             </div>
             <div className="flex items-center gap-6">
-                <button type="button" className="relative bg-grey-dark-4 rounded-2xl size-10 grid place-content-center" onClick={() => close()}>
+                <button type="button" className="relative bg-grey-dark-4 rounded-2xl size-10 grid place-content-center">
                     <Icon icon="lucide:bell" className="text-text-secondary size-5" />
                     <span className="absolute -top-2.5 -right-2.5 py-1 px-1.5 flex items-center justify-center text-center bg-semantics-error rounded-full text-[0.625rem] font-medium text-white">03</span>
                 </button>
