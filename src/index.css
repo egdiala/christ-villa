@@ -10,7 +10,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --viewport-height: 100vh; /* Set a CSS variable for viewport height */
-  --header-height: 81px; /* Set a CSS variable for header height */
+  --header-height: 96px; /* Set a CSS variable for header height */
   --sub-header-height: 83px; /* Set a CSS variable for header height */
   --onboarding-header-height: 114px;
 }
