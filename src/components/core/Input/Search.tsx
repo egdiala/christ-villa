@@ -27,8 +27,8 @@ export const SearchInput: React.FC<SearchInputProps> = (props) => {
     <div className='ego-input--outer'>
       <div className='ego-input--inner'>
         <Icon
-          icon='ri:search-2-fill'
-          className='size-4 left-3 text-grey-dark-3 mt-3 inset-y-0 absolute z-10'
+          icon='lucide:search'
+          className='size-4 left-3 text-text-tertiary mt-[13px] inset-y-0 absolute z-10'
         />
         <input
           type='search'

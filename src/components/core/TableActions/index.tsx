@@ -19,6 +19,7 @@ interface TableActionProps extends React.HTMLAttributes<HTMLButtonElement> {
   /**
    * Other unknown attributes
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: PropertyKey]: any;
 }
 
@@ -34,19 +35,19 @@ export const TableAction: React.FC<TableActionProps> = forwardRef(({
 }, ref: React.LegacyRef<HTMLButtonElement>) => {
   const btn = {
     themes: {
-      primary: "ego-table-action--primary",
-      secondary: "ego-table-action--secondary",
-      tertiary: "ego-table-action--tertiary",
-      grey: "ego-table-action--grey",
-      ghost: "ego-table-action--ghost",
+      primary: "cv-table-action--primary",
+      secondary: "cv-table-action--secondary",
+      tertiary: "cv-table-action--tertiary",
+      grey: "cv-table-action--grey",
+      ghost: "cv-table-action--ghost",
     },
   };
 
-  const width = block && "ego-button--block";
+  const width = block && "cv-button--block";
   
   return (
-    <button className={cn("w-fit", "ego-button", btn.themes[theme as keyof typeof btn.themes], width, className)} ref={ref} {...props}>
-{       children}
+    <button className={cn("w-fit", "cv-table-action", btn.themes[theme as keyof typeof btn.themes], width, className)} ref={ref} {...props}>
+      {children}
     </button>
   );
 });
