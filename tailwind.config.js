@@ -23,7 +23,11 @@ export default {
   				primary: '#021C2F',
   				tertiary: '#808D97'
   			},
-  			background: 'hsl(var(--background))',
+			background: {
+				secondary: "#071012",
+				"secondary-2": "#A8EEE7"
+			},
+  			"back-ground": 'hsl(var(--background))',
   			green: {
   				'0': '#11240E',
   				'1': '#55b648',
@@ -42,9 +46,9 @@ export default {
   			},
   			grey: {
   				dark: {
-  					'1': ',
-  					'2': ',
-  					'3': ',
+  					'1': "",
+  					'2': "",
+  					'3': "",
   					'4': '#F2F4F5'
   				}
   			},
