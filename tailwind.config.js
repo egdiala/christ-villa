@@ -23,6 +23,7 @@ export default {
           tertiary: "#808D97"
         },
         background: {
+          secondary: "#071012",
           "secondary-2": "#A8EEE7"
         },
         green: "#008E5B",

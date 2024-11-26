@@ -1,53 +1,29 @@
-.ego-button {
-  @apply whitespace-nowrap flex gap-2 items-center h-fit disabled:cursor-not-allowed hover:outline-none hover:outline-0 focus:outline-none transition-all duration-300 ease-out !important;
+.cv-button {
+  @apply whitespace-nowrap flex gap-2 items-center h-fit py-3 px-6 disabled:cursor-not-allowed hover:outline-none hover:outline-0 focus:outline-none transition-all duration-300 ease-out !important;
 }
 
-.ego-button--primary {
-  @apply text-white font-medium text-base/5 bg-dark-green-1 py-3.5 px-5 justify-center rounded-lg hover:bg-green-1 disabled:bg-dark-green-1/15 disabled:hover:ring-0 !important;
+.cv-button--primary {
+  @apply text-white font-semibold text-base bg-accent-primary justify-center rounded-lg hover:bg-accent-tertiary disabled:bg-accent-primary/15 disabled:hover:ring-0 !important;
 }
 
-.ego-button--secondary {
-  @apply text-dark-green-1 hover:text-white font-medium text-base/5 bg-green-3 py-3.5 px-5 justify-center rounded-lg hover:bg-green-1 disabled:bg-green-3/15 disabled:hover:ring-0 !important;
+.cv-button--secondary {
+  @apply text-text-primary hover:text-white font-semibold text-base bg-light-blue-2 justify-center rounded-lg hover:bg-accent-tertiary disabled:bg-light-blue-2/15 disabled:hover:ring-0 !important;
 }
 
-.ego-button--tertiary {
-  @apply text-grey-dark-1 hover:text-white font-medium text-base/5 bg-grey-dark-4 py-3.5 px-5 justify-center rounded-lg hover:bg-green-1 disabled:bg-grey-dark-4/15 disabled:hover:ring-0 !important;
+.cv-button--tertiary {
+  @apply text-text-primary hover:text-white font-semibold text-base bg-light-blue-4 justify-center rounded-lg hover:bg-accent-tertiary disabled:bg-light-blue-2/15 disabled:hover:ring-0 !important;
 }
 
-.ego-button--outline {
-  @apply bg-transparent font-medium hover:bg-green-1 border border-dark-green-1 hover:border-green-1 text-dark-green-1 hover:text-white py-3.5 px-5 justify-center rounded-lg disabled:border-dark-green-1/15 disabled:text-dark-green-1/15 disabled:hover:ring-0 !important;
+.cv-button--grey {
+  @apply text-text-primary hover:text-white font-semibold text-base bg-grey-dark-4 justify-center rounded-lg disabled:hover:ring-0 disabled:hover:bg-grey-dark-4/15 disabled:bg-grey-dark-4/15 !important;
 }
 
-.ego-button--white {
-  @apply text-white hover:text-white font-medium text-base/5 border border-white hover:border-transparent bg-transparent py-3.5 px-6 justify-center rounded-lg disabled:hover:ring-0 !important;
+.cv-button--outline {
+  @apply bg-transparent font-semibold hover:bg-accent-tertiary border border-background-secondary hover:border-transparent text-text-primary hover:text-white justify-center rounded-lg disabled:border-dark-green-1/15 disabled:text-dark-green-1/15 disabled:hover:ring-0 disabled:hover:bg-transparent !important;
 }
 
-.ego-button--ghost {
-  @apply text-grey-dark-1 hover:text-white font-medium text-sm bg-transparent py-3.5 px-5 justify-center rounded-lg hover:bg-grey-dark-1 disabled:bg-green-0/15 disabled:hover:ring-0 !important;
-}
-
-.ego-button--danger {
-  @apply text-semantics-error font-medium text-base/5 bg-semantics-error/10 py-3.5 px-5 justify-center rounded-lg disabled:hover:ring-0 !important;
-}
-
-.ego-button--arrow-cta-1 {
-  @apply rounded-lg bg-transparent text-base/5 font-medium text-[#429200] hover:bg-light-green justify-center px-2 py-2.5 !important;
-}
-
-.ego-button--arrow-cta-1 > svg {
-  @apply text-[#429200] !important;
-}
-
-.ego-button--arrow-cta-2 {
-  @apply w-full rounded-lg bg-light-green border border-transparent text-base/5 text-grey-dark-1 focus:text-white hover:border-green-0 focus:bg-green-0 focus:border-green-0 justify-between px-4 py-[1.125rem] !important;
-}
-
-.ego-button--arrow-cta-2:focus > svg {
-  @apply text-white !important;
-}
-
-.ego-button--block {
-  @apply w-full !important;
+.cv-button--ghost {
+  @apply text-text-primary hover:text-white font-semibold text-sm bg-transparent justify-center rounded-lg hover:bg-accent-tertiary disabled:text-accent-tertiary/15 disabled:hover:ring-0 disabled:hover:bg-transparent !important;
 }
 
 .spinner {
