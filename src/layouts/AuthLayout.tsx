@@ -1,13 +1,6 @@
-import { isAuthenticated } from "@/utils/authUtil";
 import type { PropsWithChildren } from "react";
-import { Navigate } from "react-router";
 
 const AuthLayout = ({ children }: PropsWithChildren) => {
-    const isLoggedIn = isAuthenticated();
-
-    if (isLoggedIn) {
-        return <Navigate to='/' replace />;
-    }
   
     return (
         <div className='w-full h-screen overflow-hidden'>
