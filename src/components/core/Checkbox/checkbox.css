@@ -1,0 +1,5 @@
+@import "../../../forms.css";
+
+.ego-checkbox {
+  @apply checked:bg-green-1 hover:border-green-1 rounded-sm size-4 border border-grey-dark-3 bg-white checked:border-green-1 focus:border-green-1 text-white focus:ring focus:ring-green-1/[0.24] disabled:bg-grey-dark-4 disabled:border-grey-dark-3 disabled:text-grey-dark-4 transition-all duration-300 ease-out !important;
+}

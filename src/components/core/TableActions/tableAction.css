@@ -1,0 +1,27 @@
+.ego-table-action--primary {
+  @apply bg-dark-green-1 border border-dark-green-1 hover:bg-dark-green-0 hover:border-dark-green-0 text-white rounded py-3 px-4 text-sm font-medium justify-center !important;
+}
+
+.ego-table-action--secondary {
+  @apply bg-green-3 border border-light-green hover:border-green-0 hover:bg-green-0 text-grey-dark-1 hover:text-white rounded py-3 px-4 text-sm font-medium justify-center !important;
+}
+
+.ego-table-action--tertiary {
+  @apply bg-transparent border border-green-0 hover:bg-green-0 text-green-0 hover:text-white rounded py-3 px-4 text-sm font-medium justify-center !important;
+}
+
+.ego-table-action--grey {
+  @apply bg-grey-dark-4 hover:bg-light-green border border-grey-dark-4 hover:border-green-0 text-grey-dark-1 hover:text-green-0 rounded py-3 px-4 text-sm font-medium justify-center !important;
+}
+
+.ego-table-action--ghost {
+  @apply bg-transparent border border-transparent hover:border-light-green hover:bg-light-green text-dark-green-1 rounded py-3 px-4 text-sm font-medium justify-center !important;
+}
+
+.ego-table-action--secondary > svg {
+  @apply text-grey-dark-2 !important;
+}
+
+.ego-table-action--secondary:hover > svg {
+  @apply text-white !important;
+}

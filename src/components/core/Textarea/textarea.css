@@ -1,0 +1,21 @@
+@import "../../../forms.css";
+
+.ego-textarea--label {
+  @apply text-grey-dark-2 font-normal text-sm !important;
+}
+
+.ego-input--error {
+  @apply text-semantics-error font-normal text-xs !important;
+}
+
+.ego-input--inner {
+  @apply relative w-full h-fit;
+}
+
+.ego-input--outer {
+  @apply grid gap-2 content-start w-full h-fit relative;
+}
+
+.ego-message-box {
+  @apply rounded block w-full p-2 border border-input-filled bg-grey-dark-4 focus:border-green-base focus:bg-light-green text-grey-dark-1 placeholder:text-grey-dark-3 focus:ring focus:ring-green-base/[0.24] disabled:bg-white disabled:border-grey-dark-3 disabled:text-grey-dark-3 caret-grey-dark-1 transition-all duration-300 ease-out !important;
+}
