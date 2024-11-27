@@ -1,0 +1,30 @@
+@import "./index.css";
+
+@layer base {
+  [type="text"],
+  [type="email"],
+  [type="url"],
+  [type="password"],
+  [type="number"],
+  [type="date"],
+  [type="datetime-local"],
+  [type="month"],
+  [type="search"],
+  [type="tel"],
+  [type="time"],
+  [type="week"],
+  [multiple],
+  textarea,
+  select {
+    @apply block w-full rounded-none bg-grey-dark-4 placeholder:text-text-tertiary p-0 m-0 transition duration-300 ease-out;
+    @apply focus:outline-none focus:outline-0 ring-0 ring-transparent border !important;
+  }
+  [type="checkbox"] {
+    @apply border-grey-dark-3 rounded hover:cursor-pointer hover:border-green-1 disabled:text-grey-dark-4 disabled:border-grey-dark-4 checked:border-green-1 text-green-1 transition duration-300 ease-in !important;
+    @apply focus:outline-none focus:outline-0 ring-0 ring-transparent focus:ring-1 focus:ring-green-1/[0.24] border !important;
+  }
+  [type="radio"] {
+    @apply border-grey-dark-3 hover:cursor-pointer hover:border-green-1 disabled:text-grey-dark-4 disabled:border-grey-dark-4 checked:border-green-1 text-green-1 transition duration-300 ease-in !important;
+    @apply focus:outline-none focus:outline-0 ring-0 ring-transparent focus:ring-1 focus:ring-green-1/[0.24] border !important;
+  }
+}

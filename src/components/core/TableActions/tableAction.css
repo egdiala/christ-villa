@@ -1,0 +1,27 @@
+.cv-table-action {
+  @apply whitespace-nowrap flex gap-2 items-center h-fit rounded py-2.5 px-4 disabled:cursor-not-allowed hover:outline-none hover:outline-0 focus:outline-none transition-all duration-300 ease-out !important;
+}
+
+.cv-table-action--primary {
+  @apply text-white font-normal text-sm bg-accent-primary justify-center hover:bg-accent-tertiary disabled:bg-accent-primary/15 disabled:hover:ring-0 !important;
+}
+
+.cv-table-action--secondary {
+  @apply text-text-primary hover:text-white font-normal text-sm bg-light-blue-2 justify-center hover:bg-accent-tertiary disabled:bg-light-blue-2/15 disabled:hover:ring-0 !important;
+}
+
+.cv-table-action--tertiary {
+  @apply text-text-primary hover:text-white font-normal text-sm bg-light-blue-4 justify-center hover:bg-accent-tertiary disabled:bg-light-blue-2/15 disabled:hover:ring-0 !important;
+}
+
+.cv-table-action--grey {
+  @apply text-text-primary hover:text-white font-normal text-sm bg-grey-dark-4 justify-center hover:bg-accent-tertiary disabled:hover:ring-0 disabled:hover:bg-grey-dark-4/15 disabled:bg-grey-dark-4/15 !important;
+}
+
+.cv-table-action--outline {
+  @apply bg-transparent font-normal text-sm hover:bg-accent-tertiary border border-background-secondary hover:border-transparent text-text-primary hover:text-white justify-center disabled:border-dark-green-1/15 disabled:text-dark-green-1/15 disabled:hover:ring-0 disabled:hover:bg-transparent !important;
+}
+
+.cv-table-action--ghost {
+  @apply text-text-primary hover:text-white font-normal text-sm bg-transparent justify-center hover:bg-accent-tertiary disabled:text-accent-tertiary/15 disabled:hover:ring-0 disabled:hover:bg-transparent !important;
+}

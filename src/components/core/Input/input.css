@@ -1,0 +1,64 @@
+@import "../../../forms.css";
+
+@layer base {
+  .ego-otp-input {
+    font-family: "Krub", sans-serif !important;
+  }
+}
+
+.ego-input--label {
+  @apply text-grey-dark-2 font-normal text-sm !important;
+}
+
+.ego-input--error {
+  @apply text-semantics-error font-normal text-xs !important;
+}
+
+.ego-input--help {
+  @apply text-grey-dark-3 font-normal text-xs !important;
+}
+
+.ego-input {
+  @apply rounded-none z-0 text-sm w-full block py-3 border border-blue-4 bg-grey-dark-4 focus:border-light-blue-1 focus:bg-light-blue-4 text-text-primary placeholder:text-text-tertiary disabled:bg-grey-dark-4 disabled:border-transparent disabled:text-text-tertiary caret-text-primary transition-all duration-300 ease-out !important;
+}
+
+.toggle-password-icon {
+  @apply absolute bottom-3 flex items-center right-0 pr-4;
+}
+
+.password-icon {
+  @apply h-4 w-4 text-grey-dark-1 !important;
+}
+
+.ego-input--inner {
+  @apply relative w-full h-fit;
+}
+
+.ego-input--outer {
+  @apply grid gap-2 content-start w-full h-fit relative z-0;
+}
+
+.ego-otp-input {
+  @apply rounded-md w-full lg:w-20 lg:h-20 text-3xl font-semibold text-center py-5 px-5 border border-grey-dark-3 bg-white focus:border-light-blue-1 focus:bg-light-blue-4 text-text-primary placeholder:text-text-tertiary disabled:bg-grey-dark-4 disabled:border-transparent disabled:text-text-tertiary caret-text-primary transition-all duration-300 ease-out !important;
+}
+
+.ego-search-input {
+  @apply rounded-none w-full text-sm block py-2.5 pl-8 border border-blue-4 bg-grey-dark-4 focus:border-light-blue-1 focus:bg-light-blue-4 text-text-primary placeholder:text-text-tertiary disabled:bg-grey-dark-4 disabled:border-transparent disabled:text-text-tertiary caret-text-primary transition-all duration-300 ease-out placeholder:text-grey-dark-3 placeholder:font-medium !important;
+}
+
+.PhoneInputInput {
+  @apply rounded-md rounded-l-none w-full flex p-2.5 border border-grey-dark-3 bg-white focus:border-light-blue-1 focus:bg-light-blue-4 text-text-primary placeholder:text-text-tertiary disabled:bg-grey-dark-4 disabled:border-transparent disabled:text-text-tertiary caret-text-primary transition-all duration-300 ease-out !important;
+}
+
+.PhoneInputCountry {
+  @apply border-y border-l border-y-grey-dark-3 rounded-md rounded-r-none border-l-grey-dark-3 mr-0 pl-4 !important;
+}
+
+.PhoneInput {
+  @apply flex items-center gap-0 !important;
+}
+
+.PhoneInputCountryIcon--border {
+  background-color: none !important;
+  box-shadow: none !important;
+}

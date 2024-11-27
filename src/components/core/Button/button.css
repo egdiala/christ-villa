@@ -1,0 +1,44 @@
+.cv-button {
+  @apply whitespace-nowrap flex gap-2 items-center h-fit py-3 px-6 disabled:cursor-not-allowed hover:outline-none hover:outline-0 focus:outline-none transition-all duration-300 ease-out !important;
+}
+
+.cv-button--primary {
+  @apply text-white font-semibold text-base bg-accent-primary justify-center rounded-lg hover:bg-accent-tertiary disabled:bg-accent-primary/15 disabled:hover:ring-0 !important;
+}
+
+.cv-button--secondary {
+  @apply text-text-primary hover:text-white font-semibold text-base bg-light-blue-2 justify-center rounded-lg hover:bg-accent-tertiary disabled:bg-light-blue-2/15 disabled:hover:ring-0 !important;
+}
+
+.cv-button--tertiary {
+  @apply text-text-primary hover:text-white font-semibold text-base bg-light-blue-4 justify-center rounded-lg hover:bg-accent-tertiary disabled:bg-light-blue-2/15 disabled:hover:ring-0 !important;
+}
+
+.cv-button--grey {
+  @apply text-text-primary hover:text-white font-semibold text-base bg-grey-dark-4 justify-center rounded-lg disabled:hover:ring-0 disabled:hover:bg-grey-dark-4/15 disabled:bg-grey-dark-4/15 !important;
+}
+
+.cv-button--outline {
+  @apply bg-transparent font-semibold hover:bg-accent-tertiary border border-background-secondary hover:border-transparent text-text-primary hover:text-white justify-center rounded-lg disabled:border-dark-green-1/15 disabled:text-dark-green-1/15 disabled:hover:ring-0 disabled:hover:bg-transparent !important;
+}
+
+.cv-button--ghost {
+  @apply text-text-primary hover:text-white font-semibold text-sm bg-transparent justify-center rounded-lg hover:bg-accent-tertiary disabled:text-accent-tertiary/15 disabled:hover:ring-0 disabled:hover:bg-transparent !important;
+}
+
+.spinner {
+  animation-name: spin;
+  animation-duration: 800ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

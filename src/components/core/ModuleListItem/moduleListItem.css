@@ -1,0 +1,11 @@
+.ego-module-list-item {
+  @apply flex w-full items-center text-sm gap-2 py-2.5 px-3 rounded-md cursor-pointer bg-transparent transition-all duration-300 ease-out !important;
+}
+
+.ego-module-list-item--inactive {
+  @apply text-white hover:text-grey-dark-1 hover:bg-accent-tertiary transition-all duration-300 ease-out !important;
+}
+
+.ego-module-list-item--active {
+  @apply text-accent-tertiary hover:text-accent-tertiary bg-light-blue-2 hover:bg-light-blue-2 font-medium transition-all duration-300 ease-out !important;
+}
