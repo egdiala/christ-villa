@@ -25,3 +25,7 @@
 .cv-table-action--ghost {
   @apply text-text-primary hover:text-white font-normal text-sm bg-transparent justify-center hover:bg-accent-tertiary disabled:text-accent-tertiary/15 disabled:hover:ring-0 disabled:hover:bg-transparent !important;
 }
+
+.cv-table-action--block {
+  @apply w-full !important;
+}

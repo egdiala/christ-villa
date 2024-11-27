@@ -8,15 +8,34 @@ export default {
   theme: {
   	extend: {
   		colors: {
+  			grey: {
+  				dark: {
+  					'1': "#021C2F",
+  					'2': "#354959",
+  					'3': "#808d97",
+  					'4': '#F2F4F5'
+  				}
+  			},
   			blue: {
+				'1': '#071012',
+				'2': '#224E59',
+				'3': '#90A6AC',
   				'4': '#D3DCDE',
   				'5': '#F4F6F7'
   			},
+			red: {
+				'1': '#230303',
+				'2': '#b0100d',
+				'3': '#D78786',
+				'4': '#EFCFCF',
+				'5': '#FBF3F3',
+			},
   			'light-blue': {
   				'1': '#22302E',
   				'2': '#A8EEE7',
   				'3': '#D3F7F3',
-  				'4': '#EEFCFA'
+  				'4': '#EEFCFA',
+				'5': '#FBFEFE'
   			},
   			text: {
   				secondary: '#354959',
@@ -24,6 +43,7 @@ export default {
   				tertiary: '#808D97'
   			},
 			background: {
+				tertiary: '#b0100d',
 				secondary: "#071012",
 				"secondary-2": "#A8EEE7"
 			},
@@ -43,14 +63,6 @@ export default {
   				secondary: '#A8EEE7',
   				DEFAULT: 'hsl(var(--accent))',
   				foreground: 'hsl(var(--accent-foreground))'
-  			},
-  			grey: {
-  				dark: {
-  					'1': "",
-  					'2': "",
-  					'3': "",
-  					'4': '#F2F4F5'
-  				}
   			},
   			'light-green': '#EFFFE1',
   			'light-red': '#FFF4F4',
