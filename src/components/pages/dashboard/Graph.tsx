@@ -47,7 +47,10 @@ export const DashboardGraph = ({ totalRequests }: DashboardGraphProps) => {
         <h2 className="text-xl text-text-primary">{totalRequests}</h2>
       </div>
       <div className="grid w-full h-full">
-        <ChartContainer config={chartConfig}>
+        <ChartContainer
+          config={chartConfig}
+          className="dashboard-request-graph"
+        >
           <LineChart
             accessibilityLayer
             data={chartData}
@@ -67,7 +70,10 @@ export const DashboardGraph = ({ totalRequests }: DashboardGraphProps) => {
             <ChartTooltip
               cursor={false}
               wrapperStyle={{ backgroundColor: "bg-text-primary" }}
-              content={<ChartTooltipContent />}
+              content={
+                <ChartTooltipContent className="dashboard-request-graph-tooltip" />
+              }
+              labelClassName="dashboard-tooltip-label"
             />
             <Line
               dataKey="completed"

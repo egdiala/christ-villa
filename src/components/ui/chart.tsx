@@ -151,7 +151,7 @@ const ChartTooltipContent = React.forwardRef<
 
       if (labelFormatter) {
         return (
-          <div className={cn("text-sm", labelClassName)}>
+          <div className={cn("font-medium", labelClassName)}>
             {labelFormatter(value, payload)}
           </div>
         );
@@ -161,11 +161,7 @@ const ChartTooltipContent = React.forwardRef<
         return null;
       }
 
-      return (
-        <div className={cn("text-xs text-light-blue-2", labelClassName)}>
-          {value}
-        </div>
-      );
+      return <div className={cn("font-medium", labelClassName)}>{value}</div>;
     }, [
       label,
       labelFormatter,
@@ -186,7 +182,7 @@ const ChartTooltipContent = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          "grid min-w-[8rem] items-start gap-1 rounded-lg border border-border/50 bg-text-primary px-3.5 py-2 text-xs shadow-xl",
+          "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl",
           className
         )}
       >
@@ -215,9 +211,9 @@ const ChartTooltipContent = React.forwardRef<
                       !hideIndicator && (
                         <div
                           className={cn(
-                            "shrink-0 rounded-full border-[--color-border] bg-[--color-bg]",
+                            "shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]",
                             {
-                              "h-[5px] w-[5px]": indicator === "dot",
+                              "h-2.5 w-2.5": indicator === "dot",
                               "w-1": indicator === "line",
                               "w-0 border-[1.5px] border-dashed bg-transparent":
                                 indicator === "dashed",
@@ -239,13 +235,13 @@ const ChartTooltipContent = React.forwardRef<
                         nestLabel ? "items-end" : "items-center"
                       )}
                     >
-                      <div className="flex gap-1">
+                      <div className="grid gap-1.5">
                         {nestLabel ? tooltipLabel : null}
-                        <span className="text-white text-sm">
+                        <span className="text-muted-foreground">
                           {itemConfig?.label || item.name}
                         </span>
                         {item.value && (
-                          <span className="text-sm text-white">
+                          <span className="font-mono font-medium tabular-nums text-foreground">
                             {item.value.toLocaleString()}
                           </span>
                         )}
