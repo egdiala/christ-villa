@@ -38,7 +38,7 @@ export const UsersFilter: React.FC<UsersFilterProps> = ({
 
   const applyFilter = (fn?: () => void) => {
     setFilters({
-      request_status: statusFilters,
+      profile_status: statusFilters,
       user_type: userTypeFilters,
     });
     fn?.();
