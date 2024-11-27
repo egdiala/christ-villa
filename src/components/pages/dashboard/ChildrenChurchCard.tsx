@@ -12,7 +12,7 @@ export const DashboardChildrenChurchCard = () => {
   const [openAttendanceModal, setOpenAttendanceModal] = useState(false);
 
   return (
-    <div className="border border-blue-4 p-4 rounded-2xl grid gap-y-[25.33px]">
+    <div className="border border-blue-4 p-4 rounded-2xl grid gap-y-[25.33px] content-start h-full">
       <h3 className="font-bold text-xl text-text-primary">Children church</h3>
 
       <div className="flex flex-col gap-y-[25.33px]">

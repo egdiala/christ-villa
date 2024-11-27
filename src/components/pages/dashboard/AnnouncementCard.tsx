@@ -9,7 +9,7 @@ export const DashboardAnnouncementCard = () => {
   ];
 
   return (
-    <div className="bg-light-blue-4 rounded-2xl p-4 grid gap-y-6 h-full place-content-start relative">
+    <div className="bg-light-blue-4 rounded-2xl p-4 grid gap-y-6 h-full content-start relative">
       <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
         <h2 className="font-bold text-xl text-text-primary">Announcement</h2>
         <Button theme="primary">
