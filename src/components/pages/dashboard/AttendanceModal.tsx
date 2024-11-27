@@ -53,12 +53,13 @@ export const AttendanceModal = ({ isOpen, onClose }: AttendanceModalProps) => {
                 </p>
                 <p className="text-sm text-text-secondary">20 of 21 present</p>
               </div>
-              <div
+              <button
                 className="rounded-lg bg-white absolute top-8 right-4 p-[6px]"
                 onClick={onClose}
+                type="button"
               >
                 <Icon icon="lucide:x" className="size-7" />
-              </div>
+              </button>
             </DialogTitle>
             <Description className="px-4 grid gap-y-2">
               {attendanceList.map((attendance) => (

@@ -9,10 +9,10 @@ export const DashboardAnnouncementCard = () => {
   ];
 
   return (
-    <div className="bg-light-blue-4 rounded-2xl p-4 grid gap-y-6 h-full place-content-start">
-      <div className="flex justify-between items-center">
+    <div className="bg-light-blue-4 rounded-2xl p-4 grid gap-y-6 h-full place-content-start relative">
+      <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
         <h2 className="font-bold text-xl text-text-primary">Announcement</h2>
-        <Button theme="secondary" className="!bg-accent-primary !text-white">
+        <Button theme="primary">
           <Icon icon="lucide:volume-2" />
           Post/Send a Message
         </Button>
@@ -36,7 +36,7 @@ export const DashboardAnnouncementCard = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {messageContent.map((content) => (
             <div key={content.id}>
               <p className="text-text-tertiary text-xs">{content.title}</p>

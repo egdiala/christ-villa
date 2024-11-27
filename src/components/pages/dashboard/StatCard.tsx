@@ -18,7 +18,7 @@ export const DashboardStatCard = ({
       className={`border border-blue-4 rounded-2xl grid gap-y-[26px] p-6 flex-1 ${className}`}
     >
       <div className="bg-light-blue-3 rounded-full flex justify-center items-center p-3 size-12">
-        <Icon icon={icon} className="size-6" />
+        <Icon icon={icon} className="size-6 text-text-secondary" />
       </div>
       <div className="grid gap-y-1">
         <p className="text-sm text-text-secondary">{title}</p>
