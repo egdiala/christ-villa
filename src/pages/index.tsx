@@ -5,7 +5,6 @@ import {
   DashboardPendingMembersTable,
   DashboardStatCard,
 } from "@/components/pages";
-import { cn } from "@/libs/cn";
 
 export const DashboardPage: React.FC = () => {
   const dashboardStatistics = [
@@ -24,13 +23,13 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="px-4 pt-[35px] flex flex-col gap-y-6 md:pt-5 pb-5 md:pb-10 view-page-container overflow-y-scroll">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-10 gap-6 ">
-        {dashboardStatistics.map((dbStat, index) => (
+        {dashboardStatistics.map((dbStat) => (
           <DashboardStatCard
             icon={dbStat.icon}
             title={dbStat.title}
             count={dbStat.count}
             key={dbStat.id}
-            className={cn("lg:col-span-2", index >= 3 ? "md:col-span-3" : "md:col-span-2")}
+            className="sm:last-of-type:col-span-2 md:last-of-type:col-span-3 lg:last-of-type:col-span-2 md:col-span-3 lg:col-span-2"
           />
         ))}
       </div>
