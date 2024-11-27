@@ -12,21 +12,23 @@ export const DashboardChildrenChurchCard = () => {
   const [openAttendanceModal, setOpenAttendanceModal] = useState(false);
 
   return (
-    <div className="border border-blue-4 p-4 rounded-2xl grid gap-y-[25.33px]">
-      <h3 className="font-bold text-xl text-text-primary">Children church</h3>
+    <div className="border border-blue-4 p-4 rounded-2xl flex flex-col gap-y-[25.33px] justify-between content-start h-full">
+      <div className="grid gap-y-[25.33px]">
+        <h3 className="font-bold text-xl text-text-primary">Children church</h3>
 
-      <div className="flex flex-col gap-y-[25.33px]">
-        {childrenChurchStats.map((ccStat) => (
-          <div className="flex items-center gap-x-[17px]" key={ccStat.id}>
-            <div className="flex justify-center items-center bg-blue-5 rounded-full p-3 size-12">
-              <Icon icon={ccStat.icon} className="size-6" />
+        <div className="flex flex-col gap-y-[25.33px]">
+          {childrenChurchStats.map((ccStat) => (
+            <div className="flex items-center gap-x-[17px]" key={ccStat.id}>
+              <div className="flex justify-center items-center bg-blue-5 rounded-full p-3 size-12">
+                <Icon icon={ccStat.icon} className="size-6" />
+              </div>
+              <div>
+                <p className="text-sm text-text-secondary">{ccStat.title}</p>
+                <h3 className="text-2xl text-text-primary">{ccStat.count}</h3>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-text-secondary">{ccStat.title}</p>
-              <h3 className="text-2xl text-text-primary">{ccStat.count}</h3>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <div className="p-4 bg-light-blue-4 rounded-2xl grid gap-y-4">

@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/core";
+import { PostAnnouncementModal } from "./PostAnnouncementModal";
 
 export const DashboardAnnouncementCard = () => {
   const messageContent = [
@@ -8,11 +10,17 @@ export const DashboardAnnouncementCard = () => {
     { id: 3, title: "Recipients", value: "All Users" },
   ];
 
+  const [openPostAnnouncementModal, setOpenPostAnnouncementModal] =
+    useState(false);
+
   return (
-    <div className="bg-light-blue-4 rounded-2xl p-4 grid gap-y-6 h-full place-content-start relative">
+    <div className="bg-light-blue-4 rounded-2xl p-4 grid gap-y-6 h-full content-start relative">
       <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
         <h2 className="font-bold text-xl text-text-primary">Announcement</h2>
-        <Button theme="primary">
+        <Button
+          theme="primary"
+          onClick={() => setOpenPostAnnouncementModal(true)}
+        >
           <Icon icon="lucide:volume-2" />
           Post/Send a Message
         </Button>
@@ -45,6 +53,11 @@ export const DashboardAnnouncementCard = () => {
           ))}
         </div>
       </div>
+
+      <PostAnnouncementModal
+        isOpen={openPostAnnouncementModal}
+        onClose={() => setOpenPostAnnouncementModal(false)}
+      />
     </div>
   );
 };

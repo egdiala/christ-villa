@@ -4,7 +4,7 @@ import {
   DashboardGraph,
   DashboardPendingMembersTable,
   DashboardStatCard,
-} from "@/components/pages";
+} from "@/components/pages/dashboard";
 
 export const DashboardPage: React.FC = () => {
   const dashboardStatistics = [
