@@ -1,11 +1,15 @@
-import { Button } from "@/components/core";
+import { useState } from "react";
 import { Icon } from "@iconify/react";
+import { Button } from "@/components/core";
+import { AttendanceModal } from "./AttendanceModal";
 
 export const DashboardChildrenChurchCard = () => {
   const childrenChurchStats = [
     { id: 1, icon: "lucide:presentation", title: "Teachers", count: 340 },
     { id: 2, icon: "lucide:baby", title: "Pupils", count: 340 },
   ];
+
+  const [openAttendanceModal, setOpenAttendanceModal] = useState(false);
 
   return (
     <div className="border border-blue-4 p-4 rounded-2xl grid gap-y-[25.33px]">
@@ -38,11 +42,19 @@ export const DashboardChildrenChurchCard = () => {
         </div>
         <p className="font-bold text-lg leading-[28.8px]">20 of 21 Present</p>
         <div className="flex justify-end">
-          <Button className="text-accent-primary text-sm font-bold">
+          <Button
+            className="text-accent-primary text-sm font-bold"
+            onClick={() => setOpenAttendanceModal(true)}
+          >
             View
           </Button>
         </div>
       </div>
+
+      <AttendanceModal
+        isOpen={openAttendanceModal}
+        onClose={() => setOpenAttendanceModal(false)}
+      />
     </div>
   );
 };
