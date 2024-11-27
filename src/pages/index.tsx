@@ -43,7 +43,7 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-11 xl:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-11 xl:grid-cols-12 gap-6">
         <div className="lg:col-span-5 xl:col-span-5">
           <DashboardAnnouncementCard />
         </div>

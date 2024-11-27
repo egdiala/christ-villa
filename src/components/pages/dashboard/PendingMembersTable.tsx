@@ -153,7 +153,7 @@ export const DashboardPendingMembersTable = () => {
 
   return (
     <div className="border border-blue-4 p-4 rounded-2xl grid gap-y-5">
-      <h2>Pending Members</h2>
+      <h2 className="font-bold text-xl text-text-primary">Pending Members</h2>
       <Table
         columns={columns}
         data={pendingMembers ?? []}
@@ -163,6 +163,7 @@ export const DashboardPendingMembersTable = () => {
         totalCount={pendingMembers?.length}
         emptyStateText="No pending members."
         onClick={({ original }) => navigate(`/users/${original?.id}`)}
+        paginateData={false}
       />
     </div>
   );
