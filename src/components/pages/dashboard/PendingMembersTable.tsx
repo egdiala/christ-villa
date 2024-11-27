@@ -4,12 +4,15 @@ import { useNavigate } from "react-router";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const DashboardPendingMembersTable = () => {
+  const imgUrl =
+    "https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
   const pendingMembers = [
     {
       id: 1,
       firstName: "Albert",
       lastName: "Flores",
-      profileImg: "/selin-unsplash.jpg",
+      profileImg: imgUrl,
       date: "Today",
       time: "12:34pm",
       gender: "Male",
@@ -20,7 +23,7 @@ export const DashboardPendingMembersTable = () => {
       id: 2,
       firstName: "Albert",
       lastName: "Flores",
-      profileImg: "/selin-unsplash.jpg",
+      profileImg: imgUrl,
       date: "Today",
       time: "12:34pm",
       gender: "Male",
@@ -31,7 +34,7 @@ export const DashboardPendingMembersTable = () => {
       id: 3,
       firstName: "Albert",
       lastName: "Flores",
-      profileImg: "/selin-unsplash.jpg",
+      profileImg: imgUrl,
       date: "Today",
       time: "12:34pm",
       gender: "Male",
@@ -42,7 +45,7 @@ export const DashboardPendingMembersTable = () => {
       id: 4,
       firstName: "Albert",
       lastName: "Flores",
-      profileImg: "/selin-unsplash.jpg",
+      profileImg: imgUrl,
       date: "Today",
       time: "12:34pm",
       gender: "Male",
@@ -53,7 +56,7 @@ export const DashboardPendingMembersTable = () => {
       id: 5,
       firstName: "Albert",
       lastName: "Flores",
-      profileImg: "/selin-unsplash.jpg",
+      profileImg: imgUrl,
       date: "Today",
       time: "12:34pm",
       gender: "Male",
