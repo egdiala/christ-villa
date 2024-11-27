@@ -1,4 +1,5 @@
 import { SearchInput, Table, TableAction } from "@/components/core"
+import { DateFilter, RequestsFilter } from "@/components/pages/requests"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { useState } from "react"
 
@@ -62,21 +63,15 @@ export const RequestsPage: React.FC = () => {
                     )
                 }
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
                 <div className="flex-1 md:max-w-96">
                     <SearchInput placeholder="Search requester name" />
                 </div>
                 
-                <div className="flex items-center gap-4">
-                    <TableAction theme="grey">
-                        Date
-                        <Icon icon="lucide:chevron-down" className="size-4 text-accent-primary" />
-                    </TableAction>
-                    <TableAction theme="grey">
-                        Filter
-                        <Icon icon="lucide:chevron-down" className="size-4 text-accent-primary" />
-                    </TableAction>
-                    <TableAction theme="grey">
+                <div className="flex items-center gap-4 w-full sm:w-auto">
+                    <DateFilter theme="grey" setFilters={undefined} isLoading={false} />
+                    <RequestsFilter theme="grey" setFilters={undefined} isLoading={false} />
+                    <TableAction theme="grey" block>
                         Export
                         <Icon icon="lucide:cloud-download" className="size-4 text-accent-primary" />
                     </TableAction>
