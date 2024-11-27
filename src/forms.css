@@ -20,11 +20,11 @@
     @apply focus:outline-none focus:outline-0 ring-0 ring-transparent border !important;
   }
   [type="checkbox"] {
-    @apply border-grey-dark-3 rounded hover:cursor-pointer hover:border-green-1 disabled:text-grey-dark-4 disabled:border-grey-dark-4 checked:border-green-1 text-green-1 transition duration-300 ease-in !important;
-    @apply focus:outline-none focus:outline-0 ring-0 ring-transparent focus:ring-1 focus:ring-green-1/[0.24] border !important;
+    @apply border-grey-dark-3 rounded hover:cursor-pointer hover:border-red-2 disabled:text-grey-dark-4 disabled:border-grey-dark-4 checked:border-red-2 text-red-2 transition duration-300 ease-in !important;
+    @apply focus:outline-none focus:outline-0 ring-0 ring-transparent focus:ring-1 focus:ring-red-2/[0.24] border !important;
   }
   [type="radio"] {
-    @apply border-grey-dark-3 hover:cursor-pointer hover:border-green-1 disabled:text-grey-dark-4 disabled:border-grey-dark-4 checked:border-green-1 text-green-1 transition duration-300 ease-in !important;
-    @apply focus:outline-none focus:outline-0 ring-0 ring-transparent focus:ring-1 focus:ring-green-1/[0.24] border !important;
+    @apply border-grey-dark-3 hover:cursor-pointer hover:border-red-2 disabled:text-grey-dark-4 disabled:border-grey-dark-4 checked:border-red-2 text-red-2 transition duration-300 ease-in !important;
+    @apply focus:outline-none focus:outline-0 ring-0 ring-transparent focus:ring-1 focus:ring-red-2/[0.24] border !important;
   }
 }

@@ -164,7 +164,6 @@ export const Table: React.FC<TableProps> = ({
                 return (
                   <tr
                     key={row.id}
-                    data-testid={row.id}
                     onClick={() => onClick?.(row)}
                     className={cn("hover:bg-green-4", !onClick ? "cursor-default" : "cursor-pointer", row?.getIsSelected() && "bg-green-4")}
                   >
