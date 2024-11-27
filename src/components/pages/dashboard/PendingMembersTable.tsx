@@ -77,7 +77,7 @@ export const DashboardPendingMembersTable = () => {
                 className="w-full h-full rounded-full object-cover"
               />
             </div>
-            <p className="text-sm leading-[23.8px] text-text-secondary">
+            <p className="text-sm text-text-secondary">
               {item?.firstName} {item?.lastName}
             </p>
           </div>
@@ -90,7 +90,7 @@ export const DashboardPendingMembersTable = () => {
       cell: ({ row }: { row: any }) => {
         const item = row?.original;
         return (
-          <p className="text-sm leading-[23.8px] text-text-secondary whitespace-nowrap">
+          <p className="text-sm text-text-secondary whitespace-nowrap">
             {item?.date} • {item?.time}
           </p>
         );
@@ -110,7 +110,7 @@ export const DashboardPendingMembersTable = () => {
       cell: ({ row }: { row: any }) => {
         const item = row?.original;
         return (
-          <div className="font-medium text-sm leading-[19.6px]">
+          <div className="font-medium text-sm">
             <RenderIf condition={item?.status?.toLowerCase() === "pending"}>
               <p className="text-amber">{item?.status}</p>
             </RenderIf>
