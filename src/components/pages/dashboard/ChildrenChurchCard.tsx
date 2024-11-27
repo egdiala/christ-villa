@@ -15,7 +15,7 @@ export const DashboardChildrenChurchCard = () => {
     <div className="border border-blue-4 p-4 rounded-2xl grid gap-y-[25.33px]">
       <h3 className="font-bold text-xl text-text-primary">Children church</h3>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-y-[25.33px]">
         {childrenChurchStats.map((ccStat) => (
           <div className="flex items-center gap-x-[17px]" key={ccStat.id}>
             <div className="flex justify-center items-center bg-blue-5 rounded-full p-3 size-12">
