@@ -45,18 +45,16 @@ export const AttendanceModal = ({ isOpen, onClose }: AttendanceModalProps) => {
           <DialogPanel className="h-full max-w-[420px] min-w-full sm:min-w-[420px] space-y-4 border bg-white overflow-y-scroll">
             <DialogTitle className="bg-light-blue-4 px-4 pt-8 pb-4 sticky top-0">
               <div className="grid gap-y-2">
-                <h2 className="font-bold text-2xl leading-[31.2px]">
+                <h2 className="font-bold text-2xl text-text-primary">
                   Attendance
                 </h2>
-                <p className="font-medium text-sm leading-[19.6px] text-text-secondary">
+                <p className="font-medium text-sm  text-text-secondary">
                   Tue. 12 July, 2024 • 12:23pm
                 </p>
-                <p className="text-sm leading-[23.8px] text-text-secondary">
-                  20 of 21 present
-                </p>
+                <p className="text-sm text-text-secondary">20 of 21 present</p>
               </div>
               <div
-                className="rounded-lg bg-white absolute top-8 right-4 p-[6px] cursor-pointer"
+                className="rounded-lg bg-white absolute top-8 right-4 p-[6px]"
                 onClick={onClose}
               >
                 <Icon icon="lucide:x" className="size-7" />
@@ -65,7 +63,7 @@ export const AttendanceModal = ({ isOpen, onClose }: AttendanceModalProps) => {
             <Description className="px-4 grid gap-y-2">
               {attendanceList.map((attendance) => (
                 <div className="flex justify-between items-center py-4 border-b border-[#808D974D]">
-                  <p className="font-medium text-sm leading-[19.6px]">
+                  <p className="font-medium text-sm text-text-primary">
                     {attendance.name}
                   </p>
                   <Checkbox

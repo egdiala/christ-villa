@@ -13,7 +13,7 @@ export const DashboardChildrenChurchCard = () => {
 
   return (
     <div className="border border-blue-4 p-4 rounded-2xl grid gap-y-[25.33px]">
-      <h3 className="font-bold text-xl leading-8">Children church</h3>
+      <h3 className="font-bold text-xl text-text-primary">Children church</h3>
 
       <div className="flex flex-col">
         {childrenChurchStats.map((ccStat) => (
@@ -22,12 +22,8 @@ export const DashboardChildrenChurchCard = () => {
               <Icon icon={ccStat.icon} className="size-6" />
             </div>
             <div>
-              <p className="text-sm text-text-secondary leading-[23.8px]">
-                {ccStat.title}
-              </p>
-              <h3 className="text-2xl text-text-primary leading-[31.2px]">
-                {ccStat.count}
-              </h3>
+              <p className="text-sm text-text-secondary">{ccStat.title}</p>
+              <h3 className="text-2xl text-text-primary">{ccStat.count}</h3>
             </div>
           </div>
         ))}
@@ -40,7 +36,7 @@ export const DashboardChildrenChurchCard = () => {
           </p>
           <p className="text-xs text-text-secondary">Sun. 21 June, 2024</p>
         </div>
-        <p className="font-bold text-lg leading-[28.8px]">20 of 21 Present</p>
+        <p className="font-bold text-lg text-text-primary">20 of 21 Present</p>
         <div className="flex justify-end">
           <Button
             className="text-accent-primary text-sm font-bold"

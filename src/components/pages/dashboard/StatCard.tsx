@@ -21,8 +21,8 @@ export const DashboardStatCard = ({
         <Icon icon={icon} className="size-6" />
       </div>
       <div className="grid gap-y-1">
-        <p className="text-sm text-text-secondary leading-[23.8px]">{title}</p>
-        <h2 className="text-2xl text-text-primary leading-[31.2px]">{count}</h2>
+        <p className="text-sm text-text-secondary">{title}</p>
+        <h2 className="text-2xl text-text-primary">{count}</h2>
       </div>
     </div>
   );
