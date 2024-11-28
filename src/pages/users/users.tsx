@@ -185,7 +185,7 @@ export const UsersPage: React.FC = () => {
       </div>
       <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
         <div className="flex-1 md:max-w-96">
-          <SearchInput placeholder="Search requester name" />
+          <SearchInput placeholder="Search by name or email" />
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto">
