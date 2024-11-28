@@ -1,156 +1,97 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router";
-import {
-  Button,
-  RenderIf,
-  SearchInput,
-  Table,
-  TableAction,
-} from "@/components/core";
+import { Button, SearchInput, Table, TableAction } from "@/components/core";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
+import { AddNewDepartmentModal } from "@/components/pages/departments";
 
 export const DepartmentsPage: React.FC = () => {
-  const userStatistics = [
-    { id: 1, label: "Total users", value: "340" },
+  const dashboardStatistics = [
+    { id: 1, label: "Total departments", value: "340" },
     { id: 2, label: "Members", value: "23" },
     { id: 3, label: "HoDs", value: "23" },
-    { id: 4, label: "Partners", value: "23" },
   ];
 
-  const users = [
+  const departments = [
     {
       id: 1,
-      firstName: "Albert",
-      lastName: "Flores",
-      profileImg:
-        "https://plus.unsplash.com/premium_photo-1682144187125-b55e638cf286?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      department: "Choir",
-      user_type: "Member",
-      status: "pending",
+      department_name: "Ushering",
+      description: "lorem ipsum dolor",
+      members: 5935,
+      total_requests: 824,
+      pending_requests: 342,
+      completed_requests: 5120,
     },
     {
       id: 2,
-      firstName: "Theresa",
-      lastName: "Webb",
-      profileImg:
-        "https://images.unsplash.com/photo-1636406269177-4827c00bb263?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Female",
-      department: "Ushering",
-      user_type: "Partner",
-      status: "approved",
+      department_name: "Choir",
+      description: "lorem ipsum dolor",
+      members: 5935,
+      total_requests: 824,
+      pending_requests: 342,
+      completed_requests: 5120,
     },
     {
       id: 3,
-      firstName: "Ronals",
-      lastName: "Richards",
-      profileImg:
-        "https://images.unsplash.com/photo-1715029005043-e88d219a3c48?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      department: "Ushering",
-      user_type: "HOD",
-      status: "suspended",
+      department_name: "Children",
+      description: "lorem ipsum dolor",
+      members: 5935,
+      total_requests: 824,
+      pending_requests: 342,
+      completed_requests: 5120,
     },
     {
       id: 4,
-      firstName: "Bessie",
-      lastName: "Cooper",
-      profileImg:
-        "https://plus.unsplash.com/premium_photo-1664536392896-cd1743f9c02c?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      department: "Ushering",
-      user_type: "Member",
-      status: "suspended",
+      department_name: "Choir",
+      description: "lorem ipsum dolor",
+      members: 5935,
+      total_requests: 824,
+      pending_requests: 342,
+      completed_requests: 5120,
     },
     {
       id: 5,
-      firstName: "Floyd",
-      lastName: "Miles",
-      profileImg:
-        "https://images.unsplash.com/photo-1636377985931-898218afd306?q=80&w=2864&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      department: "Ushering",
-      user_type: "Member",
-      status: "suspended",
+      department_name: "Choir",
+      description: "lorem ipsum dolor",
+      members: 5935,
+      total_requests: 824,
+      pending_requests: 342,
+      completed_requests: 5120,
     },
   ];
 
   const columns = [
     {
-      header: () => "Name",
-      accessorKey: "name",
-      cell: ({ row }: { row: any }) => {
-        const item = row?.original;
-        return (
-          <div className="flex items-center gap-x-3 whitespace-nowrap">
-            <div className="size-8">
-              <img
-                src={item?.profileImg}
-                alt="profile"
-                className="w-full h-full rounded-full object-cover"
-              />
-            </div>
-            <p className="text-sm text-text-secondary">
-              {item?.firstName} {item?.lastName}
-            </p>
-          </div>
-        );
-      },
+      header: () => "Department Name",
+      accessorKey: "department_name",
     },
     {
-      header: () => "Reg. Date & Time",
-      accessorKey: "reg_date",
+      header: () => "Description",
+      accessorKey: "description",
       cell: ({ row }: { row: any }) => {
         const item = row?.original;
         return (
-          <p className="text-sm text-text-secondary whitespace-nowrap">
-            {item?.date} • {item?.time}
+          <p className="text-sm text-text-secondary max-w-[13ch] truncate">
+            {item?.description}
           </p>
         );
       },
     },
     {
-      header: () => "Gender",
-      accessorKey: "gender",
+      header: () => "Members",
+      accessorKey: "members",
     },
     {
-      header: () => "Department",
-      accessorKey: "department",
+      header: () => "Total Requests",
+      accessorKey: "total_requests",
     },
     {
-      header: () => "User Type",
-      accessorKey: "user_type",
+      header: () => "Pending Requests",
+      accessorKey: "pending_requests",
     },
     {
-      header: () => "Profile Status",
-      accessorKey: "status",
-      cell: ({ row }: { row: any }) => {
-        const item = row?.original;
-        return (
-          <div className="font-medium text-sm">
-            <RenderIf condition={item?.status?.toLowerCase() === "pending"}>
-              <p className="text-amber">{item?.status}</p>
-            </RenderIf>
-            <RenderIf condition={item?.status?.toLowerCase() === "approved"}>
-              <p className="text-green-base">{item?.status}</p>
-            </RenderIf>
-            <RenderIf condition={item?.status?.toLowerCase() === "suspended"}>
-              <p className="text-accent-primary">{item?.status}</p>
-            </RenderIf>
-          </div>
-        );
-      },
+      header: () => "Completed Req.",
+      accessorKey: "completed_requests",
     },
   ];
 
@@ -166,17 +107,20 @@ export const DepartmentsPage: React.FC = () => {
 
   const navigate = useNavigate();
 
+  const [openAddNewDepartmentModal, setOpenAddNewDepartmentModal] =
+    useState(false);
+
   return (
     <div className="flex flex-col gap-5 px-4 pt-3 md:pt-5 pb-5 md:pb-10 view-page-container overflow-y-scroll">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-6">
-        {userStatistics.map((item) => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-6">
+        {dashboardStatistics.map((item) => (
           <div
             key={item.id}
             className="flex items-center gap-4 p-4 rounded-lg bg-light-blue-4"
           >
             <div className="grid place-content-center rounded-full size-12 bg-light-blue-3">
               <Icon
-                icon="lucide:users"
+                icon="lucide:component"
                 className="size-6 text-text-secondary"
               />
             </div>
@@ -189,7 +133,7 @@ export const DepartmentsPage: React.FC = () => {
       </div>
       <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
         <div className="flex-1 md:max-w-96">
-          <SearchInput placeholder="Search requester name" />
+          <SearchInput placeholder="Search department name" />
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto">
@@ -200,7 +144,10 @@ export const DepartmentsPage: React.FC = () => {
               className="size-4 text-accent-primary"
             />
           </TableAction>
-          <Button theme="primary">
+          <Button
+            theme="primary"
+            onClick={() => setOpenAddNewDepartmentModal(true)}
+          >
             <Icon icon="lucide:plus" className="" />
             Add Department
           </Button>
@@ -210,15 +157,21 @@ export const DepartmentsPage: React.FC = () => {
       <div>
         <Table
           columns={columns}
-          data={users ?? []}
+          data={departments ?? []}
           page={page}
           perPage={itemsPerPage}
-          totalCount={users.length}
+          totalCount={departments.length}
           onPageChange={handlePageChange}
-          emptyStateText="We couldn't find any user."
-          onClick={({ original }) => navigate(`/users/${original?.id}`)}
+          emptyStateText="We couldn't find any department."
+          onClick={({ original }) => navigate(`/departments/${original?.id}`)}
         />
       </div>
+
+      <AddNewDepartmentModal
+        isOpen={openAddNewDepartmentModal}
+        onClose={() => setOpenAddNewDepartmentModal(false)}
+        onAddDepartment={() => {}}
+      />
     </div>
   );
 };
