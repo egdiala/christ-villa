@@ -118,7 +118,7 @@ export const ActivitiesTab: React.FC = () => {
     {
       header: () => "Action",
       accessorKey: "action",
-      cell: ({ row }: { row: any }) => {
+      cell: () => {
         // const item = row?.original;
         return (
           <Popover className="relative">

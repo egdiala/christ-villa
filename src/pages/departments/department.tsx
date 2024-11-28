@@ -32,7 +32,7 @@ export const DepartmentPage: React.FC = () => {
       : {}),
   };
 
-  const [selectedTab, setSelectedTab] = useState("Members");
+  const [_, setSelectedTab] = useState("Members");
 
   return (
     <div className="grid pt-4 pb-9 gap-y-4 view-page-container overflow-y-scroll">
