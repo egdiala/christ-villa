@@ -15,7 +15,7 @@ import {
 import { cn } from "@/libs/cn";
 
 export const DepartmentPage: React.FC = () => {
-  const departmentName = "Ushering"; // Change value "Ushering" to see the other layout
+  const departmentName = "Children"; // Change value to "Ushering" to see the other layout
   const [openDeleteDeptModal, setOpenDeleteDeptModal] = useState(false);
   const [openEditDepartmentModal, setOpenEditDepartmentModal] = useState(false);
   const [openAddHODModal, setOpenAddHODModal] = useState(false);
@@ -78,18 +78,17 @@ export const DepartmentPage: React.FC = () => {
             className={cn(
               "grid my-2 border-2 rounded border-grey-dark-4 p-1 gap-x-3 relative",
               departmentName?.toLowerCase() === "children"
-                ? "grid-cols-5"
+                ? "grid-cols-3 gap-y-2 md:grid-cols-5"
                 : "grid-cols-3"
             )}
           >
             {Object.keys(tabsList).map((tab, index) => (
               <Tab
-                // as="div"
                 key={tab}
                 className={cn(
                   "focus-visible:outline-none",
                   index !== Object.keys(tabsList).length - 1
-                    ? "border-r border-grey-dark-3"
+                    ? "md:border-r md:border-grey-dark-3"
                     : ""
                 )}
                 onClick={() => setSelectedTab(tab)}
@@ -101,7 +100,9 @@ export const DepartmentPage: React.FC = () => {
                       selected
                         ? "bg-accent-primary text-white font-semibold"
                         : "bg-white text-text-secondary hover:bg-light-red",
-                      index !== Object.keys(tabsList).length - 1 ? "mr-3" : ""
+                      index !== Object.keys(tabsList).length - 1
+                        ? "md:mr-3"
+                        : ""
                     )}
                   >
                     {tab}

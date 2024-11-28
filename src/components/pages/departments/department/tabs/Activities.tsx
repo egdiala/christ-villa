@@ -110,10 +110,26 @@ export const ActivitiesTab: React.FC = () => {
     {
       header: () => "Activity",
       accessorKey: "activity",
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original;
+        return (
+          <p className="text-sm text-text-secondary whitespace-nowrap">
+            {item?.activity}
+          </p>
+        );
+      },
     },
     {
       header: () => "Description",
       accessorKey: "description",
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original;
+        return (
+          <p className="text-sm text-text-secondary whitespace-nowrap">
+            {item?.description}
+          </p>
+        );
+      },
     },
     {
       header: () => "Action",

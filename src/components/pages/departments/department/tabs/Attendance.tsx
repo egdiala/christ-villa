@@ -98,6 +98,14 @@ export const AttendanceTab: React.FC = () => {
     {
       header: () => "Description",
       accessorKey: "description",
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original;
+        return (
+          <p className="text-sm text-text-secondary whitespace-nowrap">
+            {item?.description}
+          </p>
+        );
+      },
     },
     {
       header: () => "Action",
