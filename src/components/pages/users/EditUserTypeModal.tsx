@@ -55,11 +55,19 @@ export const EditUserTypeModal = ({
         </Description>
 
         <div className="flex gap-4 pt-10 justify-end px-6 pb-6">
-          <div className="flex gap-4">
-            <Button theme="tertiary" onClick={onClose}>
+          <div className="flex gap-4 w-full md:w-auto">
+            <Button
+              theme="tertiary"
+              onClick={onClose}
+              className="w-1/2 md:w-auto"
+            >
               Cancel
             </Button>
-            <Button theme="primary" onClick={onUpdateUser}>
+            <Button
+              theme="primary"
+              onClick={onUpdateUser}
+              className="w-1/2 md:w-auto"
+            >
               Update User Type
             </Button>
           </div>
