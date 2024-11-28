@@ -25,7 +25,7 @@ export const EditUserTypeModal = ({
       transition
       className="fixed inset-0 flex w-screen items-center justify-center bg-black/30 transition duration-300 ease-out data-[closed]:opacity-0"
     >
-      <DialogPanel className="max-w-[493px] space-y-4 bg-white rounded-lg overflow-hidden">
+      <DialogPanel className="max-w-[493px] w-[calc(100%-20px)] lg:w-[493px] space-y-4 bg-white rounded-lg overflow-hidden">
         <DialogTitle className="flex justify-between sticky top-0 bg-white z-[9] pt-6 px-6 ">
           <h2 className="font-bold text-xl text-text-primary">
             Update User Type
