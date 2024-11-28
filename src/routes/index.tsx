@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { AuthRoutes, UsersRoutes } from "./modules";
+import { AuthRoutes, ConnectGroupsRoutes, UsersRoutes } from "./modules";
 import { DashboardPage } from "@/pages";
 import AuthLayout from "@/layouts/AuthLayout";
 import { AnimatePresence } from "motion/react";
@@ -33,6 +33,16 @@ const Router = () => {
                 <AuthRoutes />
               </LocationProvider>
             </AuthLayout>
+          }
+        />
+        <Route
+          path="connect-groups/*"
+          element={
+            <DashboardLayout>
+              <LocationProvider>
+                <ConnectGroupsRoutes />
+              </LocationProvider>
+            </DashboardLayout>
           }
         />
         <Route

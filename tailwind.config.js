@@ -54,7 +54,7 @@ export default {
   				'2': '#aadba3',
   				'3': '#ddf0da',
   				'4': '#f6fbf6',
-  				base: '#4EA507'
+  				base: '#008E5B'
   			},
   			amber: '#EE8100',
   			accent: {
