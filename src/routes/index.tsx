@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
-// import AuthLayout from "@/layouts/AuthLayout"
+import { AuthRoutes, UsersRoutes } from "./modules";
+import { DashboardPage } from "@/pages";
+import AuthLayout from "@/layouts/AuthLayout";
 import { AnimatePresence } from "motion/react";
+import { RequestsPage } from "@/pages/requests";
 import DashboardLayout from "@/layouts/ProtectedLayout";
 import { Routes, Route, BrowserRouter } from "react-router";
-import { DashboardPage } from "@/pages";
-import { RequestsPage } from "@/pages/requests";
-import { UserPage, UsersPage } from "@/pages/users";
 
 function LocationProvider({ children }: { children: ReactNode }) {
   return <AnimatePresence mode="wait">{children}</AnimatePresence>;
@@ -26,6 +26,16 @@ const Router = () => {
           }
         />
         <Route
+          path="auth/*"
+          element={
+            <AuthLayout>
+              <LocationProvider>
+                <AuthRoutes />
+              </LocationProvider>
+            </AuthLayout>
+          }
+        />
+        <Route
           path="/requests"
           element={
             <DashboardLayout>
@@ -36,21 +46,11 @@ const Router = () => {
           }
         />
         <Route
-          path="/users"
+          path="/users/*"
           element={
             <DashboardLayout>
               <LocationProvider>
-                <UsersPage />
-              </LocationProvider>
-            </DashboardLayout>
-          }
-        />
-        <Route
-          path="/users/:id"
-          element={
-            <DashboardLayout>
-              <LocationProvider>
-                <UserPage />
+                <UsersRoutes />
               </LocationProvider>
             </DashboardLayout>
           }
