@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { AuthRoutes, UsersRoutes } from "./modules";
+import { AuthRoutes, DepartmentsRoutes, UsersRoutes } from "./modules";
 import { DashboardPage } from "@/pages";
 import AuthLayout from "@/layouts/AuthLayout";
 import { AnimatePresence } from "motion/react";
@@ -51,6 +51,16 @@ const Router = () => {
             <DashboardLayout>
               <LocationProvider>
                 <UsersRoutes />
+              </LocationProvider>
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/departments/*"
+          element={
+            <DashboardLayout>
+              <LocationProvider>
+                <DepartmentsRoutes />
               </LocationProvider>
             </DashboardLayout>
           }
