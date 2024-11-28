@@ -5,7 +5,7 @@ import DashboardLayout from "@/layouts/ProtectedLayout";
 import { Routes, Route, BrowserRouter } from "react-router";
 import { DashboardPage } from "@/pages";
 import { RequestsPage } from "@/pages/requests";
-import { DepartmentsPage } from "@/pages/departments";
+import { DepartmentPage, DepartmentsPage } from "@/pages/departments";
 
 function LocationProvider({ children }: { children: ReactNode }) {
   return <AnimatePresence mode="wait">{children}</AnimatePresence>;
@@ -41,6 +41,16 @@ const Router = () => {
             <DashboardLayout>
               <LocationProvider>
                 <DepartmentsPage />
+              </LocationProvider>
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/departments/:id"
+          element={
+            <DashboardLayout>
+              <LocationProvider>
+                <DepartmentPage />
               </LocationProvider>
             </DashboardLayout>
           }
