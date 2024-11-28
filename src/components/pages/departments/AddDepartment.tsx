@@ -41,7 +41,7 @@ export const AddNewDepartmentModal = ({
         </Description>
 
         <div className="flex gap-4 pt-10 justify-end px-6 pb-6">
-          <div className="flex gap-4 w-full">
+          <div className="flex gap-4 w-full md:w-auto">
             <Button
               theme="tertiary"
               onClick={onClose}
