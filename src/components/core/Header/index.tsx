@@ -12,7 +12,7 @@ export const Header: React.FC<HeaderProps> = ({ close }) => {
     return (
         <header className="flex items-center gap-3 sticky top-0 left-0 right-0 justify-between w-full bg-accent-tertiary px-4 py-4 md:py-7">
             <div className="flex items-center gap-2">
-                <button type="button" className="md:hidden" onClick={() => close()}>
+                <button type="button" className="xl:hidden" onClick={() => close()}>
                     <Icon icon="lucide:menu" className="text-white size-5" />
                 </button>
                 <h1 className="font-bold text-white text-xl md:text-2xl">{routeTitle}</h1>
