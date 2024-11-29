@@ -3,9 +3,11 @@ import { Icon } from "@iconify/react";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
 import { DateFilter, RequestsFilter } from "@/components/pages/requests";
-import { AcademicAssistanceRequestModal } from "../AcademicAssistanceRequest";
-import { TimeOffRequestModal } from "../TimeOffRequestDetails";
-import { TripRequestModal } from "../TripRequestDetails";
+import {
+  AcademicAssistanceRequestModal,
+  TimeOffRequestModal,
+  TripRequestModal,
+} from "@/components/pages/departments";
 
 export const RequestsTab: React.FC = () => {
   const requestStatistics = [
@@ -161,8 +163,8 @@ export const RequestsTab: React.FC = () => {
   const [openTimeOffDetails, setOpenTimeOffDetails] = useState(false);
 
   return (
-    <div className="flex flex-col gap-5 px-4 py-5 view-page-container overflow-y-scroll">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-6">
+    <div className="flex flex-col gap-5 px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-5">
         {requestStatistics.map((item) => (
           <div
             key={item.id}

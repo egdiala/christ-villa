@@ -163,7 +163,9 @@ export const DepartmentsPage: React.FC = () => {
           totalCount={departments.length}
           onPageChange={handlePageChange}
           emptyStateText="We couldn't find any department."
-          onClick={({ original }) => navigate(`/departments/${original?.id}`)}
+          onClick={({ original }) =>
+            navigate(`/departments/${original?.id}/members`)
+          }
         />
       </div>
 

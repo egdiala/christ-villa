@@ -125,8 +125,8 @@ export const PupilsTab: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5 px-4 py-5 view-page-container overflow-y-scroll">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-6">
+    <div className="flex flex-col gap-5 px-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-5">
         {pupilStatistics.map((item) => (
           <div
             key={item.id}

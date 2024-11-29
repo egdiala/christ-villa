@@ -1,41 +1,37 @@
 import { useState } from "react";
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/core";
 import {
-  ActivitiesTab,
   AddHODModal,
-  AttendanceTab,
   DeleteDepartmentModal,
   EditDepartmentModal,
-  MembersTab,
-  PupilsTab,
-  RequestsTab,
 } from "@/components/pages/departments";
 import { cn } from "@/libs/cn";
+import { NavLink, Outlet, useLocation } from "react-router";
 
 export const DepartmentPage: React.FC = () => {
   const departmentName = "Children"; // Change value to "Ushering" to see the other layout
   const [openDeleteDeptModal, setOpenDeleteDeptModal] = useState(false);
   const [openEditDepartmentModal, setOpenEditDepartmentModal] = useState(false);
   const [openAddHODModal, setOpenAddHODModal] = useState(false);
+  const { pathname } = useLocation();
+  const pathArray = pathname.split("/");
+  const basePath = `/${pathArray[1]}/${pathArray[2]}`;
 
   const tabsList: Record<any, any> = {
-    Members: <MembersTab />,
-    ...(departmentName?.toLowerCase() === "children"
-      ? { Pupils: <PupilsTab /> }
+    Members: `${basePath}/members`,
+    ...(departmentName?.toLowerCase()?.includes("children")
+      ? { Pupils: `${basePath}/pupils` }
       : {}),
-    Requests: <RequestsTab />,
-    Activities: <ActivitiesTab />,
-    ...(departmentName?.toLowerCase() === "children"
-      ? { Attendance: <AttendanceTab /> }
+    Requests: `${basePath}/requests`,
+    Activities: `${basePath}/activities`,
+    ...(departmentName?.toLowerCase()?.includes("children")
+      ? { Attendance: `${basePath}/attendance` }
       : {}),
   };
 
-  const [_, setSelectedTab] = useState("Members");
-
   return (
-    <div className="grid pt-4 pb-9 gap-y-4 view-page-container overflow-y-scroll">
+    <div className="flex flex-col gap-y-4 pt-4 pb-9  view-page-container overflow-y-scroll">
       <div className="flex gap-4 flex-col md:flex-row justify-between px-4 py-1">
         <h4 className="capitalize font-bold text-2xl md:text-xl text-text-primary">
           {departmentName} Department
@@ -71,55 +67,45 @@ export const DepartmentPage: React.FC = () => {
         </div>
       </div>
 
-      <TabGroup className="grid gap-y-4">
+      <div className="flex flex-col gap-y-4 w-full">
         {/** Tabs */}
-        <div className="px-4">
-          <TabList
+        <div className="px-4 my-2 w-full">
+          <div
             className={cn(
-              "grid my-2 border-2 rounded border-grey-dark-4 p-1 gap-x-3 relative",
+              "grid border-2 rounded border-grey-dark-4 p-1 gap-3 relative overflow-x-scroll scrollbar-hide grid-auto-column",
               departmentName?.toLowerCase() === "children"
-                ? "grid-cols-3 gap-y-2 md:grid-cols-5"
+                ? "grid-cols-5"
                 : "grid-cols-3"
             )}
           >
             {Object.keys(tabsList).map((tab, index) => (
-              <Tab
+              <NavLink
+                to={tabsList[tab]}
                 key={tab}
-                className={cn(
-                  "focus-visible:outline-none",
-                  index !== Object.keys(tabsList).length - 1
-                    ? "md:border-r md:border-grey-dark-3"
-                    : ""
-                )}
-                onClick={() => setSelectedTab(tab)}
+                className={({ isActive }) =>
+                  cn(
+                    "flex justify-center items-center py-1 px-2 rounded",
+                    isActive
+                      ? "bg-accent-primary text-white"
+                      : "bg-white text-text-secondary hover:bg-light-red"
+                  )
+                }
+                // className={cn(
+                //   "focus-visible:outline-none",
+                //   index !== Object.keys(tabsList).length - 1
+                //     ? "border-r border-grey-dark-3"
+                //     : ""
+                // )}
               >
-                {({ selected }) => (
-                  <div
-                    className={cn(
-                      "rounded flex items-center justify-center py-2 text-sm outline-none cursor-pointer",
-                      selected
-                        ? "bg-accent-primary text-white font-semibold"
-                        : "bg-white text-text-secondary hover:bg-light-red",
-                      index !== Object.keys(tabsList).length - 1
-                        ? "md:mr-3"
-                        : ""
-                    )}
-                  >
-                    {tab}
-                  </div>
-                )}
-              </Tab>
+                {tab}
+              </NavLink>
             ))}
-          </TabList>
+          </div>
         </div>
 
         {/** Tab Content */}
-        <TabPanels>
-          {Object.values(tabsList)?.map((value, index) => (
-            <TabPanel key={index}>{value}</TabPanel>
-          ))}
-        </TabPanels>
-      </TabGroup>
+        <Outlet />
+      </div>
 
       <DeleteDepartmentModal
         isOpen={openDeleteDeptModal}

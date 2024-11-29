@@ -136,7 +136,7 @@ export const AttendanceTab: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5 px-4 py-5 view-page-container overflow-y-scroll">
+    <div className="flex flex-col gap-5 px-4">
       <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
         <div className="flex-1 md:max-w-96">
           <SearchInput placeholder="Search name" />

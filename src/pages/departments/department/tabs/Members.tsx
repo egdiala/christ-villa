@@ -5,8 +5,10 @@ import { setPaginationParams } from "@/hooks/usePaginationParams";
 import { UsersFilter } from "@/components/pages/users";
 import { cn } from "@/libs/cn";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
-import { ApproveMemberRequestModal } from "../ApproveMemberRequest";
-import { RemoveMemberModal } from "../RemoveMember";
+import {
+  ApproveMemberRequestModal,
+  RemoveMemberModal,
+} from "@/components/pages/departments";
 
 interface MembersTabProps {
   isChildrenDept?: boolean;
@@ -222,10 +224,10 @@ export const MembersTab: React.FC = ({
   };
 
   return (
-    <div className="flex flex-col gap-5 px-4 py-5 view-page-container overflow-y-scroll">
+    <div className="flex flex-col gap-5 px-4">
       <div
         className={cn(
-          "grid grid-cols-1 gap-4 pb-6",
+          "grid grid-cols-1 gap-4 pb-5",
           isChildrenDept ? "md:grid-cols-3" : "md:grid-cols-2 lg:grid-cols-4"
         )}
       >

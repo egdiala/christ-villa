@@ -4,7 +4,7 @@ import { SearchInput, Table, TableAction } from "@/components/core";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
 import { DateFilter, RequestsFilter } from "@/components/pages/requests";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
-import { DeleteActivityModal } from "../DeleteActivity";
+import { DeleteActivityModal } from "@/components/pages/departments/department/DeleteActivity";
 
 export const ActivitiesTab: React.FC = () => {
   const activities = [
@@ -185,7 +185,7 @@ export const ActivitiesTab: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5 px-4 py-5 view-page-container overflow-y-scroll">
+    <div className="flex flex-col gap-5 px-4">
       <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
         <div className="flex-1 md:max-w-96">
           <SearchInput placeholder="Search name" />
