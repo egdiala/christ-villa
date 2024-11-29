@@ -1,11 +1,12 @@
 import { ReactNode } from "react";
+import { Routes, Route, BrowserRouter } from "react-router";
+import { AnimatePresence } from "motion/react";
 import { AuthRoutes, ConnectGroupsRoutes, UsersRoutes } from "./modules";
 import { DashboardPage } from "@/pages";
 import AuthLayout from "@/layouts/AuthLayout";
-import { AnimatePresence } from "motion/react";
-import { RequestsPage } from "@/pages/requests";
 import DashboardLayout from "@/layouts/ProtectedLayout";
-import { Routes, Route, BrowserRouter } from "react-router";
+import { RequestsPage } from "@/pages/requests";
+import { Profile } from "@/pages/profile";
 
 function LocationProvider({ children }: { children: ReactNode }) {
   return <AnimatePresence mode="wait">{children}</AnimatePresence>;
@@ -61,6 +62,16 @@ const Router = () => {
             <DashboardLayout>
               <LocationProvider>
                 <UsersRoutes />
+              </LocationProvider>
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <DashboardLayout>
+              <LocationProvider>
+                <Profile />
               </LocationProvider>
             </DashboardLayout>
           }
