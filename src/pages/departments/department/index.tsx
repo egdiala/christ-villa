@@ -78,7 +78,7 @@ export const DepartmentPage: React.FC = () => {
                 : "grid-cols-3"
             )}
           >
-            {Object.keys(tabsList).map((tab, index) => (
+            {Object.keys(tabsList).map((tab) => (
               <NavLink
                 to={tabsList[tab]}
                 key={tab}
