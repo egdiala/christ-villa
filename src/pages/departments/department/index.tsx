@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { Button } from "@/components/core";
+import { Button, RenderIf } from "@/components/core";
 import {
   AddHODModal,
   DeleteDepartmentModal,
@@ -31,8 +31,8 @@ export const DepartmentPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-y-4 pt-4 pb-9  view-page-container overflow-y-scroll">
-      <div className="flex gap-4 flex-col md:flex-row justify-between px-4 py-1">
+    <div className="flex flex-col pt-4 pb-9 gap-y-4 view-page-container overflow-y-scroll px-4">
+      <div className="flex gap-4 flex-col md:flex-row justify-between py-1">
         <h4 className="capitalize font-bold text-2xl md:text-xl text-text-primary">
           {departmentName} Department
         </h4>
@@ -67,40 +67,31 @@ export const DepartmentPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-y-4 w-full">
+      <div className="grid gap-y-4">
         {/** Tabs */}
-        <div className="px-4 my-2 w-full">
-          <div
-            className={cn(
-              "grid border-2 rounded border-grey-dark-4 p-1 gap-3 relative overflow-x-scroll scrollbar-hide grid-auto-column",
-              departmentName?.toLowerCase() === "children"
-                ? "grid-cols-5"
-                : "grid-cols-3"
-            )}
-          >
-            {Object.keys(tabsList).map((tab) => (
+        <div className="rounded border-2 border-grey-dark-4 p-1 flex gap-x-2 items-center gap-2 w-full overflow-scroll scrollbar-hide">
+          {Object.keys(tabsList).map((tab, index) => (
+            <>
               <NavLink
                 to={tabsList[tab]}
                 key={tab}
                 className={({ isActive }) =>
                   cn(
-                    "flex justify-center items-center py-1 px-2 rounded",
+                    "rounded flex items-center justify-center p-2 text-sm w-full",
                     isActive
-                      ? "bg-accent-primary text-white"
+                      ? "bg-accent-primary text-white font-semibold"
                       : "bg-white text-text-secondary hover:bg-light-red"
                   )
                 }
-                // className={cn(
-                //   "focus-visible:outline-none",
-                //   index !== Object.keys(tabsList).length - 1
-                //     ? "border-r border-grey-dark-3"
-                //     : ""
-                // )}
               >
                 {tab}
               </NavLink>
-            ))}
-          </div>
+
+              <RenderIf condition={index !== Object.keys(tabsList).length - 1}>
+                <div className="border border-r bg-grey-dark-3 h-6"></div>
+              </RenderIf>
+            </>
+          ))}
         </div>
 
         {/** Tab Content */}

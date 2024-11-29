@@ -224,7 +224,7 @@ export const MembersTab: React.FC = ({
   };
 
   return (
-    <div className="flex flex-col gap-5 px-4">
+    <div className="flex flex-col gap-5">
       <div
         className={cn(
           "grid grid-cols-1 gap-4 pb-5",
