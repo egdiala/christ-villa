@@ -1,15 +1,18 @@
 import { SearchInput, Table, TableAction } from "@/components/core"
-import { CreateConnectGroupModal } from "@/components/pages/connect-groups"
+import { ConnectGroupFilter, AddGroupMemberModal, EditConnectGroupModal } from "@/components/pages/connect-groups"
 import { cn } from "@/libs/cn"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { useState } from "react"
 import { useNavigate } from "react-router"
 
-export const ConnectGroupsPage: React.FC = () => {
+export const ConnectGroupPage: React.FC = () => {
     const navigate = useNavigate()
     const [page, setPage] = useState(1)
     const [itemsPerPage] = useState(10)
-    const [createGroup, setCreateGroup] = useState(false)
+    const [toggleModals, setToggleModals] = useState({
+        openAddMember: false,
+        openEditGroup: false
+    })
 
     const sampleData = [
         {
@@ -38,12 +41,16 @@ export const ConnectGroupsPage: React.FC = () => {
             accessorKey: "name",
         },
         {
-            header: () => "Description",
-            accessorKey: "description",
+            header: () => "Reg. Date & Time",
+            accessorKey: "createdAt",
         },
         {
-            header: () => "Members",
-            accessorKey: "members",
+            header: () => "Gender",
+            accessorKey: "gender",
+        },
+        {
+            header: () => "Role",
+            accessorKey: "role",
         },
         {
             header: () => "Status",
@@ -55,6 +62,10 @@ export const ConnectGroupsPage: React.FC = () => {
                 )
             }
         },
+        {
+            header: () => "Action",
+            accessorKey: "action",
+        },
     ];
 
     const handlePageChange = (page: number) => {
@@ -64,13 +75,33 @@ export const ConnectGroupsPage: React.FC = () => {
     };
     
     const requestCards = [
-        { label: "Total Connect Groups", value: "340", icon: "lucide:life-buoy" },
         { label: "Members", value: "23", icon: "lucide:users" },
-        { label: "Head of Group", value: "23", icon: "lucide:users" },
+        { label: "HODs", value: "2", icon: "lucide:life-buoy" },
     ]
     return (
         <div className="flex flex-col gap-5 px-4 pt-3 md:pt-5 pb-5 md:pb-10 view-page-container overflow-y-scroll">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
+            <div className="flex items-center gap-3 justify-between">
+                <h1 className="font-bold text-xl text-text-primary">Technology Connect Group</h1>
+                <div className="flex items-center gap-2">
+                    <TableAction theme="ghost" className="group">
+                        <Icon icon="lucide:trash" className="group-hover:text-white text-accent-primary size-4" />
+                        <span className="group-hover:text-white text-accent-primary">Delete Group</span>
+                    </TableAction>
+                    <TableAction type="button" theme="grey" className="group" onClick={() => setToggleModals((prev) => ({ ...prev, openEditGroup: true }))}>
+                        <Icon icon="lucide:pen" className="size-4" />
+                        Edit Group
+                    </TableAction>
+                    <TableAction theme="grey" className="group">
+                        <Icon icon="lucide:ban" className="size-4" />
+                        Suspend Group
+                    </TableAction>
+                    <TableAction type="button" theme="primary" onClick={() => setToggleModals((prev) => ({ ...prev, openAddMember: true }))} block>
+                        <Icon icon="lucide:plus" className="size-4" />
+                        Add Member
+                    </TableAction>
+                </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
                 {
                     requestCards.map((item, index) => 
                         <div key={index} className="flex items-center gap-4 p-4 rounded-lg bg-light-blue-4">
@@ -87,17 +118,14 @@ export const ConnectGroupsPage: React.FC = () => {
             </div>
             <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
                 <div className="flex-1 md:max-w-96">
-                    <SearchInput placeholder="Search connect group name" />
+                    <SearchInput placeholder="Search member name" />
                 </div>
                 
                 <div className="flex items-center gap-4 w-full sm:w-auto">
+                    <ConnectGroupFilter setFilters={undefined} isLoading={false} />
                     <TableAction theme="grey" block>
                         Export
                         <Icon icon="lucide:cloud-download" className="size-4 text-accent-primary" />
-                    </TableAction>
-                    <TableAction type="button" theme="primary" onClick={() => setCreateGroup(true)} block>
-                        <Icon icon="lucide:plus" className="size-4" />
-                        Add New Group
                     </TableAction>
                 </div>
             </div>
@@ -113,7 +141,8 @@ export const ConnectGroupsPage: React.FC = () => {
                     emptyStateText="We couldn't find any connect groups."
                 />
             </div>
-            <CreateConnectGroupModal isOpen={createGroup} onClose={() => setCreateGroup(false)} />
+            <EditConnectGroupModal isOpen={toggleModals.openEditGroup} onClose={() => setToggleModals((prev) => ({ ...prev, openEditGroup: false }))} />
+            <AddGroupMemberModal isOpen={toggleModals.openAddMember} onClose={() => setToggleModals((prev) => ({ ...prev, openAddMember: false }))} />
         </div>
     )
 }
