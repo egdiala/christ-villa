@@ -1,5 +1,5 @@
 import { SearchInput, Table, TableAction } from "@/components/core"
-import { ConnectGroupFilter, AddGroupMemberModal, EditConnectGroupModal } from "@/components/pages/connect-groups"
+import { ConnectGroupFilter, AddGroupMemberModal, EditConnectGroupModal, DeleteConnectGroupModal, SuspendConnectGroupModal } from "@/components/pages/connect-groups"
 import { cn } from "@/libs/cn"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { useState } from "react"
@@ -11,7 +11,9 @@ export const ConnectGroupPage: React.FC = () => {
     const [itemsPerPage] = useState(10)
     const [toggleModals, setToggleModals] = useState({
         openAddMember: false,
-        openEditGroup: false
+        openEditGroup: false,
+        openDeleteGroup: false,
+        openSuspendGroup: false
     })
 
     const sampleData = [
@@ -80,25 +82,29 @@ export const ConnectGroupPage: React.FC = () => {
     ]
     return (
         <div className="flex flex-col gap-5 px-4 pt-3 md:pt-5 pb-5 md:pb-10 view-page-container overflow-y-scroll">
-            <div className="flex items-center gap-3 justify-between">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:justify-between">
                 <h1 className="font-bold text-xl text-text-primary">Technology Connect Group</h1>
-                <div className="flex items-center gap-2">
-                    <TableAction theme="ghost" className="group">
-                        <Icon icon="lucide:trash" className="group-hover:text-white text-accent-primary size-4" />
-                        <span className="group-hover:text-white text-accent-primary">Delete Group</span>
-                    </TableAction>
-                    <TableAction type="button" theme="grey" className="group" onClick={() => setToggleModals((prev) => ({ ...prev, openEditGroup: true }))}>
-                        <Icon icon="lucide:pen" className="size-4" />
-                        Edit Group
-                    </TableAction>
-                    <TableAction theme="grey" className="group">
-                        <Icon icon="lucide:ban" className="size-4" />
-                        Suspend Group
-                    </TableAction>
-                    <TableAction type="button" theme="primary" onClick={() => setToggleModals((prev) => ({ ...prev, openAddMember: true }))} block>
-                        <Icon icon="lucide:plus" className="size-4" />
-                        Add Member
-                    </TableAction>
+                <div className="flex items-center flex-wrap gap-2">
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <TableAction type="button" theme="ghost" className="group" onClick={() => setToggleModals((prev) => ({ ...prev, openDeleteGroup: true }))} block>
+                            <Icon icon="lucide:trash" className="group-hover:text-white text-accent-primary size-4" />
+                            <span className="group-hover:text-white text-accent-primary">Delete Group</span>
+                        </TableAction>
+                        <TableAction type="button" theme="grey" className="group" onClick={() => setToggleModals((prev) => ({ ...prev, openEditGroup: true }))} block>
+                            <Icon icon="lucide:pen" className="size-4" />
+                            Edit Group
+                        </TableAction>
+                    </div>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <TableAction type="button" theme="grey" className="group" onClick={() => setToggleModals((prev) => ({ ...prev, openSuspendGroup: true }))} block>
+                            <Icon icon="lucide:ban" className="size-4" />
+                            Suspend Group
+                        </TableAction>
+                        <TableAction type="button" theme="primary" onClick={() => setToggleModals((prev) => ({ ...prev, openAddMember: true }))} block>
+                            <Icon icon="lucide:plus" className="size-4" />
+                            Add Member
+                        </TableAction>
+                    </div>
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
@@ -141,6 +147,8 @@ export const ConnectGroupPage: React.FC = () => {
                     emptyStateText="We couldn't find any connect groups."
                 />
             </div>
+            <SuspendConnectGroupModal isOpen={toggleModals.openSuspendGroup} onClose={() => setToggleModals((prev) => ({ ...prev, openSuspendGroup: false }))} />
+            <DeleteConnectGroupModal isOpen={toggleModals.openDeleteGroup} onClose={() => setToggleModals((prev) => ({ ...prev, openDeleteGroup: false }))} />
             <EditConnectGroupModal isOpen={toggleModals.openEditGroup} onClose={() => setToggleModals((prev) => ({ ...prev, openEditGroup: false }))} />
             <AddGroupMemberModal isOpen={toggleModals.openAddMember} onClose={() => setToggleModals((prev) => ({ ...prev, openAddMember: false }))} />
         </div>

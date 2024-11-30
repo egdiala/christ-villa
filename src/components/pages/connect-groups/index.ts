@@ -1,4 +1,6 @@
 export { AddGroupMemberModal } from "./AddGroupMember"
 export { ConnectGroupFilter } from "./ConnectGroupFilter"
 export { CreateConnectGroupModal } from "./CreateConnectGroup"
+export { DeleteConnectGroupModal } from "./DeleteConnectGroup"
 export { EditConnectGroupModal } from "./EditConnectGroup"
+export { SuspendConnectGroupModal } from "./SuspendConnectGroup"
