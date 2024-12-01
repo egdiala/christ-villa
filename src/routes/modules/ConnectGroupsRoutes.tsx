@@ -1,10 +1,11 @@
 import { Routes, Route } from "react-router";
-import { ConnectGroupsPage } from "@/pages/connect-groups";
+import { ConnectGroupPage, ConnectGroupsPage } from "@/pages/connect-groups";
 
 const ConnectGroupsRoutes = () => {
   return (
     <Routes>
       <Route index element={<ConnectGroupsPage />} />
+      <Route path=":id" element={<ConnectGroupPage />} />
     </Routes>
   );
 };

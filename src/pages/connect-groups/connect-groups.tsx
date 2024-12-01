@@ -3,8 +3,10 @@ import { CreateConnectGroupModal } from "@/components/pages/connect-groups"
 import { cn } from "@/libs/cn"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { useState } from "react"
+import { useNavigate } from "react-router"
 
 export const ConnectGroupsPage: React.FC = () => {
+    const navigate = useNavigate()
     const [page, setPage] = useState(1)
     const [itemsPerPage] = useState(10)
     const [createGroup, setCreateGroup] = useState(false)
@@ -107,6 +109,7 @@ export const ConnectGroupsPage: React.FC = () => {
                     perPage={itemsPerPage}
                     totalCount={sampleData.length}
                     onPageChange={handlePageChange}
+                    onClick={() => navigate("/connect-groups/1")}
                     emptyStateText="We couldn't find any connect groups."
                 />
             </div>
