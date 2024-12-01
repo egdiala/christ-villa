@@ -1,9 +1,10 @@
-import { SearchInput, Table, TableAction } from "@/components/core"
-import { ConnectGroupFilter, AddGroupMemberModal, EditConnectGroupModal, DeleteConnectGroupModal, SuspendConnectGroupModal } from "@/components/pages/connect-groups"
 import { cn } from "@/libs/cn"
-import { Icon } from "@iconify/react/dist/iconify.js"
 import { useState } from "react"
 import { useNavigate } from "react-router"
+import { Icon } from "@iconify/react/dist/iconify.js"
+import { SearchInput, Table, TableAction } from "@/components/core"
+import { Menu, MenuButton, MenuHeading, MenuItem, MenuItems, MenuSection } from '@headlessui/react'
+import { ConnectGroupFilter, AddGroupMemberModal, EditConnectGroupModal, DeleteConnectGroupModal, SuspendConnectGroupModal, RemoveMemberModal } from "@/components/pages/connect-groups"
 
 export const ConnectGroupPage: React.FC = () => {
     const navigate = useNavigate()
@@ -13,7 +14,8 @@ export const ConnectGroupPage: React.FC = () => {
         openAddMember: false,
         openEditGroup: false,
         openDeleteGroup: false,
-        openSuspendGroup: false
+        openSuspendGroup: false,
+        openRemoveMember: false
     })
 
     const sampleData = [
@@ -67,6 +69,28 @@ export const ConnectGroupPage: React.FC = () => {
         {
             header: () => "Action",
             accessorKey: "action",
+            cell: () => {
+                return (
+                    <div className="text-right">
+                        <Menu>
+                            <MenuButton type="button" className="group p-2 grid place-content-center rounded-lg bg-red-5 hover:bg-red-2 transition-colors duration-300 ease-out"><Icon icon="lucide:ellipsis" className="group-hover:text-white text-text-secondary size-4" /></MenuButton>
+                            <MenuItems transition anchor="bottom end" className="w-52 origin-top-right rounded-xl bg-white px-2.5 py-3.5 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0">
+                                <MenuSection className="space-y-4">
+                                    <MenuHeading as="h1" className="font-semibold text-base text-grey-dark-1">Actions</MenuHeading>
+                                    <div className="grid gap-1">
+                                        <MenuItem as="button" type="button" className="flex items-center w-full rounded hover:bg-red-5 px-2 py-1.5 text-sm/6 text-text-secondary">
+                                            Approve
+                                        </MenuItem>
+                                        <MenuItem as="button" type="button" className="flex items-center w-full rounded hover:bg-red-5 px-2 py-1.5 text-sm/6 text-text-secondary" onClick={() => setToggleModals((prev) => ({ ...prev, openRemoveMember: true }))}>
+                                            Remove
+                                        </MenuItem>
+                                    </div>
+                                </MenuSection>
+                            </MenuItems>
+                        </Menu>
+                    </div>
+                )
+            }
         },
     ];
 
@@ -147,6 +171,7 @@ export const ConnectGroupPage: React.FC = () => {
                     emptyStateText="We couldn't find any connect groups."
                 />
             </div>
+            <RemoveMemberModal isOpen={toggleModals.openRemoveMember} onClose={() => setToggleModals((prev) => ({ ...prev, openRemoveMember: false }))} />
             <SuspendConnectGroupModal isOpen={toggleModals.openSuspendGroup} onClose={() => setToggleModals((prev) => ({ ...prev, openSuspendGroup: false }))} />
             <DeleteConnectGroupModal isOpen={toggleModals.openDeleteGroup} onClose={() => setToggleModals((prev) => ({ ...prev, openDeleteGroup: false }))} />
             <EditConnectGroupModal isOpen={toggleModals.openEditGroup} onClose={() => setToggleModals((prev) => ({ ...prev, openEditGroup: false }))} />
