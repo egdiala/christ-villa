@@ -34,7 +34,7 @@ export const TimeOffRequestModal = ({
         <div className="flex flex-col min-h-full items-center p-3 justify-end md:justify-center">
           <DialogPanel
             transition
-            className="max-w-[361px] w-full md:w-[361px] space-y-3 bg-white p-4 rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
+            className="max-w-[361px] w-full md:w-[361px] space-y-3 bg-white pt-4 pb-6 px-4 rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
           >
             <DialogTitle className="flex items-center justify-between">
               <h3 className="font-bold text-text-primary text-2xl">
@@ -96,8 +96,6 @@ export const TimeOffRequestModal = ({
                   sociis nec id.{" "}
                 </p>
               </div>
-
-              <span className="border-t border-dashed border-[#808D9763]"></span>
 
               <Button theme="primary" onClick={onClose} block>
                 Close
