@@ -5,19 +5,19 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { Icon } from "@iconify/react";
-import { Button, ComboBox } from "@/components/core";
+import { Button, Input } from "@/components/core";
 
-interface EditUserTypeModalProps {
+interface AddNewDepartmentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onUpdateUser: () => void;
+  onAddDepartment: () => void;
 }
 
-export const EditUserTypeModal = ({
+export const AddNewDepartmentModal = ({
   isOpen,
   onClose,
-  onUpdateUser,
-}: EditUserTypeModalProps) => {
+  onAddDepartment,
+}: AddNewDepartmentModalProps) => {
   return (
     <Dialog
       open={isOpen}
@@ -31,9 +31,9 @@ export const EditUserTypeModal = ({
             transition
             className="max-w-[493px] w-full lg:w-[493px] space-y-4 bg-white rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
           >
-            <DialogTitle className="flex justify-between rounded-t-lg bg-white z-[9] pt-6 px-6 ">
+            <DialogTitle className="flex justify-between bg-white rounded-t-lg z-[9] pt-6 px-6 ">
               <h2 className="font-bold text-xl text-text-primary">
-                Update User Type
+                Add New Department
               </h2>
               <button
                 type="button"
@@ -45,22 +45,8 @@ export const EditUserTypeModal = ({
             </DialogTitle>
 
             <Description className="grid gap-y-6 px-6">
-              <ComboBox
-                options={[]}
-                setSelected={() => {}}
-                onChange={() => {}}
-                optionLabel={() => {}}
-                label="Select Department"
-                placeholder="Select Department"
-              />
-              <ComboBox
-                options={[]}
-                setSelected={() => {}}
-                onChange={() => {}}
-                optionLabel={() => {}}
-                label="Select User type"
-                placeholder="Select User type"
-              />
+              <Input placeholder="Name" label="Name" />
+              <Input placeholder="Description" label="Description" />
             </Description>
 
             <div className="flex gap-4 pt-10 justify-end px-6 pb-6">
@@ -74,10 +60,10 @@ export const EditUserTypeModal = ({
                 </Button>
                 <Button
                   theme="primary"
-                  onClick={onUpdateUser}
+                  onClick={onAddDepartment}
                   className="w-1/2 md:w-auto"
                 >
-                  Update User Type
+                  Add Department
                 </Button>
               </div>
             </div>

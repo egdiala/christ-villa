@@ -5,19 +5,17 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { Icon } from "@iconify/react";
-import { Button, ComboBox } from "@/components/core";
+import { Button, Input } from "@/components/core";
 
-interface EditUserTypeModalProps {
+interface ChangePasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onUpdateUser: () => void;
 }
 
-export const EditUserTypeModal = ({
+export const ChangePasswordModal = ({
   isOpen,
   onClose,
-  onUpdateUser,
-}: EditUserTypeModalProps) => {
+}: ChangePasswordModalProps) => {
   return (
     <Dialog
       open={isOpen}
@@ -29,11 +27,11 @@ export const EditUserTypeModal = ({
         <div className="flex flex-col min-h-full items-center p-3 justify-end md:justify-center">
           <DialogPanel
             transition
-            className="max-w-[493px] w-full lg:w-[493px] space-y-4 bg-white rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
+            className="max-w-[604px] w-full lg:w-[604px] space-y-4 bg-white rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
           >
             <DialogTitle className="flex justify-between rounded-t-lg bg-white z-[9] pt-6 px-6 ">
               <h2 className="font-bold text-xl text-text-primary">
-                Update User Type
+                Change Password
               </h2>
               <button
                 type="button"
@@ -45,21 +43,16 @@ export const EditUserTypeModal = ({
             </DialogTitle>
 
             <Description className="grid gap-y-6 px-6">
-              <ComboBox
-                options={[]}
-                setSelected={() => {}}
-                onChange={() => {}}
-                optionLabel={() => {}}
-                label="Select Department"
-                placeholder="Select Department"
+              <Input label="Old Password" placeholder="Enter old password" />
+              <Input
+                label="New Password"
+                type="password"
+                placeholder="Enter new password"
               />
-              <ComboBox
-                options={[]}
-                setSelected={() => {}}
-                onChange={() => {}}
-                optionLabel={() => {}}
-                label="Select User type"
-                placeholder="Select User type"
+              <Input
+                label="Confirm new Password"
+                type="password"
+                placeholder="Enter new password"
               />
             </Description>
 
@@ -72,12 +65,8 @@ export const EditUserTypeModal = ({
                 >
                   Cancel
                 </Button>
-                <Button
-                  theme="primary"
-                  onClick={onUpdateUser}
-                  className="w-1/2 md:w-auto"
-                >
-                  Update User Type
+                <Button theme="primary" className="w-1/2 md:w-auto">
+                  Update Password
                 </Button>
               </div>
             </div>
