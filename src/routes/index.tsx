@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Routes, Route, BrowserRouter } from "react-router";
 import { AnimatePresence } from "motion/react";
-import { AuthRoutes, ConnectGroupsRoutes, UsersRoutes } from "./modules";
+import { AuthRoutes, ConnectGroupsRoutes, DepartmentsRoutes, UsersRoutes } from "./modules";
 import { DashboardPage } from "@/pages";
 import AuthLayout from "@/layouts/AuthLayout";
 import DashboardLayout from "@/layouts/ProtectedLayout";
@@ -62,6 +62,16 @@ const Router = () => {
             <DashboardLayout>
               <LocationProvider>
                 <UsersRoutes />
+              </LocationProvider>
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/departments/*"
+          element={
+            <DashboardLayout>
+              <LocationProvider>
+                <DepartmentsRoutes />
               </LocationProvider>
             </DashboardLayout>
           }

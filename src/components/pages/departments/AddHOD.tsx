@@ -7,17 +7,17 @@ import {
 import { Icon } from "@iconify/react";
 import { Button, ComboBox } from "@/components/core";
 
-interface EditUserTypeModalProps {
+interface AddHODModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onUpdateUser: () => void;
+  onAddHOD: () => void;
 }
 
-export const EditUserTypeModal = ({
+export const AddHODModal = ({
   isOpen,
   onClose,
-  onUpdateUser,
-}: EditUserTypeModalProps) => {
+  onAddHOD,
+}: AddHODModalProps) => {
   return (
     <Dialog
       open={isOpen}
@@ -32,9 +32,7 @@ export const EditUserTypeModal = ({
             className="max-w-[493px] w-full lg:w-[493px] space-y-4 bg-white rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
           >
             <DialogTitle className="flex justify-between rounded-t-lg bg-white z-[9] pt-6 px-6 ">
-              <h2 className="font-bold text-xl text-text-primary">
-                Update User Type
-              </h2>
+              <h2 className="font-bold text-xl text-text-primary">Add HOD</h2>
               <button
                 type="button"
                 onClick={onClose}
@@ -50,8 +48,8 @@ export const EditUserTypeModal = ({
                 setSelected={() => {}}
                 onChange={() => {}}
                 optionLabel={() => {}}
-                label="Select Department"
-                placeholder="Select Department"
+                label="Select Member"
+                placeholder="Select Member"
               />
               <ComboBox
                 options={[]}
@@ -59,7 +57,7 @@ export const EditUserTypeModal = ({
                 onChange={() => {}}
                 optionLabel={() => {}}
                 label="Select User type"
-                placeholder="Select User type"
+                placeholder="Select HOD"
               />
             </Description>
 
@@ -74,10 +72,10 @@ export const EditUserTypeModal = ({
                 </Button>
                 <Button
                   theme="primary"
-                  onClick={onUpdateUser}
+                  onClick={onAddHOD}
                   className="w-1/2 md:w-auto"
                 >
-                  Update User Type
+                  Add HOD
                 </Button>
               </div>
             </div>

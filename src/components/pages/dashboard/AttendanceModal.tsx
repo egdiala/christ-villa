@@ -1,7 +1,6 @@
 import {
   Description,
   Dialog,
-  DialogBackdrop,
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
@@ -38,11 +37,18 @@ export const AttendanceModal = ({ isOpen, onClose }: AttendanceModalProps) => {
   ];
 
   return (
-    <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      <DialogBackdrop className="fixed inset-0 bg-black/30" />
-      <div className="fixed inset-0 w-screen">
-        <div className="flex h-full items-center justify-end">
-          <DialogPanel className="h-full max-w-[420px] min-w-full sm:min-w-[420px] space-y-4 border bg-white overflow-y-scroll">
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      as="div"
+      className="relative z-10 focus:outline-none"
+    >
+      <div className="fixed inset-0 z-10 w-screen overflow-scroll scrollbar-hide duration-300 ease-out transition-opacity data-[closed]:opacity-0 bg-grey-dark-4/70">
+        <div className="flex flex-col min-h-full items-end justify-end">
+          <DialogPanel
+            transition
+            className="h-full max-w-[420px] min-w-full sm:min-w-[420px] space-y-4 border bg-white backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-x-full"
+          >
             <DialogTitle className="bg-light-blue-4 px-4 pt-8 pb-4 sticky top-0">
               <div className="grid gap-y-2">
                 <h2 className="font-bold text-2xl text-text-primary">
@@ -63,7 +69,10 @@ export const AttendanceModal = ({ isOpen, onClose }: AttendanceModalProps) => {
             </DialogTitle>
             <Description className="px-4 grid gap-y-2">
               {attendanceList.map((attendance) => (
-                <div className="flex justify-between items-center py-4 border-b border-[#808D974D]">
+                <div
+                  key={attendance.id}
+                  className="flex justify-between items-center py-4 border-b border-[#808D974D]"
+                >
                   <p className="font-medium text-sm text-text-primary">
                     {attendance.name}
                   </p>

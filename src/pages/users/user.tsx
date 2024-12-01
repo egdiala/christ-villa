@@ -9,7 +9,7 @@ import {
 } from "@/components/pages/users";
 
 export const UserPage: React.FC = () => {
-  const userStatus = "approved";
+  const userStatus = "pending";
 
   const userRegistrationInfo = [
     { id: 1, title: "Member ID", value: "39i439HIJD03" },
