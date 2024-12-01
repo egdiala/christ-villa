@@ -4,7 +4,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { RenderIf } from "@/components/core";
+import { Button, RenderIf } from "@/components/core";
 import { cn } from "@/libs/cn";
 
 interface TimeOffRequestModalProps {
@@ -98,6 +98,10 @@ export const TimeOffRequestModal = ({
               </div>
 
               <span className="border-t border-dashed border-[#808D9763]"></span>
+
+              <Button theme="primary" onClick={onClose} block>
+                Close
+              </Button>
             </Description>
           </DialogPanel>
         </div>

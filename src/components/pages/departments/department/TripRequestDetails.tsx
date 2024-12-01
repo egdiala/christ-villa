@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import {
   Description,
   Dialog,
@@ -37,12 +38,11 @@ export const TripRequestModal = ({
             transition
             className="max-w-[393px] w-full md:w-[393px] space-y-3 bg-white pt-6 pb-9 px-4 rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
           >
-            <span className="absolute w-10 h-1 bg-grey-dark-3 rounded-[20px] opacity-[21%] top-2 left-[45%]"></span>
             <DialogTitle>
               <div className="flex justify-between items-start ">
                 <div className="grid gap-y-2">
                   <h3 className="font-bold text-text-primary text-2xl">
-                    Time off Request
+                    Trip details
                   </h3>
 
                   <p className="text-xs text-text-secondary">2nd May, 2024</p>
@@ -66,15 +66,17 @@ export const TripRequestModal = ({
               <span className="border-t-2 border-grey-dark-4"></span>
 
               <div className="grid gap-y-[5px] text-sm text-text-secondary">
-                <div className="flex gap-x-1">
-                  <img src="/start_location.svg" alt="start location" />
+                <div className="flex gap-x-1 items-center">
+                  <div className="size-[13.46px] rounded-full bg-green-4 flex justify-center items-center">
+                    <div className="size-[6.27px] rounded-full bg-green-1 border border-white" />
+                  </div>
                   <p>2301 Putty Hill Avenue, Parkville, MD, 21234</p>
                 </div>
 
                 <span className="h-[18.49px] ml-2 border-l border-dashed border-text-tertiary"></span>
 
-                <div className="flex gap-x-1">
-                  <img src="/map_pin.svg" alt="map pin" />
+                <div className="flex gap-x-1 items-center">
+                  <Icon icon="ph:map-pin-fill" className="text-red-2" />
                   <p>2304 Putty Hill Avenue, Parkville, MD, 21238</p>
                 </div>
               </div>
