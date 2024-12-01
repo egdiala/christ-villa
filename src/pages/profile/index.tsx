@@ -15,8 +15,7 @@ export const Profile = () => {
     {
       id: 3,
       label: "Email",
-      value:
-        "exampleqsdbjkwbjdnjkbwjbejbhevjhwebfjbenkwjfkjebwfhbjhwebkjebkjx@gmail.com",
+      value: "example@gmail.com",
     },
     { id: 4, label: "Position in church", value: "Member" },
     { id: 5, label: "Gender", value: "Female" },

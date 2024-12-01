@@ -36,14 +36,17 @@ export const Header: React.FC<HeaderProps> = ({ close }) => {
             03
           </span>
         </button>
-        <div className="flex items-center gap-1 p-2 bg-white rounded-full">
+        <a
+          href="/profile"
+          className="flex items-center gap-1 p-2 bg-white rounded-full cursor-pointer"
+        >
           <div className="size-6 rounded-full overflow-hidden">
             <img src={avatar} className="size-6" />
           </div>
           <h2 className="text-text-primary text-sm font-medium">
             Ronald Julius
           </h2>
-        </div>
+        </a>
       </div>
 
       <NotificationsModal
