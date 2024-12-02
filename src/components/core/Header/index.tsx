@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import { useRouteTitle } from "@/hooks/useRouteTitle";
 import { NotificationsModal } from "@/components/pages/profile";
+import { getItem } from "@/utils/localStorage";
+import { APP_USERDATA_STORAGE_KEY } from "@/constants/utils";
 
 interface HeaderProps {
   close: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ close }) => {
+  const loggedInUser = JSON.parse(getItem(APP_USERDATA_STORAGE_KEY));
+
   const avatar =
+    loggedInUser?.avatar ||
     "https://s3-alpha-sig.figma.com/img/c0f6/06fc/0740c4ec01b32fb99ce4e37683ce112d?Expires=1733702400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Il5qo0Ka9XTBwHt3gi0PPYrizcVevdDvG~JcFWQEbEm-q6a46L-A7ybp7nqRXqI3CCg2Bvgq9R94IIOJXuHlD6fglQ-oEpdZTPaRDSf-gljUAtX7dQBMb7Ce3nXt5BFtoybXtge48TIXkKIAqT6AuKVKL7xOo66kNU8h0ofrWcuCiHuR8WHxbBk1C1dt~ADf5KR~QUF~QMYx1ugR04-uXaVwnCQyGqN2oy-tA5GrfuvdxlDJGNzrg-qvTI57xK4uEDfsWA0fNSaAktRUQxO7bKYnj8J~Ny9LVWewuFpLNlE09HU15BuQZ0AbdFfCxY3aItkhz-eYLA2~WQUpg6yToA__";
   const routeTitle = useRouteTitle();
 
@@ -44,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({ close }) => {
             <img src={avatar} className="size-6" />
           </div>
           <h2 className="text-text-primary text-sm font-medium">
-            Ronald Julius
+            {loggedInUser?.name}
           </h2>
         </a>
       </div>
