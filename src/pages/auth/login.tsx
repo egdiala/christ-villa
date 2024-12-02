@@ -1,19 +1,24 @@
 import { Link } from "react-router"
 import { motion } from "motion/react"
-import { Button, Input, PasswordInput } from "@/components/core"
+import { loginSchema } from "@/validations/auth"
+import { useLogin } from "@/services/hooks/mutations"
 import { routeVariants } from "@/constants/animateVariants"
 import { useFormikWrapper } from "@/hooks/useFormikWrapper"
+import { Button, Input, PasswordInput } from "@/components/core"
 
 
 export const LoginPage = () => {
+    const { mutate, isPending } = useLogin()
 
-    const { handleSubmit, register } = useFormikWrapper({
+    const { handleSubmit, register, isValid } = useFormikWrapper({
         validateOnMount: true,
         initialValues: {
             email: "",
             password: ""
         },
-        onSubmit() {
+        validationSchema: loginSchema,
+        onSubmit(values) {
+            mutate(values)
         }
     })
 
@@ -29,7 +34,7 @@ export const LoginPage = () => {
                     <Input id="email" label="Email" type="text" placeholder="example@email.com" {...register("email")} />
                     <PasswordInput id="password" label="Password" placeholder="•••••••••" {...register("password")} showPassword />
                 </div>
-                <Button type="submit" theme="primary" block>Sign In</Button>
+                <Button type="submit" theme="primary" loading={isPending} disabled={!isValid || isPending} block>Sign In</Button>
                 <Link to="/auth/forgot-password" className="text-center text-background-tertiary underline underline-offset-2 decoration-background-tertiary text-base font-black">Reset Password</Link>
             </form>
         </motion.div>
