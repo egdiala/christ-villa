@@ -5,81 +5,44 @@ import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { DateFilter } from "@/components/pages/requests";
 import { UsersFilter } from "@/components/pages/users";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
+import { useGetAllUsers } from "@/services/hooks/queries";
+import { format } from "date-fns";
 
 export const UsersPage: React.FC = () => {
+  const [page, setPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [dateFilter, setDateFilter] = useState({
+    start_date: "",
+    end_date: "",
+  });
+
+  const [userFilter, setUserFilter] = useState({
+    status: -1,
+    account_type: "",
+  });
+
+  const [searchParams, setSearchParams] = useState("");
+
+  const handlePageChange = (page: number) => {
+    setPage(page);
+    setPaginationParams(page, itemsPerPage, searchParams, setSearchParams);
+  };
+
+  const { data: users, isLoading } = useGetAllUsers({
+    query: {
+      page: page,
+      start_date: dateFilter.start_date,
+      end_date: dateFilter.end_date,
+      user_type: userFilter.account_type,
+      ...(userFilter.status === -1 ? {} : { status: userFilter.status }),
+    },
+  });
+
   const userStatistics = [
     { id: 1, label: "Total users", value: "340" },
     { id: 2, label: "Members", value: "23" },
     { id: 3, label: "HoDs", value: "23" },
     { id: 4, label: "Partners", value: "23" },
-  ];
-
-  const users = [
-    {
-      id: 1,
-      firstName: "Albert",
-      lastName: "Flores",
-      profileImg:
-        "https://plus.unsplash.com/premium_photo-1682144187125-b55e638cf286?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      department: "Choir",
-      user_type: "Member",
-      status: "pending",
-    },
-    {
-      id: 2,
-      firstName: "Theresa",
-      lastName: "Webb",
-      profileImg:
-        "https://images.unsplash.com/photo-1636406269177-4827c00bb263?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Female",
-      department: "Ushering",
-      user_type: "Partner",
-      status: "approved",
-    },
-    {
-      id: 3,
-      firstName: "Ronals",
-      lastName: "Richards",
-      profileImg:
-        "https://images.unsplash.com/photo-1715029005043-e88d219a3c48?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      department: "Ushering",
-      user_type: "HOD",
-      status: "suspended",
-    },
-    {
-      id: 4,
-      firstName: "Bessie",
-      lastName: "Cooper",
-      profileImg:
-        "https://plus.unsplash.com/premium_photo-1664536392896-cd1743f9c02c?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      department: "Ushering",
-      user_type: "Member",
-      status: "suspended",
-    },
-    {
-      id: 5,
-      firstName: "Floyd",
-      lastName: "Miles",
-      profileImg:
-        "https://images.unsplash.com/photo-1636377985931-898218afd306?q=80&w=2864&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      department: "Ushering",
-      user_type: "Member",
-      status: "suspended",
-    },
   ];
 
   const columns = [
@@ -92,13 +55,13 @@ export const UsersPage: React.FC = () => {
           <div className="flex items-center gap-x-3 whitespace-nowrap">
             <div className="size-8">
               <img
-                src={item?.profileImg}
+                src={item?.avatar}
                 alt="profile"
                 className="w-full h-full rounded-full object-cover"
               />
             </div>
-            <p className="text-sm text-text-secondary">
-              {item?.firstName} {item?.lastName}
+            <p className="text-sm text-text-secondary capitalize">
+              {item?.name}
             </p>
           </div>
         );
@@ -111,7 +74,8 @@ export const UsersPage: React.FC = () => {
         const item = row?.original;
         return (
           <p className="text-sm text-text-secondary whitespace-nowrap">
-            {item?.date} • {item?.time}
+            {format(item?.createdAt, "yyyy-MM-dd")} •{" "}
+            {format(item?.createdAt, "p")}
           </p>
         );
       },
@@ -119,14 +83,38 @@ export const UsersPage: React.FC = () => {
     {
       header: () => "Gender",
       accessorKey: "gender",
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original;
+        return (
+          <p className="text-sm text-text-secondary whitespace-nowrap capitalize">
+            {item?.gender}
+          </p>
+        );
+      },
     },
     {
       header: () => "Department",
       accessorKey: "department",
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original;
+        return (
+          <p className="text-sm text-text-secondary whitespace-nowrap capitalize">
+            {item?.department ?? "N/A"}
+          </p>
+        );
+      },
     },
     {
       header: () => "User Type",
-      accessorKey: "user_type",
+      accessorKey: "account_type",
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original;
+        return (
+          <p className="text-sm text-text-secondary whitespace-nowrap capitalize">
+            {item?.account_type}
+          </p>
+        );
+      },
     },
     {
       header: () => "Profile Status",
@@ -135,30 +123,20 @@ export const UsersPage: React.FC = () => {
         const item = row?.original;
         return (
           <div className="font-medium text-sm">
-            <RenderIf condition={item?.status?.toLowerCase() === "pending"}>
-              <p className="text-amber">{item?.status}</p>
+            <RenderIf condition={item?.status === 0}>
+              <p className="text-amber">Pending</p>
             </RenderIf>
-            <RenderIf condition={item?.status?.toLowerCase() === "approved"}>
-              <p className="text-green-base">{item?.status}</p>
+            <RenderIf condition={item?.status === 1}>
+              <p className="text-green-base">Active</p>
             </RenderIf>
-            <RenderIf condition={item?.status?.toLowerCase() === "suspended"}>
-              <p className="text-accent-primary">{item?.status}</p>
+            <RenderIf condition={item?.status === 2}>
+              <p className="text-accent-primary">Suspended</p>
             </RenderIf>
           </div>
         );
       },
     },
   ];
-
-  const [page, setPage] = useState(1);
-  const [itemsPerPage] = useState(10);
-
-  const [searchParams, setSearchParams] = useState("");
-
-  const handlePageChange = (page: number) => {
-    setPage(page);
-    setPaginationParams(page, itemsPerPage, searchParams, setSearchParams);
-  };
 
   const navigate = useNavigate();
 
@@ -189,8 +167,16 @@ export const UsersPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto">
-          <DateFilter theme="grey" setFilters={undefined} isLoading={false} />
-          <UsersFilter theme="grey" setFilters={undefined} isLoading={false} />
+          <DateFilter
+            theme="grey"
+            setFilters={setDateFilter}
+            isLoading={isLoading}
+          />
+          <UsersFilter
+            theme="grey"
+            setFilters={setUserFilter}
+            isLoading={isLoading}
+          />
           <TableAction theme="grey" block>
             Export
             <Icon
@@ -207,10 +193,11 @@ export const UsersPage: React.FC = () => {
           data={users ?? []}
           page={page}
           perPage={itemsPerPage}
-          totalCount={users.length}
+          totalCount={users?.length}
           onPageChange={handlePageChange}
           emptyStateText="We couldn't find any user."
-          onClick={({ original }) => navigate(`/users/${original?.id}`)}
+          onClick={({ original }) => navigate(`/users/${original?.user_id}`)}
+          loading={isLoading}
         />
       </div>
     </div>

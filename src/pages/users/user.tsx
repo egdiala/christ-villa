@@ -7,13 +7,32 @@ import {
   DeleteUserModal,
   EditUserTypeModal,
 } from "@/components/pages/users";
+import { useLocation } from "react-router";
+import { useGetSingleUser } from "@/services/hooks/queries";
+import { format } from "date-fns";
+import { userProfileStatus } from "@/constants/status";
 
 export const UserPage: React.FC = () => {
-  const userStatus = "pending";
+  const { pathname } = useLocation();
+  const userId = pathname.split("/")[2];
+
+  const { data: user, isLoading } = useGetSingleUser({ user_id: userId });
+
+  const userStatus =
+    userProfileStatus?.find(
+      (profileStatus) => profileStatus.value === user?.status
+    )?.label ?? "Pending";
 
   const userRegistrationInfo = [
     { id: 1, title: "Member ID", value: "39i439HIJD03" },
-    { id: 2, title: "Reg. Date & Time", value: "Today • 12:34pm" },
+    {
+      id: 2,
+      title: "Reg. Date & Time",
+      value: user?.createdAt
+        ? `${format(user?.createdAt, "yyyy-MM-dd")} •
+    ${format(user?.createdAt, "p")}`
+        : "",
+    },
     { id: 3, title: "Approved by", value: "NA" },
   ];
 
@@ -21,21 +40,33 @@ export const UserPage: React.FC = () => {
     {
       id: 4,
       title: "Address",
-      value: "2301 Putty Hill Avenue, Parkville, MD, 21234",
+      value: user?.address,
     },
-    { id: 5, title: "Profession", value: "Interface Designer" },
-    { id: 6, title: "Marital Status", value: "Married" },
-    { id: 7, title: "Department", value: "Not applicable" },
-    { id: 8, title: "Hobbies", value: ["swimming", "Reading", "Other"] },
+    { id: 5, title: "Profession", value: user?.profession },
+    { id: 6, title: "Marital Status", value: user?.marital_status },
+    {
+      id: 7,
+      title: "Department(s)",
+      value: isLoading
+        ? "Not applicable"
+        : user?.department_data
+            ?.map((data: { name: string }) => data?.name)
+            ?.join(", "),
+    },
+    {
+      id: 8,
+      title: "Hobbies",
+      value: isLoading ? [""] : [user?.hobbies ? user?.hobbies : "N/A"],
+    },
   ];
 
   const profileCardInfo = [
     {
       id: 9,
-      value: "example@gmail.com",
+      value: user?.email,
       icon: "lucide:mail",
     },
-    { id: 10, value: "+1 814 5632 783", icon: "lucide:phone" },
+    { id: 10, value: user?.phone_number, icon: "lucide:phone" },
   ];
 
   const [openDeleteUserModal, setOpenDeleteUserModal] = useState(false);
@@ -46,7 +77,7 @@ export const UserPage: React.FC = () => {
     <div className="py-4 grid gap-4">
       <div className="flex gap-4 flex-col md:flex-row justify-between md:items-center px-4">
         <h2 className="font-bold text-2xl md:text-xl text-text-primary">
-          John Doe
+          {user?.name}
         </h2>
 
         <div className="flex gap-2">
@@ -93,27 +124,30 @@ export const UserPage: React.FC = () => {
           <div className="flex flex-col items-center">
             <img
               src="/lilypads_pattern.png"
+              alt="lilypads"
               className="object-cover w-full rounded-t-lg"
             />
             <div className="absolute top-4">
               <div className="w-[150px] md:w-[128px] h-[150px] md:h-[136px] rounded-[32px] overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1693039537350-3bba6975add7?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  src={user?.avatar}
                   alt="user profile"
                   className="object-cover w-full h-full"
                 />
               </div>
               <div className="w-[80%] absolute -bottom-3 left-[8%]  h-8 rounded-[100px] border border-red-4 bg-red-5 flex items-center justify-center gap-x-1">
                 <img src="/crest.svg" alt="crest" />
-                <p className="text-text-primary text-sm">Member</p>
+                <p className="text-text-primary text-sm capitalize">
+                  {user?.account_type}
+                </p>
               </div>
             </div>
           </div>
 
           <div className="px-4 py-[32.5px] grid gap-y-5">
             <div className="grid content-end text-text-primary">
-              <h4 className="font-bold text-lg ">John Doe</h4>
-              <p className="text-sm">Female</p>
+              <h4 className="font-bold text-lg ">{user?.name}</h4>
+              <p className="text-sm capitalize">{user?.gender}</p>
             </div>
 
             <div className="grid gap-y-2 content-end">
@@ -194,17 +228,22 @@ export const UserPage: React.FC = () => {
                 >
                   <h4 className="text-text-tertiary">{otherInfo.title}</h4>
                   <RenderIf condition={otherInfo.id !== 8}>
-                    <p className="font-medium text-text-primary">
-                      {otherInfo.value}
+                    <p className="font-medium text-text-primary capitalize">
+                      {otherInfo?.value}
                     </p>
                   </RenderIf>
                   <RenderIf condition={otherInfo.id === 8}>
                     <div className="flex gap-2">
-                      {[...otherInfo.value].map((innerVal) => (
-                        <div className="bg-light-blue-4 px-2 py-1 text-sm text-text-primary capitalize">
-                          {innerVal}
-                        </div>
-                      ))}
+                      {[...(otherInfo?.value ?? "")]?.map(
+                        (innerVal: string) => (
+                          <div
+                            key={innerVal}
+                            className="bg-light-blue-4 px-2 py-1 text-sm text-text-primary capitalize"
+                          >
+                            {innerVal}
+                          </div>
+                        )
+                      )}
                     </div>
                   </RenderIf>
                 </div>
@@ -217,13 +256,13 @@ export const UserPage: React.FC = () => {
       <DeleteUserModal
         isOpen={openDeleteUserModal}
         onClose={() => setOpenDeleteUserModal(false)}
-        onDelete={() => {}}
+        user={user}
       />
 
       <ApproveMemberModal
         isOpen={openApproveMemberModal}
         onClose={() => setOpenApproveMemberModal(false)}
-        onApprove={() => {}}
+        user={user}
       />
 
       <EditUserTypeModal
