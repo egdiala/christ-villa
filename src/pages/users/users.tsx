@@ -74,7 +74,7 @@ export const UsersPage: React.FC = () => {
         const item = row?.original;
         return (
           <p className="text-sm text-text-secondary whitespace-nowrap">
-            {format(item?.createdAt, "yyyy-MM-dd")} •{" "}
+            {format(item?.createdAt, "dd MMM, yyyy")} •{" "}
             {format(item?.createdAt, "p")}
           </p>
         );
