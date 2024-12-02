@@ -56,7 +56,7 @@ export const UserPage: React.FC = () => {
     {
       id: 8,
       title: "Hobbies",
-      value: isLoading ? [""] : [user?.hobbies ? user?.hobbies : "N/A"],
+      value: isLoading ? [""] : [user?.hobbies || "N/A"],
     },
   ];
 
