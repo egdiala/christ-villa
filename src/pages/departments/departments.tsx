@@ -1,9 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 import { Button, SearchInput, Table, TableAction } from "@/components/core";
-import { setPaginationParams } from "@/hooks/usePaginationParams";
+import {
+  getPaginationParams,
+  setPaginationParams,
+} from "@/hooks/usePaginationParams";
 import { AddNewDepartmentModal } from "@/components/pages/departments";
+import { useGetAllDepartments } from "@/services/hooks/queries/useDepartments";
+import { useDebounce } from "@/hooks/useDebounce";
+import {
+  FetchedDepartmentCountType,
+  FetchedDepartmentType,
+} from "@/types/departments";
 
 export const DepartmentsPage: React.FC = () => {
   const dashboardStatistics = [
@@ -12,98 +21,78 @@ export const DepartmentsPage: React.FC = () => {
     { id: 3, label: "HoDs", value: "23" },
   ];
 
-  const departments = [
-    {
-      id: 1,
-      department_name: "Ushering",
-      description: "lorem ipsum dolor",
-      members: 5935,
-      total_requests: 824,
-      pending_requests: 342,
-      completed_requests: 5120,
-    },
-    {
-      id: 2,
-      department_name: "Choir",
-      description: "lorem ipsum dolor",
-      members: 5935,
-      total_requests: 824,
-      pending_requests: 342,
-      completed_requests: 5120,
-    },
-    {
-      id: 3,
-      department_name: "Children",
-      description: "lorem ipsum dolor",
-      members: 5935,
-      total_requests: 824,
-      pending_requests: 342,
-      completed_requests: 5120,
-    },
-    {
-      id: 4,
-      department_name: "Choir",
-      description: "lorem ipsum dolor",
-      members: 5935,
-      total_requests: 824,
-      pending_requests: 342,
-      completed_requests: 5120,
-    },
-    {
-      id: 5,
-      department_name: "Choir",
-      description: "lorem ipsum dolor",
-      members: 5935,
-      total_requests: 824,
-      pending_requests: 342,
-      completed_requests: 5120,
-    },
-  ];
+  const { value, onChangeHandler } = useDebounce(300);
+  const [page, setPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+
+  const { data: departments, isLoading } = useGetAllDepartments<
+    FetchedDepartmentType[]
+  >({
+    q: value,
+    page: page.toString(),
+    item_per_page: itemsPerPage.toString(),
+  });
+
+  const { data: departmentCount } =
+    useGetAllDepartments<FetchedDepartmentCountType>({
+      q: value,
+      component: "count",
+    });
 
   const columns = [
     {
       header: () => "Department Name",
-      accessorKey: "department_name",
-    },
-    {
-      header: () => "Description",
-      accessorKey: "description",
+      accessorKey: "name",
       cell: ({ row }: { row: any }) => {
         const item = row?.original;
         return (
-          <p className="text-sm text-text-secondary max-w-[13ch] truncate">
-            {item?.description}
+          <p className="text-sm text-text-secondary capitalize whitespace-nowrap">
+            {item?.name}
+          </p>
+        );
+      },
+    },
+    {
+      header: () => "Description",
+      accessorKey: "name",
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original;
+        return (
+          <p className="text-sm text-text-secondary max-w-[13ch] truncate capitalize">
+            {item?.name}
           </p>
         );
       },
     },
     {
       header: () => "Members",
-      accessorKey: "members",
-    },
-    {
-      header: () => "Total Requests",
-      accessorKey: "total_requests",
+      accessorKey: "total_count",
     },
     {
       header: () => "Pending Requests",
-      accessorKey: "pending_requests",
+      accessorKey: "total_pending_req",
     },
     {
-      header: () => "Completed Req.",
-      accessorKey: "completed_requests",
+      header: () => "Approved Requests",
+      accessorKey: "total_approved_req",
+    },
+    {
+      header: () => "Declined Req.",
+      accessorKey: "total_declined_req",
     },
   ];
-
-  const [page, setPage] = useState(1);
-  const [itemsPerPage] = useState(10);
-
-  const [searchParams, setSearchParams] = useState("");
 
   const handlePageChange = (page: number) => {
     setPage(page);
     setPaginationParams(page, itemsPerPage, searchParams, setSearchParams);
   };
+
+  useEffect(() => {
+    getPaginationParams(location, setPage, () => {});
+  }, [location, setPage]);
 
   const navigate = useNavigate();
 
@@ -133,7 +122,10 @@ export const DepartmentsPage: React.FC = () => {
       </div>
       <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
         <div className="flex-1 md:max-w-96">
-          <SearchInput placeholder="Search department name" />
+          <SearchInput
+            placeholder="Search department name"
+            onChange={onChangeHandler}
+          />
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto">
@@ -160,19 +152,19 @@ export const DepartmentsPage: React.FC = () => {
           data={departments ?? []}
           page={page}
           perPage={itemsPerPage}
-          totalCount={departments.length}
+          totalCount={departmentCount?.total}
           onPageChange={handlePageChange}
           emptyStateText="We couldn't find any department."
           onClick={({ original }) =>
-            navigate(`/departments/${original?.id}/members`)
+            navigate(`/departments/${original?.department_id}/members`)
           }
+          loading={isLoading}
         />
       </div>
 
       <AddNewDepartmentModal
         isOpen={openAddNewDepartmentModal}
         onClose={() => setOpenAddNewDepartmentModal(false)}
-        onAddDepartment={() => {}}
       />
     </div>
   );
