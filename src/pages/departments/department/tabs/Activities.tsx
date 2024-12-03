@@ -1,12 +1,23 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
+import { useLocation } from "react-router";
 import { SearchInput, Table, TableAction } from "@/components/core";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
 import { DateFilter, RequestsFilter } from "@/components/pages/requests";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { DeleteActivityModal } from "@/components/pages/departments/department/DeleteActivity";
+import { useGetDepartmentMaterials } from "@/services/hooks/queries/useDepartments";
 
 export const ActivitiesTab: React.FC = () => {
+  const { pathname } = useLocation();
+  const pathArray = pathname.split("/");
+  const departmentId = pathArray[2];
+
+  const { data: departmentActivities } = useGetDepartmentMaterials({
+    department_id: departmentId,
+  });
+  console.log({ departmentActivities });
+
   const activities = [
     {
       id: 1,

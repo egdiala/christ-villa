@@ -8,8 +8,30 @@ import {
   TimeOffRequestModal,
   TripRequestModal,
 } from "@/components/pages/departments";
+import { useGetDepartmentRequests } from "@/services/hooks/queries/useDepartments";
+import { useLocation, useSearchParams } from "react-router";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export const RequestsTab: React.FC = () => {
+  const { pathname } = useLocation();
+  const pathArray = pathname.split("/");
+  const departmentId = pathArray[2];
+
+  const [page, setPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { value, onChangeHandler } = useDebounce(300);
+
+  const { data: departmentRequests } = useGetDepartmentRequests({
+    q: value,
+    department_id: departmentId,
+    page: page.toString(),
+    item_per_page: itemsPerPage.toString(),
+  });
+
+  console.log({ departmentRequests });
+
   const requestStatistics = [
     { id: 1, label: "Total requests", value: "12,345" },
     { id: 2, label: "Pending requests", value: "35" },
@@ -147,11 +169,6 @@ export const RequestsTab: React.FC = () => {
     },
   ];
 
-  const [page, setPage] = useState(1);
-  const [itemsPerPage] = useState(10);
-
-  const [searchParams, setSearchParams] = useState("");
-
   const handlePageChange = (page: number) => {
     setPage(page);
     setPaginationParams(page, itemsPerPage, searchParams, setSearchParams);
@@ -186,7 +203,10 @@ export const RequestsTab: React.FC = () => {
 
       <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
         <div className="flex-1 md:max-w-96">
-          <SearchInput placeholder="Search requester name" />
+          <SearchInput
+            placeholder="Search requester name"
+            onChange={onChangeHandler}
+          />
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto">

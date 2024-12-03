@@ -6,18 +6,44 @@ import {
 } from "@headlessui/react";
 import { Icon } from "@iconify/react";
 import { Button, Input } from "@/components/core";
+import { useUpdateDepartment } from "@/services/hooks/mutations/useDepartments";
+import { FetchedDepartmentType } from "@/types/departments";
+import { addDepartmentSchema } from "@/validations/departments";
+import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 
 interface EditDepartmentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onUpdateDepartment: () => void;
+  departmentInfo: FetchedDepartmentType;
 }
 
 export const EditDepartmentModal = ({
   isOpen,
   onClose,
-  onUpdateDepartment,
+  departmentInfo,
 }: EditDepartmentModalProps) => {
+  const { handleSubmit, register, isValid, resetForm } = useFormikWrapper({
+    validateOnMount: true,
+    initialValues: {
+      name: departmentInfo?.name,
+    },
+    validationSchema: addDepartmentSchema,
+    onSubmit(values) {
+      mutate({
+        department_id: departmentInfo?.department_id,
+        name: values.name,
+      });
+    },
+    enableReinitialize: true,
+  });
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
+
+  const { mutate, isPending } = useUpdateDepartment(handleClose);
+
   return (
     <Dialog
       open={isOpen}
@@ -26,7 +52,10 @@ export const EditDepartmentModal = ({
       className="relative z-10 focus:outline-none"
     >
       <div className="fixed inset-0 z-10 w-screen overflow-scroll scrollbar-hide duration-300 ease-out transition-opacity data-[closed]:opacity-0 bg-grey-dark-4/70">
-        <div className="flex flex-col min-h-full items-center p-3 justify-end md:justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col min-h-full items-center p-3 justify-end md:justify-center"
+        >
           <DialogPanel
             transition
             className="max-w-[493px] w-full lg:w-[493px] space-y-4 bg-white rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
@@ -45,8 +74,7 @@ export const EditDepartmentModal = ({
             </DialogTitle>
 
             <Description className="grid gap-y-6 px-6">
-              <Input placeholder="Name" label="Name" />
-              <Input placeholder="Description" label="Description" />
+              <Input placeholder="Name" label="Name" {...register("name")} />
             </Description>
 
             <div className="flex gap-4 pt-10 justify-end px-6 pb-6">
@@ -59,16 +87,19 @@ export const EditDepartmentModal = ({
                   Cancel
                 </Button>
                 <Button
+                  type="submit"
                   theme="primary"
-                  onClick={onUpdateDepartment}
+                  onClick={() => {}}
                   className="w-1/2 md:w-auto"
+                  loading={isPending}
+                  disabled={!isValid || isPending}
                 >
                   Update Department
                 </Button>
               </div>
             </div>
           </DialogPanel>
-        </div>
+        </form>
       </div>
     </Dialog>
   );
