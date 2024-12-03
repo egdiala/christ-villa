@@ -7,11 +7,12 @@ import {
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/core";
 import { useDeleteUser } from "@/services/hooks/mutations/useUsers";
+import { FetchedUserType } from "@/types/users";
 
 interface DeleteUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: any;
+  user: FetchedUserType;
 }
 
 export const DeleteUserModal = ({
@@ -19,9 +20,9 @@ export const DeleteUserModal = ({
   onClose,
   user,
 }: DeleteUserModalProps) => {
-  const { mutate, isPending } = useDeleteUser();
+  const { mutate, isPending } = useDeleteUser(() => onClose());
   const handleDeleteUser = () => {
-    mutate({ user_id: user?.user_id }, { onSuccess: onClose });
+    mutate({ user_id: user?.user_id });
   };
 
   return (

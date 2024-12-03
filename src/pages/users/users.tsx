@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router";
+import { format } from "date-fns";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { DateFilter } from "@/components/pages/requests";
 import { UsersFilter } from "@/components/pages/users";
-import { setPaginationParams } from "@/hooks/usePaginationParams";
+import {
+  getPaginationParams,
+  setPaginationParams,
+} from "@/hooks/usePaginationParams";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useGetAllUsers } from "@/services/hooks/queries";
-import { format } from "date-fns";
+import {
+  FetchedUserCountType,
+  FetchedUsersStatisticsType,
+  FetchedUsersType,
+} from "@/types/users";
 
 export const UsersPage: React.FC = () => {
   const [page, setPage] = useState(1);
@@ -16,33 +25,41 @@ export const UsersPage: React.FC = () => {
     end_date: "",
   });
 
-  const [userFilter, setUserFilter] = useState({
-    status: -1,
-    account_type: "",
-  });
+  const [userFilter, setUserFilter] = useState({});
 
-  const [searchParams, setSearchParams] = useState("");
+  const { value, onChangeHandler } = useDebounce(300);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
 
   const handlePageChange = (page: number) => {
     setPage(page);
     setPaginationParams(page, itemsPerPage, searchParams, setSearchParams);
   };
 
-  const { data: users, isLoading } = useGetAllUsers({
-    query: {
-      page: page,
-      start_date: dateFilter.start_date,
-      end_date: dateFilter.end_date,
-      user_type: userFilter.account_type,
-      ...(userFilter.status === -1 ? {} : { status: userFilter.status }),
-    },
+  const { data: users, isLoading } = useGetAllUsers<FetchedUsersType[]>({
+    q: value,
+    page: page.toString(),
+    ...dateFilter,
+    ...userFilter,
+  });
+
+  const { data: usersCount } = useGetAllUsers<FetchedUserCountType>({
+    q: value,
+    ...dateFilter,
+    ...userFilter,
+    component: "count",
+  });
+
+  const { data: usersStatistics } = useGetAllUsers<FetchedUsersStatisticsType>({
+    component: "count-status",
   });
 
   const userStatistics = [
-    { id: 1, label: "Total users", value: "340" },
-    { id: 2, label: "Members", value: "23" },
-    { id: 3, label: "HoDs", value: "23" },
-    { id: 4, label: "Partners", value: "23" },
+    { id: 1, label: "Total users", value: usersStatistics?.total_users },
+    { id: 2, label: "Members", value: usersStatistics?.total_members },
+    { id: 3, label: "HoDs", value: usersStatistics?.total_hods },
+    { id: 4, label: "Pastors", value: usersStatistics?.total_pastors },
+    { id: 5, label: "Ministers", value: usersStatistics?.total_ministers },
   ];
 
   const columns = [
@@ -93,18 +110,6 @@ export const UsersPage: React.FC = () => {
       },
     },
     {
-      header: () => "Department",
-      accessorKey: "department",
-      cell: ({ row }: { row: any }) => {
-        const item = row?.original;
-        return (
-          <p className="text-sm text-text-secondary whitespace-nowrap capitalize">
-            {item?.department ?? "N/A"}
-          </p>
-        );
-      },
-    },
-    {
       header: () => "User Type",
       accessorKey: "account_type",
       cell: ({ row }: { row: any }) => {
@@ -138,11 +143,15 @@ export const UsersPage: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    getPaginationParams(location, setPage, () => {});
+  }, [location, setPage]);
+
   const navigate = useNavigate();
 
   return (
     <div className="flex flex-col gap-5 px-4 pt-3 md:pt-5 pb-5 md:pb-10 view-page-container overflow-y-scroll">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 pb-6">
         {userStatistics.map((item) => (
           <div
             key={item.id}
@@ -163,7 +172,10 @@ export const UsersPage: React.FC = () => {
       </div>
       <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
         <div className="flex-1 md:max-w-96">
-          <SearchInput placeholder="Search by name or email" />
+          <SearchInput
+            placeholder="Search by name or email"
+            onChange={onChangeHandler}
+          />
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto">
@@ -193,7 +205,7 @@ export const UsersPage: React.FC = () => {
           data={users ?? []}
           page={page}
           perPage={itemsPerPage}
-          totalCount={users?.length}
+          totalCount={usersCount?.total}
           onPageChange={handlePageChange}
           emptyStateText="We couldn't find any user."
           onClick={({ original }) => navigate(`/users/${original?.user_id}`)}

@@ -1,18 +1,20 @@
 import { axiosInstance } from "../axiosInstance";
 import { USERS_API } from "@/constants/api";
-import { queryFormatter } from "./queryFormatter";
-import { UpdateUserStatusType } from "@/types/users";
+import { createQueryString } from "@/utils/createQuery";
+import {
+  FetchSingleUserQuery,
+  FetchUsersQuery,
+  UpdateUserStatusType,
+} from "@/types/users";
 
-export const getAllUsers = async ({
-  query,
-}: {
-  query: Record<string, string | number | boolean | undefined>;
-}) => {
-  const res = await axiosInstance.get(`${USERS_API}?${queryFormatter(query)}`);
+export const getAllUsers = async (query: FetchUsersQuery) => {
+  const res = await axiosInstance.get(
+    `${USERS_API}${createQueryString(query)}`
+  );
   return res.data;
 };
 
-export const getSingleUser = async ({ user_id }: { user_id: string }) => {
+export const getSingleUser = async ({ user_id }: FetchSingleUserQuery) => {
   const res = await axiosInstance.get(`${USERS_API}/${user_id}`);
   return res.data;
 };
@@ -23,7 +25,7 @@ export const updateUserStatus = async (data: UpdateUserStatusType) => {
   return res.data;
 };
 
-export const deleteUser = async ({ user_id }: { user_id: string }) => {
+export const deleteUser = async ({ user_id }: FetchSingleUserQuery) => {
   const res = await axiosInstance.delete(`${USERS_API}/${user_id}`);
   return res.data;
 };

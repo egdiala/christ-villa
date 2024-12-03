@@ -11,12 +11,15 @@ import { useLocation } from "react-router";
 import { useGetSingleUser } from "@/services/hooks/queries";
 import { format } from "date-fns";
 import { userProfileStatus } from "@/constants/status";
+import { FetchedUserType } from "@/types/users";
 
 export const UserPage: React.FC = () => {
   const { pathname } = useLocation();
   const userId = pathname.split("/")[2];
 
-  const { data: user, isLoading } = useGetSingleUser({ user_id: userId });
+  const { data: user, isLoading } = useGetSingleUser<FetchedUserType>({
+    user_id: userId,
+  });
 
   const userStatus =
     userProfileStatus?.find(
@@ -24,16 +27,15 @@ export const UserPage: React.FC = () => {
     )?.label ?? "Pending";
 
   const userRegistrationInfo = [
-    { id: 1, title: "Member ID", value: "39i439HIJD03" },
+    { id: 1, title: "Email", value: user?.email },
     {
       id: 2,
       title: "Reg. Date & Time",
       value: user?.createdAt
-        ? `${format(user?.createdAt, "yyyy-MM-dd")} •
+        ? `${format(user?.createdAt, "dd MMM, yyyy")} •
     ${format(user?.createdAt, "p")}`
         : "",
     },
-    { id: 3, title: "Approved by", value: "NA" },
   ];
 
   const userOtherInfo = [
@@ -200,7 +202,7 @@ export const UserPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {userRegistrationInfo.map((regInfo) => (
                 <div
                   className="grid gap-y-1 text-sm content-start"
@@ -256,13 +258,13 @@ export const UserPage: React.FC = () => {
       <DeleteUserModal
         isOpen={openDeleteUserModal}
         onClose={() => setOpenDeleteUserModal(false)}
-        user={user}
+        user={user as FetchedUserType}
       />
 
       <ApproveMemberModal
         isOpen={openApproveMemberModal}
         onClose={() => setOpenApproveMemberModal(false)}
-        user={user}
+        user={user as FetchedUserType}
       />
 
       <EditUserTypeModal

@@ -1,23 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllUsers, getSingleUser } from "../../apis/users";
+import { FetchUsersQuery } from "@/types/users";
+import { GET_USER, GET_USERS } from "@/constants/queryKeys";
 
-export const useGetAllUsers = ({
-  query,
-}: {
-  query: Record<string, string | number | boolean | undefined>;
-}) => {
+export const useGetAllUsers = <T>(query: FetchUsersQuery) => {
   return useQuery({
-    queryKey: ["all-users", query],
-    queryFn: () => getAllUsers({ query }),
-    select: (res) => res.data,
+    queryKey: [GET_USERS, query],
+    queryFn: () => getAllUsers(query),
+    select: (res) => res.data as T,
   });
 };
 
-export const useGetSingleUser = ({ user_id }: { user_id: string }) => {
+export const useGetSingleUser = <T>({ user_id }: { user_id: string }) => {
   return useQuery({
-    queryKey: ["single-user", user_id],
+    queryKey: [GET_USER, user_id],
     queryFn: () => getSingleUser({ user_id }),
-    select: (res) => res.data,
+    select: (res) => res.data as T,
     enabled: !!user_id,
   });
 };

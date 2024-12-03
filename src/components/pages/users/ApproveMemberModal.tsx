@@ -7,11 +7,12 @@ import {
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/core";
 import { useUpdateUserStatus } from "@/services/hooks/mutations/useUsers";
+import { FetchedUserType } from "@/types/users";
 
 interface ApproveMemberModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: any;
+  user: FetchedUserType;
 }
 
 export const ApproveMemberModal = ({
@@ -19,9 +20,9 @@ export const ApproveMemberModal = ({
   onClose,
   user,
 }: ApproveMemberModalProps) => {
-  const { mutate, isPending } = useUpdateUserStatus();
+  const { mutate, isPending } = useUpdateUserStatus(() => onClose());
   const handleApproveMember = () => {
-    mutate({ user_id: user?.user_id, status: 1 }, { onSuccess: onClose });
+    mutate({ user_id: user?.user_id, status: 1 });
   };
 
   return (
