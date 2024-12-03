@@ -65,9 +65,8 @@ export const AddNewDepartmentModal = ({
               </button>
             </DialogTitle>
 
-            <Description className="grid gap-y-6 px-6">
+            <Description className="px-6">
               <Input placeholder="Name" label="Name" {...register("name")} />
-              <Input placeholder="Description" label="Description" />
             </Description>
 
             <div className="flex gap-4 pt-10 justify-end px-6 pb-6">

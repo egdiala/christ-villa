@@ -8,14 +8,29 @@ import {
 } from "@/components/pages/departments";
 import { cn } from "@/libs/cn";
 import { NavLink, Outlet, useLocation } from "react-router";
+import { useGetSingleDepartment } from "@/services/hooks/queries/useDepartments";
 
 export const DepartmentPage: React.FC = () => {
-  const departmentName = "Children"; // Change value to "Ushering" to see the other layout
+  const { pathname } = useLocation();
+  const pathArray = pathname.split("/");
+  const departmentId = pathArray[2];
+
+  const { data: singleDepartmentInfo } = useGetSingleDepartment({
+    department_id: departmentId,
+  });
+
+  const { data: requestAreas } = useGetSingleDepartment({
+    department_id: departmentId,
+    component: "request-area",
+  });
+  console.log({ requestAreas });
+
+  const departmentName = singleDepartmentInfo?.name;
+
   const [openDeleteDeptModal, setOpenDeleteDeptModal] = useState(false);
   const [openEditDepartmentModal, setOpenEditDepartmentModal] = useState(false);
   const [openAddHODModal, setOpenAddHODModal] = useState(false);
-  const { pathname } = useLocation();
-  const pathArray = pathname.split("/");
+
   const basePath = `/${pathArray[1]}/${pathArray[2]}`;
 
   const tabsList: Record<any, any> = {
@@ -44,7 +59,7 @@ export const DepartmentPage: React.FC = () => {
             onClick={() => setOpenDeleteDeptModal(true)}
           >
             <Icon icon="lucide:trash" className="size-4" />
-            Delete Department
+            Delete
           </Button>
 
           <Button
@@ -53,7 +68,7 @@ export const DepartmentPage: React.FC = () => {
             className="!text-sm w-full md:unset"
           >
             <Icon icon="lucide:edit-2" className="size-4" />
-            Edit Department
+            Edit
           </Button>
 
           <Button
@@ -62,7 +77,7 @@ export const DepartmentPage: React.FC = () => {
             className="!text-sm w-full md:unset"
           >
             <Icon icon="lucide:plus" className="size-4" />
-            Add HOD
+            Add Request Area
           </Button>
         </div>
       </div>
