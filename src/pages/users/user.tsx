@@ -55,20 +55,15 @@ export const UserPage: React.FC = () => {
             ?.map((data: { name: string }) => data?.name)
             ?.join(", "),
     },
-    {
-      id: 8,
-      title: "Hobbies",
-      value: isLoading ? [""] : [user?.hobbies || "N/A"],
-    },
   ];
 
   const profileCardInfo = [
     {
-      id: 9,
+      id: 8,
       value: user?.email,
       icon: "lucide:mail",
     },
-    { id: 10, value: user?.phone_number, icon: "lucide:phone" },
+    { id: 9, value: user?.phone_number, icon: "lucide:phone" },
   ];
 
   const [openDeleteUserModal, setOpenDeleteUserModal] = useState(false);
@@ -225,29 +220,15 @@ export const UserPage: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               {userOtherInfo.map((otherInfo) => (
                 <div
-                  className="grid gap-y-1 text-sm content-start"
+                  className={`grid gap-y-1 text-sm content-start ${
+                    otherInfo.id === 7 ? "col-span-2" : "col-span-1"
+                  }`}
                   key={otherInfo.id}
                 >
                   <h4 className="text-text-tertiary">{otherInfo.title}</h4>
-                  <RenderIf condition={otherInfo.id !== 8}>
-                    <p className="font-medium text-text-primary capitalize">
-                      {otherInfo?.value}
-                    </p>
-                  </RenderIf>
-                  <RenderIf condition={otherInfo.id === 8}>
-                    <div className="flex gap-2">
-                      {[...(otherInfo?.value ?? "")]?.map(
-                        (innerVal: string) => (
-                          <div
-                            key={innerVal}
-                            className="bg-light-blue-4 px-2 py-1 text-sm text-text-primary capitalize"
-                          >
-                            {innerVal}
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </RenderIf>
+                  <p className="font-medium text-text-primary capitalize">
+                    {otherInfo?.value}
+                  </p>
                 </div>
               ))}
             </div>
