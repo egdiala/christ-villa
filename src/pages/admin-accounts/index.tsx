@@ -4,10 +4,11 @@ import { Icon } from "@iconify/react/dist/iconify.js"
 import { useGetAdmins } from "@/services/hooks/queries/useAdmins"
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core"
 import { CreateAdminAccountModal } from "@/components/pages/admin-accounts"
-import type { AdminStatus, FetchedAdminCountType, FetchedAdminType } from "@/types/admin"
+import { AdminStatus, FetchedAdminCountType, FetchedAdminType } from "@/types/admin"
 import { useDebounce } from "@/hooks/useDebounce"
 import { setPaginationParams } from "@/hooks/usePaginationParams"
 import { useSearchParams } from "react-router"
+import { Loader } from "@/components/core/Button/Loader"
 
 export const AdminAccountsPage: React.FC = () => {
 
@@ -101,7 +102,7 @@ export const AdminAccountsPage: React.FC = () => {
                     </TableAction>
                 </div>
             </div>
-            <div>
+            <RenderIf condition={!isLoading && !loadingAdminsCount}>
                 <Table
                     columns={columns}
                     data={data ?? []}
@@ -111,7 +112,12 @@ export const AdminAccountsPage: React.FC = () => {
                     onPageChange={handlePageChange}
                     emptyStateText="We couldn't find any admin."
                 />
-            </div>
+            </RenderIf>
+            <RenderIf condition={isLoading || loadingAdminsCount}>
+                <div className="flex w-full h-96 items-center justify-center">
+                    <Loader className="spinner size-6 text-green-1" />
+                </div>
+            </RenderIf>
             <CreateAdminAccountModal isOpen={createAdmin} onClose={() => setCreateAdmin(false)} />
         </div>
     )
