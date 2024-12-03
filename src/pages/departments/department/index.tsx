@@ -9,15 +9,17 @@ import {
 import { cn } from "@/libs/cn";
 import { NavLink, Outlet, useLocation } from "react-router";
 import { useGetSingleDepartment } from "@/services/hooks/queries/useDepartments";
+import { FetchedDepartmentType } from "@/types/departments";
 
 export const DepartmentPage: React.FC = () => {
   const { pathname } = useLocation();
   const pathArray = pathname.split("/");
   const departmentId = pathArray[2];
 
-  const { data: singleDepartmentInfo } = useGetSingleDepartment({
-    department_id: departmentId,
-  });
+  const { data: singleDepartmentInfo } =
+    useGetSingleDepartment<FetchedDepartmentType>({
+      department_id: departmentId,
+    });
 
   const { data: requestAreas } = useGetSingleDepartment({
     department_id: departmentId,
@@ -116,13 +118,13 @@ export const DepartmentPage: React.FC = () => {
       <DeleteDepartmentModal
         isOpen={openDeleteDeptModal}
         onClose={() => setOpenDeleteDeptModal(false)}
-        onDelete={() => {}}
+        departmentInfo={singleDepartmentInfo as FetchedDepartmentType}
       />
 
       <EditDepartmentModal
         isOpen={openEditDepartmentModal}
         onClose={() => setOpenEditDepartmentModal(false)}
-        onUpdateDepartment={() => {}}
+        departmentInfo={singleDepartmentInfo as FetchedDepartmentType}
       />
 
       <AddHODModal

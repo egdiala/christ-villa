@@ -15,6 +15,7 @@ import {
   FetchDepartmentsQuery,
   FetchDepartmentTimeOffsQuery,
   FetchUsersQuery,
+  UpdateDepartmentType,
   UpdateMemberStatusType,
 } from "@/types/departments";
 import { createQueryString } from "@/utils/createQuery";
@@ -39,8 +40,13 @@ export const getSingleDepartment = async (query: FetchDepartmentsQuery) => {
   return res.data;
 };
 
-export const updateDepartment = async ({ name }: CreateDepartmentType) => {
-  const res = await axiosInstance.put(`${DEPARTMENTS_API}`, { name });
+export const updateDepartment = async ({
+  name,
+  department_id,
+}: UpdateDepartmentType) => {
+  const res = await axiosInstance.put(`${DEPARTMENTS_API}/${department_id}`, {
+    name,
+  });
   return res.data;
 };
 

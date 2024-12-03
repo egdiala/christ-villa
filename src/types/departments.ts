@@ -10,12 +10,30 @@ export type CreateDepartmentType = {
   name: string;
 };
 
+export type UpdateDepartmentType = {
+  name: string;
+  department_id: string;
+};
+
 export type FetchedDepartmentsCountType = {
   total: number;
 };
 
 export type FetchedDepartmentsType = {
   name: string;
+  department_id: string;
+  total_count: number;
+  total_pending_req: number;
+  total_approved_req: number;
+  total_declined_req: number;
+};
+
+export type FetchedDepartmentType = {
+  name: string;
+  comment: string;
+  request_areas: any[];
+  createdAt: string;
+  updatedAt: string;
   department_id: string;
   total_count: number;
   total_pending_req: number;
