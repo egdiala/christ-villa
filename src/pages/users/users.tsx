@@ -16,6 +16,7 @@ import {
   FetchedUsersStatisticsType,
   FetchedUsersType,
 } from "@/types/users";
+import { Loader } from "@/components/core/Button/Loader";
 
 export const UsersPage: React.FC = () => {
   const [page, setPage] = useState(1);
@@ -43,16 +44,18 @@ export const UsersPage: React.FC = () => {
     ...userFilter,
   });
 
-  const { data: usersCount } = useGetAllUsers<FetchedUserCountType>({
-    q: value,
-    ...dateFilter,
-    ...userFilter,
-    component: "count",
-  });
+  const { data: usersCount, isLoading: isLoadingCount } =
+    useGetAllUsers<FetchedUserCountType>({
+      q: value,
+      ...dateFilter,
+      ...userFilter,
+      component: "count",
+    });
 
-  const { data: usersStatistics } = useGetAllUsers<FetchedUsersStatisticsType>({
-    component: "count-status",
-  });
+  const { data: usersStatistics, isLoading: isLoadingStatistics } =
+    useGetAllUsers<FetchedUsersStatisticsType>({
+      component: "count-status",
+    });
 
   const userStatistics = [
     { id: 1, label: "Total users", value: usersStatistics?.total_users },
@@ -151,55 +154,62 @@ export const UsersPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-5 px-4 pt-3 md:pt-5 pb-5 md:pb-10 view-page-container overflow-y-scroll">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 pb-6">
-        {userStatistics.map((item) => (
-          <div
-            key={item.id}
-            className="flex items-center gap-4 p-4 rounded-lg bg-light-blue-4"
-          >
-            <div className="grid place-content-center rounded-full size-12 bg-light-blue-3">
-              <Icon
-                icon="lucide:users"
-                className="size-6 text-text-secondary"
-              />
-            </div>
-            <div className="grid gap-1">
-              <h1 className="text-sm text-text-secondary">{item.label}</h1>
-              <p className="text-2xl text-text-primary">{item.value}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
-        <div className="flex-1 md:max-w-96">
-          <SearchInput
-            placeholder="Search by name or email"
-            onChange={onChangeHandler}
-          />
+      <RenderIf condition={isLoading || isLoadingCount || isLoadingStatistics}>
+        <div className="flex w-full h-96 items-center justify-center">
+          <Loader className="spinner size-6 text-green-1" />
         </div>
-
-        <div className="flex items-center gap-4 w-full sm:w-auto">
-          <DateFilter
-            theme="grey"
-            setFilters={setDateFilter}
-            isLoading={isLoading}
-          />
-          <UsersFilter
-            theme="grey"
-            setFilters={setUserFilter}
-            isLoading={isLoading}
-          />
-          <TableAction theme="grey" block>
-            Export
-            <Icon
-              icon="lucide:cloud-download"
-              className="size-4 text-accent-primary"
+      </RenderIf>
+      <RenderIf
+        condition={!isLoading && !isLoadingCount && !isLoadingStatistics}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 pb-6">
+          {userStatistics.map((item) => (
+            <div
+              key={item.id}
+              className="flex items-center gap-4 p-4 rounded-lg bg-light-blue-4"
+            >
+              <div className="grid place-content-center rounded-full size-12 bg-light-blue-3">
+                <Icon
+                  icon="lucide:users"
+                  className="size-6 text-text-secondary"
+                />
+              </div>
+              <div className="grid gap-1">
+                <h1 className="text-sm text-text-secondary">{item.label}</h1>
+                <p className="text-2xl text-text-primary">{item.value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
+          <div className="flex-1 md:max-w-96">
+            <SearchInput
+              placeholder="Search by name or email"
+              onChange={onChangeHandler}
             />
-          </TableAction>
-        </div>
-      </div>
+          </div>
 
-      <div>
+          <div className="flex items-center gap-4 w-full sm:w-auto">
+            <DateFilter
+              theme="grey"
+              setFilters={setDateFilter}
+              isLoading={isLoading}
+            />
+            <UsersFilter
+              theme="grey"
+              setFilters={setUserFilter}
+              isLoading={isLoading}
+            />
+            <TableAction theme="grey" block>
+              Export
+              <Icon
+                icon="lucide:cloud-download"
+                className="size-4 text-accent-primary"
+              />
+            </TableAction>
+          </div>
+        </div>
+
         <Table
           columns={columns}
           data={users ?? []}
@@ -211,7 +221,7 @@ export const UsersPage: React.FC = () => {
           onClick={({ original }) => navigate(`/users/${original?.user_id}`)}
           loading={isLoading}
         />
-      </div>
+      </RenderIf>
     </div>
   );
 };
