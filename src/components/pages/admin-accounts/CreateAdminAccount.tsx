@@ -5,6 +5,7 @@ import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Button, Input, SelectInput } from "@/components/core";
 import { Checkbox, Dialog, DialogPanel, DialogTitle, Field, Label } from "@headlessui/react";
 import { cn } from "@/libs/cn";
+import { useCreateAdmin } from "@/services/hooks/mutations";
 
 interface CreateAdminAccountModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface CreateAdminAccountModalProps {
 }
 
 export const CreateAdminAccountModal: React.FC<CreateAdminAccountModalProps> = ({ isOpen, onClose }) => {
+    const { mutate, isPending } = useCreateAdmin(() => close())
     const genders = [
         { label: "Male", value: "male" },
         { label: "Female", value: "female" }
@@ -19,11 +21,11 @@ export const CreateAdminAccountModal: React.FC<CreateAdminAccountModalProps> = (
 
     const permissions = [
         { label: "Create", value: "create" },
-        { label: "Read/View", value: "read" },
+        { label: "Read/View", value: "view" },
         { label: "Update", value: "update" },
         { label: "Delete", value: "delete" },
     ]
-    const { register, setFieldValue, values } = useFormikWrapper({
+    const { handleSubmit, isValid, register, resetForm, setFieldValue, values } = useFormikWrapper({
         initialValues: {
             name: "",
             email: "",
@@ -31,8 +33,8 @@ export const CreateAdminAccountModal: React.FC<CreateAdminAccountModalProps> = (
             permission: [] as string[]
         },
         validationSchema: createAdminSchema,
-        onSubmit() {
-            
+        onSubmit: () => {
+            mutate(values)
         }
     })
     const togglePermission = (value: string) => {
@@ -43,22 +45,27 @@ export const CreateAdminAccountModal: React.FC<CreateAdminAccountModalProps> = (
         const otherItems = values.permission.filter((item) => item !== value)
         setFieldValue("permission", otherItems)
     }
+    const close = () => {
+        onClose();
+        resetForm();
+    }
+
     return (
         <Dialog
         open={isOpen}
-        onClose={onClose}
+        onClose={close}
         as="div"
         className="relative z-10 focus:outline-none"
         >
             <div className="fixed inset-0 z-10 w-screen overflow-scroll scrollbar-hide duration-300 ease-out transition-opacity data-[closed]:opacity-0 bg-grey-dark-4/70">
                 <div className="flex flex-col min-h-full items-center p-3 justify-end md:justify-center">
-                    <DialogPanel transition className="flex flex-col gap-5 justify-between w-full max-w-[37.75rem] rounded-lg bg-white p-4 md:p-5 backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full">
+                    <DialogPanel as="form" onSubmit={handleSubmit} transition className="flex flex-col gap-5 justify-between w-full max-w-[37.75rem] rounded-lg bg-white p-4 md:p-5 backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full">
                         <div className="flex items-center justify-between gap-3">
                             <DialogTitle className="font-bold text-text-primary text-xl">Add Admin Account</DialogTitle>
-                            <button type="button" onClick={onClose} className="size-8 p-2 grid place-content-center text-grey-dark-3 hover:text-grey-dark-1 hover:bg-grey-dark-4 rounded-full ease-out duration-300 transition-all"><Icon icon="ph:x-bold" /></button>
+                            <button type="button" onClick={close} className="size-8 p-2 grid place-content-center text-grey-dark-3 hover:text-grey-dark-1 hover:bg-grey-dark-4 rounded-full ease-out duration-300 transition-all"><Icon icon="ph:x-bold" /></button>
                         </div>
 
-                        <form className="space-y-6">
+                        <div className="space-y-6">
                             <Input label="Admin Name" type="text" placeholder="Enter admin name" {...register("name")} />
                             <Input label="Email" type="email" placeholder="Enter email" {...register("email")} />
                             <SelectInput label="Gender" options={genders} {...register("gender")} />
@@ -84,13 +91,13 @@ export const CreateAdminAccountModal: React.FC<CreateAdminAccountModalProps> = (
                                     }
                                 </div>
                             </div>
-                        </form>
+                        </div>
 
                         <div className="flex items-center justify-end gap-4 w-full md:w-5/6 ml-auto pt-10">
-                            <Button type="button" theme="tertiary" onClick={onClose} block>
+                            <Button type="button" theme="tertiary" onClick={close} block>
                                 Cancel
                             </Button>
-                            <Button type="submit" theme="primary" block>
+                            <Button type="submit" theme="primary" loading={isPending} disabled={!isValid || isPending} block>
                                 Add Admin
                             </Button>
                         </div>

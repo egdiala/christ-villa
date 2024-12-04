@@ -46,10 +46,10 @@ const SidebarContent: React.FC<SidebarProps> = ({ showSidebar }) => {
 export const Sidebar: React.FC<SidebarProps> = ({ showSidebar }) => {
     return (
         <Fragment>
-            <nav className={cn("bg-accent-tertiary hidden xl:flex flex-col gap-8 px-5 py-6 h-screen max-h-screen w-full max-w-60 xl:fixed inset-y-0 z-20 overflow-y-scroll scrollbar-hide justify-between left-0 border-r border-r-gray-200 transition transform ease-out duration-500")}>
+            <nav className={cn("bg-accent-tertiary hidden xl:flex flex-col gap-8 px-5 py-6 h-screen max-h-screen w-full max-w-60 xl:fixed inset-y-0 z-20 overflow-y-scroll scrollbar-hide justify-between left-0 transition transform ease-out duration-500")}>
                 <SidebarContent showSidebar={showSidebar} />
             </nav>
-            <nav className={cn("bg-accent-tertiary flex xl:hidden flex-col gap-8 px-5 py-6 h-screen max-h-screen w-full max-w-60 absolute xl:relative inset-y-0 z-20 overflow-y-scroll scrollbar-hide justify-between left-0 border-r border-r-gray-200 transition transform ease-out duration-500", showSidebar ? "translate-x-0" : "-translate-x-full")}>
+            <nav className={cn("bg-accent-tertiary flex xl:hidden flex-col gap-8 px-5 py-6 h-screen max-h-screen w-full max-w-60 absolute xl:relative inset-y-0 z-20 overflow-y-scroll scrollbar-hide justify-between left-0 transition transform ease-out duration-500", showSidebar ? "translate-x-0" : "-translate-x-full")}>
                 <SidebarContent showSidebar={showSidebar} />
             </nav>
         </Fragment>
