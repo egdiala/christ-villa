@@ -11,7 +11,6 @@ export const useCreateAdmin = (fn?: (v: any) => void) => {
         onSuccess: (response: any) => {
             queryClient.invalidateQueries({ queryKey: [GET_ADMINS] });
             successToast({ message: "Admin Added Successfully!" })
-            console.log(response)
             fn?.(response);
         },
         onError: (err: any) => {

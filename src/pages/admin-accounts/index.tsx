@@ -123,7 +123,7 @@ export const AdminAccountsPage: React.FC = () => {
             </RenderIf>
             <RenderIf condition={isLoading || loadingAdminsCount}>
                 <div className="flex w-full h-96 items-center justify-center">
-                    <Loader className="spinner size-6 text-green-1" />
+                    <Loader className="spinner size-6 text-accent-primary" />
                 </div>
             </RenderIf>
             <CreateAdminAccountModal isOpen={toggleModals.openCreateAdmin} onClose={() => setToggleModals((prev) => ({ ...prev, openCreateAdmin: false }))} />
