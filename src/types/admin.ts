@@ -5,3 +5,33 @@ export interface FetchAdminsQuery {
     item_per_page?: string;
     component?: "count" | "profile";
 }
+
+export type CreateAdminType = {
+    name: string;
+    email: string;
+    gender: string;
+    permission: string[];
+}
+
+export enum AdminStatus {
+    Pending = 0,
+    Active = 1,
+    Suspended = 2
+}
+
+export interface FetchedAdminType {
+    name: string;
+    email: string;
+    permission: string[];
+    avatar: string;
+    user_type: string;
+    gender: string;
+    status: number;
+    createdAt: Date | string;
+    updatedAt: Date | string;
+    user_id: string;
+}
+
+export interface FetchedAdminCountType {
+    total: number;
+}
