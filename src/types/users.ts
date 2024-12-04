@@ -15,7 +15,12 @@ export interface FetchSingleUserQuery {
 }
 
 export type UpdateUserStatusType = {
-  status: number;
+  status: string;
+  user_id: string;
+};
+
+export type ChangeUserType = {
+  user_type: string;
   user_id: string;
 };
 
@@ -57,7 +62,7 @@ export type FetchedUserType = {
   name: string;
   email: string;
   account_type: string;
-  status: number;
+  status: string;
   avatar: string;
   phone_prefix: string;
   phone_number: string;

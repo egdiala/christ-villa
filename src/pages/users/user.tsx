@@ -23,7 +23,7 @@ export const UserPage: React.FC = () => {
 
   const userStatus =
     userProfileStatus?.find(
-      (profileStatus) => profileStatus.value === user?.status
+      (profileStatus) => profileStatus.value === user?.status?.toString()
     )?.label ?? "Pending";
 
   const userRegistrationInfo = [
@@ -100,7 +100,7 @@ export const UserPage: React.FC = () => {
 
           <RenderIf
             condition={
-              userStatus?.toLowerCase() === "approved" ||
+              userStatus?.toLowerCase() === "active" ||
               userStatus?.toLowerCase() === "suspended"
             }
           >
@@ -251,7 +251,7 @@ export const UserPage: React.FC = () => {
       <EditUserTypeModal
         isOpen={openEditUserTypeModal}
         onClose={() => setOpenEditUserTypeModal(false)}
-        onUpdateUser={() => {}}
+        userId={userId}
       />
     </div>
   );

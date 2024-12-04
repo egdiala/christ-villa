@@ -22,7 +22,7 @@ export const ApproveMemberModal = ({
 }: ApproveMemberModalProps) => {
   const { mutate, isPending } = useUpdateUserStatus(() => onClose());
   const handleApproveMember = () => {
-    mutate({ user_id: user?.user_id, status: 1 });
+    mutate({ user_id: user?.user_id, status: "1" });
   };
 
   return (

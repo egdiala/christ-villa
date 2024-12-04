@@ -1,7 +1,7 @@
 export const userProfileStatus = [
-  { label: "Pending", value: 0 },
-  { label: "Active", value: 1 },
-  { label: "Suspended", value: 2 },
+  { label: "Pending", value: "0" },
+  { label: "Active", value: "1" },
+  { label: "Suspended", value: "2" },
 ];
 
 export const userTypes = [

@@ -22,7 +22,7 @@ export const UsersFilter: React.FC<UsersFilterProps> = ({
   setFilters,
   theme = "grey",
 }) => {
-  const [statusFilters, setStatusFilters] = useState(-1);
+  const [statusFilters, setStatusFilters] = useState("");
   const [userTypeFilters, setUserTypeFilters] = useState("");
 
   const applyFilter = (fn?: () => void) => {
@@ -101,7 +101,7 @@ export const UsersFilter: React.FC<UsersFilterProps> = ({
                       role="button"
                       onClick={() =>
                         setStatusFilters(
-                          statusFilters !== item.value ? item.value : -1
+                          statusFilters !== item.value ? item.value : ""
                         )
                       }
                       className={cn(
@@ -117,7 +117,7 @@ export const UsersFilter: React.FC<UsersFilterProps> = ({
                         checked={statusFilters === item.value}
                         onChange={() =>
                           setStatusFilters(
-                            statusFilters !== item.value ? item.value : -1
+                            statusFilters !== item.value ? item.value : ""
                           )
                         }
                       />
