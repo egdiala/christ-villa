@@ -1,24 +1,30 @@
 import { cn } from "@/libs/cn"
-import { Fragment, useState } from "react"
-import { Icon } from "@iconify/react/dist/iconify.js"
-import { useGetAdmins } from "@/services/hooks/queries/useAdmins"
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core"
-import { CreateAdminAccountModal } from "@/components/pages/admin-accounts"
-import { AdminStatus, FetchedAdminCountType, FetchedAdminType } from "@/types/admin"
-import { useDebounce } from "@/hooks/useDebounce"
-import { setPaginationParams } from "@/hooks/usePaginationParams"
+import { useState } from "react"
 import { useSearchParams } from "react-router"
+import { useDebounce } from "@/hooks/useDebounce"
+import { Icon } from "@iconify/react/dist/iconify.js"
 import { Loader } from "@/components/core/Button/Loader"
+import { useGetAdmins } from "@/services/hooks/queries/useAdmins"
+import { setPaginationParams } from "@/hooks/usePaginationParams"
+import { RenderIf, SearchInput, Table, TableAction } from "@/components/core"
+import { AdminStatus, FetchedAdminCountType, FetchedAdminType } from "@/types/admin"
+import { AdminsFilter, CreateAdminAccountModal, UpdateAdminStatusModal } from "@/components/pages/admin-accounts"
 
 export const AdminAccountsPage: React.FC = () => {
 
     const [page, setPage] = useState(1)
     const [itemsPerPage] = useState(10)
+    const [filters, setFilters] = useState({})
     const [searchParams, setSearchParams] = useSearchParams()
-    const [createAdmin, setCreateAdmin] = useState(false)
     const { value, onChangeHandler } = useDebounce(300)
-    const { data, isLoading } = useGetAdmins<FetchedAdminType[]>({ q: value, page: page.toString(), item_per_page: itemsPerPage.toString() })
-    const { data: adminsCount, isLoading: loadingAdminsCount } = useGetAdmins<FetchedAdminCountType>({ component: "count", q: value })
+    const { data, isLoading } = useGetAdmins<FetchedAdminType[]>({ q: value, ...filters, page: page.toString(), item_per_page: itemsPerPage.toString() })
+    const { data: adminsCount, isLoading: loadingAdminsCount } = useGetAdmins<FetchedAdminCountType>({ component: "count", q: value, ...filters })
+    const [toggleModals, setToggleModals] = useState({
+        openCreateAdmin: false,
+        openSuspendAdmin: false,
+        openActivateAdmin: false,
+        activeAdmin: null as FetchedAdminType | null
+    })
 
     const columns = [
         {
@@ -65,14 +71,11 @@ export const AdminAccountsPage: React.FC = () => {
             cell: ({ row }: { row: any }) => {
                 const item = row.original as FetchedAdminType
                 return (
-                    <Fragment>
-                        <RenderIf condition={item.status === 1}>
-                            <button type="button">Suspend</button>
-                        </RenderIf>
-                        <RenderIf condition={item.status === 2}>
-                            <button type="button">Activate</button>
-                        </RenderIf>
-                    </Fragment>
+                    <button
+                        type="button"
+                        className="py-2 px-4 text-sm font-medium text-text-primary bg-grey-dark-4 rounded-lg"
+                        onClick={() => setToggleModals((prev) => ({ ...prev, openSuspendAdmin: true, activeAdmin: item }))}
+                    >{item.status === 1 ? "Suspend" : "Activate"}</button>
                 )
             }
         },
@@ -92,11 +95,12 @@ export const AdminAccountsPage: React.FC = () => {
                 </div>
                 
                 <div className="flex items-center gap-4 w-full sm:w-auto">
+                    <AdminsFilter setFilters={setFilters} isLoading={isLoading} />
                     <TableAction theme="grey" block>
                         Export
                         <Icon icon="lucide:cloud-download" className="size-4 text-accent-primary" />
                     </TableAction>
-                    <TableAction type="button" theme="primary" onClick={() => setCreateAdmin(true)} block>
+                    <TableAction type="button" theme="primary" onClick={() => setToggleModals((prev) => ({ ...prev, openCreateAdmin: true }))} block>
                         <Icon icon="lucide:plus" className="size-4" />
                         Add Admin
                     </TableAction>
@@ -118,7 +122,8 @@ export const AdminAccountsPage: React.FC = () => {
                     <Loader className="spinner size-6 text-green-1" />
                 </div>
             </RenderIf>
-            <CreateAdminAccountModal isOpen={createAdmin} onClose={() => setCreateAdmin(false)} />
+            <CreateAdminAccountModal isOpen={toggleModals.openCreateAdmin} onClose={() => setToggleModals((prev) => ({ ...prev, openCreateAdmin: false }))} />
+            <UpdateAdminStatusModal isOpen={toggleModals.openSuspendAdmin} admin={toggleModals.activeAdmin as FetchedAdminType} onClose={() => setToggleModals((prev) => ({ ...prev, openSuspendAdmin: false, activeAdmin: null }))} />
         </div>
     )
 }
