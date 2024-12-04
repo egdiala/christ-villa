@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { Button, RenderIf } from "@/components/core";
+import { Breadcrumb, Button, RenderIf } from "@/components/core";
 import {
   AddHODModal,
   DeleteDepartmentModal,
@@ -47,8 +47,15 @@ export const DepartmentPage: React.FC = () => {
       : {}),
   };
 
+  const breadCrumbItems = [
+    { label: "Departments", link: "/departments" },
+    { label: singleDepartmentInfo?.name as string },
+  ];
+
   return (
     <div className="flex flex-col pt-4 pb-9 gap-y-4 view-page-container overflow-y-scroll px-4">
+      <Breadcrumb showBack items={breadCrumbItems} />
+
       <div className="flex gap-4 flex-col md:flex-row justify-between py-1">
         <h4 className="capitalize font-bold text-2xl md:text-xl text-text-primary">
           {departmentName} Department
