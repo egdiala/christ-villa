@@ -1,36 +1,21 @@
-import { SearchInput, Table, TableAction } from "@/components/core"
-import { CreateConnectGroupModal } from "@/components/pages/connect-groups"
 import { cn } from "@/libs/cn"
+import { useEffect, useState } from "react"
 import { Icon } from "@iconify/react/dist/iconify.js"
-import { useState } from "react"
-import { useNavigate } from "react-router"
+import { useGetConnectGroups } from "@/services/hooks/queries"
+import { SearchInput, Table, TableAction } from "@/components/core"
+import { useLocation, useNavigate, useSearchParams } from "react-router"
+import { CreateConnectGroupModal } from "@/components/pages/connect-groups"
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams"
 
 export const ConnectGroupsPage: React.FC = () => {
+    const location = useLocation()
     const navigate = useNavigate()
     const [page, setPage] = useState(1)
     const [itemsPerPage] = useState(10)
     const [createGroup, setCreateGroup] = useState(false)
-
-    const sampleData = [
-        {
-            name: "Project Alpha",
-            description: "A cutting-edge AI research project.",
-            members: 12,
-            status: "Active",
-        },
-        {
-            name: "Marketing Campaign X",
-            description: "A digital marketing initiative for Q4.",
-            members: 8,
-            status: "Suspended",
-        },
-        {
-            name: "Website Redesign",
-            description: "Overhaul the company website for better UX.",
-            members: 5,
-            status: "Active",
-        },
-    ];
+    const [searchParams, setSearchParams] = useSearchParams()
+    const { data } = useGetConnectGroups<any[]>({})
+    const { data: count } = useGetConnectGroups<any>({ component: "count" })
 
     const columns = [
         {
@@ -60,8 +45,12 @@ export const ConnectGroupsPage: React.FC = () => {
     const handlePageChange = (page: number) => {
         // in a real page, this function would paginate the data from the backend
         setPage(page)
-        // setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
+        setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
     };
+
+    useEffect(() => {
+        getPaginationParams(location, setPage, () => {})
+    }, [location, setPage])
     
     const requestCards = [
         { label: "Total Connect Groups", value: "340", icon: "lucide:life-buoy" },
@@ -104,10 +93,10 @@ export const ConnectGroupsPage: React.FC = () => {
             <div>
                 <Table
                     columns={columns}
-                    data={sampleData}
+                    data={data ?? []}
                     page={page}
                     perPage={itemsPerPage}
-                    totalCount={sampleData.length}
+                    totalCount={count?.total}
                     onPageChange={handlePageChange}
                     onClick={() => navigate("/connect-groups/1")}
                     emptyStateText="We couldn't find any connect groups."

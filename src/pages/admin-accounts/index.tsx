@@ -1,17 +1,17 @@
 import { cn } from "@/libs/cn"
-import { useState } from "react"
-import { useSearchParams } from "react-router"
+import { useEffect, useState } from "react"
 import { useDebounce } from "@/hooks/useDebounce"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { Loader } from "@/components/core/Button/Loader"
+import { useLocation, useSearchParams } from "react-router"
 import { useGetAdmins } from "@/services/hooks/queries/useAdmins"
-import { setPaginationParams } from "@/hooks/usePaginationParams"
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core"
 import { AdminStatus, FetchedAdminCountType, FetchedAdminType } from "@/types/admin"
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams"
 import { AdminsFilter, CreateAdminAccountModal, UpdateAdminStatusModal } from "@/components/pages/admin-accounts"
 
 export const AdminAccountsPage: React.FC = () => {
-
+    const location = useLocation()
     const [page, setPage] = useState(1)
     const [itemsPerPage] = useState(10)
     const [filters, setFilters] = useState({})
@@ -86,6 +86,10 @@ export const AdminAccountsPage: React.FC = () => {
         setPage(page)
         setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
     };
+
+    useEffect(() => {
+        getPaginationParams(location, setPage, () => {})
+    }, [location, setPage])
     
     return (
         <div className="flex flex-col gap-5 px-4 pt-3 md:pt-5 pb-5 md:pb-10 view-page-container overflow-y-scroll">
