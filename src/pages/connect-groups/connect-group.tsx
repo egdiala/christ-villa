@@ -1,18 +1,20 @@
 import { cn } from "@/libs/cn"
-import { useState } from "react"
+import { Fragment, useMemo, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import { Icon } from "@iconify/react/dist/iconify.js"
-import { SearchInput, Table, TableAction } from "@/components/core"
+import { Loader } from "@/components/core/Button/Loader"
+import { useGetConnectGroup } from "@/services/hooks/queries"
+import { RenderIf, SearchInput, Table, TableAction } from "@/components/core"
+import type { FetchedConnectGroupCountStatusType } from "@/types/connect-group"
 import { Menu, MenuButton, MenuHeading, MenuItem, MenuItems, MenuSection } from '@headlessui/react'
 import { ConnectGroupFilter, AddGroupMemberModal, EditConnectGroupModal, DeleteConnectGroupModal, SuspendConnectGroupModal, RemoveMemberModal } from "@/components/pages/connect-groups"
-import { useGetConnectGroup } from "@/services/hooks/queries"
 
 export const ConnectGroupPage: React.FC = () => {
     const { id } = useParams()
     const navigate = useNavigate()
     const [page, setPage] = useState(1)
     const [itemsPerPage] = useState(10)
-    const { data } = useGetConnectGroup<any[]>({ id: id as string })
+    const { data, isLoading } = useGetConnectGroup<FetchedConnectGroupCountStatusType>({ id: id as string, component: "count-status" })
     const [toggleModals, setToggleModals] = useState({
         openAddMember: false,
         openEditGroup: false,
@@ -82,82 +84,93 @@ export const ConnectGroupPage: React.FC = () => {
         // setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
     };
     
-    const requestCards = [
-        { label: "Members", value: "23", icon: "lucide:users" },
-        { label: "HODs", value: "2", icon: "lucide:life-buoy" },
-    ]
+    const requestCards = useMemo(() => {
+        return [
+            { label: "Members", value: data?.total_member, icon: "lucide:users" },
+            { label: "HODs", value: data?.total_admin, icon: "lucide:life-buoy" },
+        ]
+    },[data?.total_admin, data?.total_member])
     return (
-        <div className="flex flex-col gap-5 px-4 pt-3 md:pt-5 pb-5 md:pb-10 view-page-container overflow-y-scroll">
-            <div className="flex flex-col md:flex-row md:items-center gap-3 md:justify-between">
-                <h1 className="font-bold text-xl text-text-primary">Technology Connect Group</h1>
-                <div className="flex items-center flex-wrap gap-2">
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <TableAction type="button" theme="ghost" className="group" onClick={() => setToggleModals((prev) => ({ ...prev, openDeleteGroup: true }))} block>
-                            <Icon icon="lucide:trash" className="group-hover:text-white text-accent-primary size-4" />
-                            <span className="group-hover:text-white text-accent-primary">Delete Group</span>
-                        </TableAction>
-                        <TableAction type="button" theme="grey" className="group" onClick={() => setToggleModals((prev) => ({ ...prev, openEditGroup: true }))} block>
-                            <Icon icon="lucide:pen" className="size-4" />
-                            Edit Group
-                        </TableAction>
-                    </div>
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <TableAction type="button" theme="grey" className="group" onClick={() => setToggleModals((prev) => ({ ...prev, openSuspendGroup: true }))} block>
-                            <Icon icon="lucide:ban" className="size-4" />
-                            Suspend Group
-                        </TableAction>
-                        <TableAction type="button" theme="primary" onClick={() => setToggleModals((prev) => ({ ...prev, openAddMember: true }))} block>
-                            <Icon icon="lucide:plus" className="size-4" />
-                            Add Member
-                        </TableAction>
-                    </div>
-                </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-                {
-                    requestCards.map((item, index) => 
-                        <div key={index} className="flex items-center gap-4 p-4 rounded-lg bg-light-blue-4">
-                            <div className="grid place-content-center rounded-full size-12 bg-light-blue-3">
-                                <Icon icon={item.icon} className="size-6 text-text-secondary" />
+        <Fragment>
+            <RenderIf condition={!isLoading}>
+                <div className="flex flex-col gap-5 px-4 pt-3 md:pt-5 pb-5 md:pb-10 view-page-container overflow-y-scroll">
+                    <div className="flex flex-col md:flex-row md:items-center gap-3 md:justify-between">
+                        <h1 className="font-bold text-xl text-text-primary capitalize">{data?.name}</h1>
+                        <div className="flex items-center flex-wrap gap-2">
+                            <div className="flex items-center gap-2 w-full sm:w-auto">
+                                <TableAction type="button" theme="ghost" className="group" onClick={() => setToggleModals((prev) => ({ ...prev, openDeleteGroup: true }))} block>
+                                    <Icon icon="lucide:trash" className="group-hover:text-white text-accent-primary size-4" />
+                                    <span className="group-hover:text-white text-accent-primary">Delete Group</span>
+                                </TableAction>
+                                <TableAction type="button" theme="grey" className="group" onClick={() => setToggleModals((prev) => ({ ...prev, openEditGroup: true }))} block>
+                                    <Icon icon="lucide:pen" className="size-4" />
+                                    Edit Group
+                                </TableAction>
                             </div>
-                            <div className="grid gap-1">
-                                <h1 className="text-sm text-text-secondary">{item.label}</h1>
-                                <p className="text-2xl text-text-primary">{item.value}</p>
+                            <div className="flex items-center gap-2 w-full sm:w-auto">
+                                <TableAction type="button" theme="grey" className="group" onClick={() => setToggleModals((prev) => ({ ...prev, openSuspendGroup: true }))} block>
+                                    <Icon icon="lucide:ban" className="size-4" />
+                                    Suspend Group
+                                </TableAction>
+                                <TableAction type="button" theme="primary" onClick={() => setToggleModals((prev) => ({ ...prev, openAddMember: true }))} block>
+                                    <Icon icon="lucide:plus" className="size-4" />
+                                    Add Member
+                                </TableAction>
                             </div>
                         </div>
-                    )
-                }
-            </div>
-            <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
-                <div className="flex-1 md:max-w-96">
-                    <SearchInput placeholder="Search member name" />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+                        {
+                            requestCards.map((item, index) => 
+                                <div key={index} className="flex items-center gap-4 p-4 rounded-lg bg-light-blue-4">
+                                    <div className="grid place-content-center rounded-full size-12 bg-light-blue-3">
+                                        <Icon icon={item.icon} className="size-6 text-text-secondary" />
+                                    </div>
+                                    <div className="grid gap-1">
+                                        <h1 className="text-sm text-text-secondary">{item.label}</h1>
+                                        <p className="text-2xl text-text-primary">{item.value}</p>
+                                    </div>
+                                </div>
+                            )
+                        }
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
+                        <div className="flex-1 md:max-w-96">
+                            <SearchInput placeholder="Search member name" />
+                        </div>
+                        
+                        <div className="flex items-center gap-4 w-full sm:w-auto">
+                            <ConnectGroupFilter setFilters={undefined} isLoading={false} />
+                            <TableAction theme="grey" block>
+                                Export
+                                <Icon icon="lucide:cloud-download" className="size-4 text-accent-primary" />
+                            </TableAction>
+                        </div>
+                    </div>
+                    <div>
+                        <Table
+                            columns={columns}
+                            data={[]}
+                            page={page}
+                            perPage={itemsPerPage}
+                            totalCount={0}
+                            onPageChange={handlePageChange}
+                            onClick={() => navigate("/connect-groups/1")}
+                            emptyStateText="We couldn't find any member."
+                        />
+                    </div>
+                    <RemoveMemberModal isOpen={toggleModals.openRemoveMember} onClose={() => setToggleModals((prev) => ({ ...prev, openRemoveMember: false }))} />
+                    <SuspendConnectGroupModal isOpen={toggleModals.openSuspendGroup} onClose={() => setToggleModals((prev) => ({ ...prev, openSuspendGroup: false }))} />
+                    <DeleteConnectGroupModal isOpen={toggleModals.openDeleteGroup} connectGroup={data!} onClose={() => setToggleModals((prev) => ({ ...prev, openDeleteGroup: false }))} />
+                    <EditConnectGroupModal isOpen={toggleModals.openEditGroup} connectGroup={data!} onClose={() => setToggleModals((prev) => ({ ...prev, openEditGroup: false }))} />
+                    <AddGroupMemberModal isOpen={toggleModals.openAddMember} onClose={() => setToggleModals((prev) => ({ ...prev, openAddMember: false }))} />
                 </div>
-                
-                <div className="flex items-center gap-4 w-full sm:w-auto">
-                    <ConnectGroupFilter setFilters={undefined} isLoading={false} />
-                    <TableAction theme="grey" block>
-                        Export
-                        <Icon icon="lucide:cloud-download" className="size-4 text-accent-primary" />
-                    </TableAction>
+            </RenderIf>
+            <RenderIf condition={isLoading}>
+                <div className="flex w-full h-96 items-center justify-center">
+                    <Loader className="spinner size-6 text-accent-primary" />
                 </div>
-            </div>
-            <div>
-                <Table
-                    columns={columns}
-                    data={data ?? []}
-                    page={page}
-                    perPage={itemsPerPage}
-                    totalCount={0}
-                    onPageChange={handlePageChange}
-                    onClick={() => navigate("/connect-groups/1")}
-                    emptyStateText="We couldn't find any connect groups."
-                />
-            </div>
-            <RemoveMemberModal isOpen={toggleModals.openRemoveMember} onClose={() => setToggleModals((prev) => ({ ...prev, openRemoveMember: false }))} />
-            <SuspendConnectGroupModal isOpen={toggleModals.openSuspendGroup} onClose={() => setToggleModals((prev) => ({ ...prev, openSuspendGroup: false }))} />
-            <DeleteConnectGroupModal isOpen={toggleModals.openDeleteGroup} onClose={() => setToggleModals((prev) => ({ ...prev, openDeleteGroup: false }))} />
-            <EditConnectGroupModal isOpen={toggleModals.openEditGroup} onClose={() => setToggleModals((prev) => ({ ...prev, openEditGroup: false }))} />
-            <AddGroupMemberModal isOpen={toggleModals.openAddMember} onClose={() => setToggleModals((prev) => ({ ...prev, openAddMember: false }))} />
-        </div>
+            </RenderIf>
+        </Fragment>
     )
 }

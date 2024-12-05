@@ -13,7 +13,17 @@ export interface FetchConnectGroupQuery {
     component?: "count" | "count-status";
 }
 
+export interface DeleteConnectGroupQuery {
+    id: string;
+    user_id?: string; // Used when removing a memeber from the group
+}
+
 export type CreateConnectGroupType = {
+    name: string;
+}
+
+export type EditConnectGroupType = {
+    id: string;
     name: string;
 }
 
