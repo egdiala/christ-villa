@@ -12,3 +12,7 @@ export const GET_DEPARTMENT_TIME_OFF = "get-department-time-off";
 export const GET_DEPARTMENT_MATERIALS = "get-department-materials";
 export const GET_DEPARTMENT_MATERIAL = "get-department-material";
 export const GET_USERS = "get-users";
+
+// Connect Groups
+export const GET_CONNECT_GROUP = "get-connect-group"
+export const GET_CONNECT_GROUPS = "get-connect-groups"

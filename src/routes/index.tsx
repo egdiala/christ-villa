@@ -1,13 +1,19 @@
 import { ReactNode } from "react";
 import { Routes, Route, BrowserRouter } from "react-router";
+import { AnimatePresence } from "motion/react";
+import AuthLayout from "@/layouts/AuthLayout";
+import DashboardLayout from "@/layouts/ProtectedLayout";
 import { DashboardPage } from "@/pages";
 import { Profile } from "@/pages/profile";
-import AuthLayout from "@/layouts/AuthLayout";
-import { AnimatePresence } from "motion/react";
 import { RequestsPage } from "@/pages/requests";
-import DashboardLayout from "@/layouts/ProtectedLayout";
 import { AdminAccountsPage } from "@/pages/admin-accounts";
-import { AuthRoutes, ConnectGroupsRoutes, DepartmentsRoutes, UsersRoutes } from "./modules";
+import { EngagePage } from "@/pages/engage";
+import {
+  AuthRoutes,
+  ConnectGroupsRoutes,
+  DepartmentsRoutes,
+  UsersRoutes,
+} from "./modules";
 
 function LocationProvider({ children }: { children: ReactNode }) {
   return <AnimatePresence mode="wait">{children}</AnimatePresence>;
@@ -93,6 +99,16 @@ const Router = () => {
             <DashboardLayout>
               <LocationProvider>
                 <Profile />
+              </LocationProvider>
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/engage"
+          element={
+            <DashboardLayout>
+              <LocationProvider>
+                <EngagePage />
               </LocationProvider>
             </DashboardLayout>
           }
