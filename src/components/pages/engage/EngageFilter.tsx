@@ -63,7 +63,7 @@ export const EngageFilter: React.FC<EngageFilterProps> = ({
             <h1 className="font-bold text-xl text-grey-dark-1">Filter</h1>
             <div className="grid grid-cols-2">
               <div className="grid col-span-1 gap-5 md:gap-8">
-                <div className="flex flex-col gap-1 w-2/3">
+                <div className="flex flex-col gap-1 w-4/5">
                   <span className="uppercase text-text-tertiary text-xs">
                     ENGAGEMENT TYPE
                   </span>

@@ -9,6 +9,7 @@ import {
 } from "@headlessui/react";
 import { Button, Checkbox, TableAction } from "@/components/core";
 import { cn } from "@/libs/cn";
+import { userProfileStatus, userTypes } from "@/constants/status";
 
 interface UsersFilterProps {
   setFilters: any;
@@ -21,25 +22,13 @@ export const UsersFilter: React.FC<UsersFilterProps> = ({
   setFilters,
   theme = "grey",
 }) => {
-  const profileStatus = [
-    { label: "Pending", value: "PENDING" },
-    { label: "Approved", value: "APPROVED" },
-    { label: "Suspended", value: "SUSPENDED" },
-  ];
-
-  const userTypes = [
-    { label: "Members", value: "MEMBERS" },
-    { label: "Pastors", value: "PASTORS" },
-    { label: "Partners", value: "PARTNERS" },
-  ];
-
   const [statusFilters, setStatusFilters] = useState("");
   const [userTypeFilters, setUserTypeFilters] = useState("");
 
   const applyFilter = (fn?: () => void) => {
     setFilters({
-      profile_status: statusFilters,
-      user_type: userTypeFilters,
+      status: statusFilters,
+      account_type: userTypeFilters,
     });
     fn?.();
   };
@@ -106,7 +95,7 @@ export const UsersFilter: React.FC<UsersFilterProps> = ({
                   <span className="uppercase text-text-tertiary text-xs">
                     PROFILE STATUS
                   </span>
-                  {profileStatus.map((item) => (
+                  {userProfileStatus.map((item) => (
                     <div
                       key={item.label}
                       role="button"

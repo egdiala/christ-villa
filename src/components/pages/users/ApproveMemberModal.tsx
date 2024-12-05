@@ -6,18 +6,25 @@ import {
 } from "@headlessui/react";
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/core";
+import { useUpdateUserStatus } from "@/services/hooks/mutations/useUsers";
+import { FetchedUserType } from "@/types/users";
 
 interface ApproveMemberModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onApprove: () => void;
+  user: FetchedUserType;
 }
 
 export const ApproveMemberModal = ({
   isOpen,
   onClose,
-  onApprove,
+  user,
 }: ApproveMemberModalProps) => {
+  const { mutate, isPending } = useUpdateUserStatus(() => onClose());
+  const handleApproveMember = () => {
+    mutate({ user_id: user?.user_id, status: "1" });
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -40,19 +47,30 @@ export const ApproveMemberModal = ({
 
             <Description>
               <h4 className="font-bold text-xl text-text-primary">
-                Approve [user name]?
+                Approve {user?.name}?
               </h4>
               <p className="text-sm text-text-secondary">
-                This action would approve [user name] to be a member of the
+                This action would approve {user?.name} to be a member of the
                 church
               </p>
             </Description>
 
             <div className="flex gap-4 w-full">
-              <Button theme="tertiary" onClick={onClose} className="w-full">
+              <Button
+                theme="tertiary"
+                onClick={onClose}
+                className="w-full"
+                disabled={isPending}
+              >
                 Cancel
               </Button>
-              <Button theme="primary" onClick={onApprove} className="w-full">
+              <Button
+                theme="primary"
+                onClick={handleApproveMember}
+                className="w-full"
+                loading={isPending}
+                disabled={isPending}
+              >
                 Approve
               </Button>
             </div>

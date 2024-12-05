@@ -6,18 +6,25 @@ import {
 } from "@headlessui/react";
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/core";
+import { useDeleteUser } from "@/services/hooks/mutations/useUsers";
+import { FetchedUserType } from "@/types/users";
 
 interface DeleteUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onDelete: () => void;
+  user: FetchedUserType;
 }
 
 export const DeleteUserModal = ({
   isOpen,
   onClose,
-  onDelete,
+  user,
 }: DeleteUserModalProps) => {
+  const { mutate, isPending } = useDeleteUser(() => onClose());
+  const handleDeleteUser = () => {
+    mutate({ user_id: user?.user_id });
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -40,19 +47,30 @@ export const DeleteUserModal = ({
 
             <Description className="grid gap-y-2">
               <h4 className="font-bold text-xl text-text-primary">
-                Delete [user name]?
+                Delete {user?.name}?
               </h4>
               <p className="text-sm text-text-secondary">
-                This action would remove [user name] from the system and is
+                This action would remove {user?.name} from the system and is
                 irreversible.
               </p>
             </Description>
 
             <div className="flex gap-4 w-full">
-              <Button theme="tertiary" onClick={onClose} className="w-full">
+              <Button
+                theme="tertiary"
+                onClick={onClose}
+                className="w-full"
+                disabled={isPending}
+              >
                 Cancel
               </Button>
-              <Button theme="primary" onClick={onDelete} className="w-full">
+              <Button
+                theme="primary"
+                onClick={handleDeleteUser}
+                className="w-full"
+                loading={isPending}
+                disabled={isPending}
+              >
                 Delete
               </Button>
             </div>
