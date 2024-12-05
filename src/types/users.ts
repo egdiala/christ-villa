@@ -85,3 +85,9 @@ export type FetchedUserType = {
     join_date: string;
   }[];
 };
+
+export enum UsersStatus {
+  Pending = 0,
+  Approved = 1,
+  Suspended = 2,
+}

@@ -11,7 +11,7 @@ export const useGetAllUsers = <T>(query: FetchUsersQuery) => {
   });
 };
 
-export const useGetSingleUser = <T>({ user_id }: { user_id: string }) => {
+export const useGetSingleUser = <T>(user_id: string) => {
   return useQuery({
     queryKey: [GET_USER, user_id],
     queryFn: () => getSingleUser({ user_id }),

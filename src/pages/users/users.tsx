@@ -17,6 +17,8 @@ import {
   FetchedUsersType,
 } from "@/types/users";
 import { Loader } from "@/components/core/Button/Loader";
+import { cn } from "@/libs/cn";
+import { UsersStatus } from "../../types/users";
 
 export const UsersPage: React.FC = () => {
   const [page, setPage] = useState(1);
@@ -58,11 +60,11 @@ export const UsersPage: React.FC = () => {
     });
 
   const userStatistics = [
-    { id: 1, label: "Total users", value: usersStatistics?.total_users },
-    { id: 2, label: "Members", value: usersStatistics?.total_members },
-    { id: 3, label: "HoDs", value: usersStatistics?.total_hods },
-    { id: 4, label: "Pastors", value: usersStatistics?.total_pastors },
-    { id: 5, label: "Ministers", value: usersStatistics?.total_ministers },
+    { id: 1, label: "Total users", value: usersStatistics?.total_users ?? 0 },
+    { id: 2, label: "Members", value: usersStatistics?.total_members ?? 0 },
+    { id: 3, label: "HoDs", value: usersStatistics?.total_hods ?? 0 },
+    { id: 4, label: "Pastors", value: usersStatistics?.total_pastors ?? 0 },
+    { id: 5, label: "Ministers", value: usersStatistics?.total_ministers ?? 0 },
   ];
 
   const columns = [
@@ -130,16 +132,17 @@ export const UsersPage: React.FC = () => {
       cell: ({ row }: { row: any }) => {
         const item = row?.original;
         return (
-          <div className="font-medium text-sm">
-            <RenderIf condition={item?.status === 0}>
-              <p className="text-amber">Pending</p>
-            </RenderIf>
-            <RenderIf condition={item?.status === 1}>
-              <p className="text-green-base">Active</p>
-            </RenderIf>
-            <RenderIf condition={item?.status === 2}>
-              <p className="text-accent-primary">Suspended</p>
-            </RenderIf>
+          <div
+            className={cn(
+              "font-medium text-sm capitalize",
+              item?.status === 0
+                ? "text-amber"
+                : item?.status === 1
+                ? "text-green-base"
+                : "text-accent-primary"
+            )}
+          >
+            {UsersStatus[item?.status]}
           </div>
         );
       },
@@ -154,62 +157,63 @@ export const UsersPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-5 px-4 pt-3 md:pt-5 pb-5 md:pb-10 view-page-container overflow-y-scroll">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 pb-6">
+        {userStatistics.map((item) => (
+          <div
+            key={item.id}
+            className="flex items-center gap-4 p-4 rounded-lg bg-light-blue-4"
+          >
+            <div className="grid place-content-center rounded-full size-12 bg-light-blue-3">
+              <Icon
+                icon="lucide:users"
+                className="size-6 text-text-secondary"
+              />
+            </div>
+            <div className="grid gap-1">
+              <h1 className="text-sm text-text-secondary">{item.label}</h1>
+              <p className="text-2xl text-text-primary">{item.value}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
+        <div className="flex-1 md:max-w-96">
+          <SearchInput
+            placeholder="Search by name or email"
+            onChange={onChangeHandler}
+          />
+        </div>
+
+        <div className="flex items-center gap-4 w-full sm:w-auto">
+          <DateFilter
+            theme="grey"
+            setFilters={setDateFilter}
+            isLoading={isLoading}
+          />
+          <UsersFilter
+            theme="grey"
+            setFilters={setUserFilter}
+            isLoading={isLoading}
+          />
+          <TableAction theme="grey" block>
+            Export
+            <Icon
+              icon="lucide:cloud-download"
+              className="size-4 text-accent-primary"
+            />
+          </TableAction>
+        </div>
+      </div>
+
       <RenderIf condition={isLoading || isLoadingCount || isLoadingStatistics}>
         <div className="flex w-full h-96 items-center justify-center">
           <Loader className="spinner size-6 text-green-1" />
         </div>
       </RenderIf>
+
       <RenderIf
         condition={!isLoading && !isLoadingCount && !isLoadingStatistics}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 pb-6">
-          {userStatistics.map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center gap-4 p-4 rounded-lg bg-light-blue-4"
-            >
-              <div className="grid place-content-center rounded-full size-12 bg-light-blue-3">
-                <Icon
-                  icon="lucide:users"
-                  className="size-6 text-text-secondary"
-                />
-              </div>
-              <div className="grid gap-1">
-                <h1 className="text-sm text-text-secondary">{item.label}</h1>
-                <p className="text-2xl text-text-primary">{item.value}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
-          <div className="flex-1 md:max-w-96">
-            <SearchInput
-              placeholder="Search by name or email"
-              onChange={onChangeHandler}
-            />
-          </div>
-
-          <div className="flex items-center gap-4 w-full sm:w-auto">
-            <DateFilter
-              theme="grey"
-              setFilters={setDateFilter}
-              isLoading={isLoading}
-            />
-            <UsersFilter
-              theme="grey"
-              setFilters={setUserFilter}
-              isLoading={isLoading}
-            />
-            <TableAction theme="grey" block>
-              Export
-              <Icon
-                icon="lucide:cloud-download"
-                className="size-4 text-accent-primary"
-              />
-            </TableAction>
-          </div>
-        </div>
-
         <Table
           columns={columns}
           data={users ?? []}

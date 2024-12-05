@@ -18,9 +18,7 @@ export const UserPage: React.FC = () => {
   const { pathname } = useLocation();
   const userId = pathname.split("/")[2];
 
-  const { data: user, isLoading } = useGetSingleUser<FetchedUserType>({
-    user_id: userId,
-  });
+  const { data: user, isLoading } = useGetSingleUser<FetchedUserType>(userId);
 
   const userStatus =
     userProfileStatus?.find(
