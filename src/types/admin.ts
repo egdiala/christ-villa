@@ -13,6 +13,12 @@ export type CreateAdminType = {
     permission: string[];
 }
 
+export type UpdateAdminStatusType = {
+    user_id: string;
+    status: string; // 1=Activate | 2=Suspend
+    reason?: string; // Required when status is 2
+}
+
 export enum AdminStatus {
     Pending = 0,
     Active = 1,

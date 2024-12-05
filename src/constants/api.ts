@@ -8,3 +8,6 @@ export const GET_ADMINS_API = "admin/ops/admin-users";
 
 // Profile
 export const CHANGE_PASSWORD_API = "admin/ops/change-password";
+
+// Connect Groups
+export const GET_CONNECT_GROUPS_API = "admin/ops/connect-groups"
