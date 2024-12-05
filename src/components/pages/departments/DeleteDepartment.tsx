@@ -1,23 +1,25 @@
-import {
-  Description,
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-} from "@headlessui/react";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/core";
+import { FetchedDepartmentType } from "@/types/departments";
+import { useDeleteDepartment } from "@/services/hooks/mutations/useDepartments";
 
 interface DeleteDepartmentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onDelete: () => void;
+  departmentInfo: FetchedDepartmentType;
 }
 
 export const DeleteDepartmentModal = ({
   isOpen,
   onClose,
-  onDelete,
+  departmentInfo,
 }: DeleteDepartmentModalProps) => {
+  const { mutate, isPending } = useDeleteDepartment(() => onClose());
+  const handleDelete = () => {
+    mutate({ department_id: departmentInfo?.department_id });
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -38,21 +40,27 @@ export const DeleteDepartmentModal = ({
               />
             </DialogTitle>
 
-            <Description className="grid gap-y-2">
+            <div className="grid gap-y-2">
               <h4 className="font-bold text-xl text-text-primary">
-                Delete [dept name]?
+                Delete {departmentInfo?.name}?
               </h4>
               <p className="text-sm text-text-secondary">
-                This action would remove [dept name] from the system and is
-                irreversible.
+                This action would remove {departmentInfo?.name} from the system
+                and is irreversible.
               </p>
-            </Description>
+            </div>
 
             <div className="flex gap-4 w-full">
               <Button theme="tertiary" onClick={onClose} block>
                 Cancel
               </Button>
-              <Button theme="primary" onClick={onDelete} block>
+              <Button
+                theme="primary"
+                onClick={handleDelete}
+                loading={isPending}
+                disabled={isPending}
+                block
+              >
                 Delete
               </Button>
             </div>

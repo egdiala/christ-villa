@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { Button, RenderIf } from "@/components/core";
+import { Breadcrumb, Button, RenderIf } from "@/components/core";
 import {
   AddHODModal,
   DeleteDepartmentModal,
@@ -8,14 +8,31 @@ import {
 } from "@/components/pages/departments";
 import { cn } from "@/libs/cn";
 import { NavLink, Outlet, useLocation } from "react-router";
+import { useGetSingleDepartment } from "@/services/hooks/queries/useDepartments";
+import { FetchedDepartmentType } from "@/types/departments";
 
 export const DepartmentPage: React.FC = () => {
-  const departmentName = "Children"; // Change value to "Ushering" to see the other layout
+  const { pathname } = useLocation();
+  const pathArray = pathname.split("/");
+  const departmentId = pathArray[2];
+
+  const { data: singleDepartmentInfo } =
+    useGetSingleDepartment<FetchedDepartmentType>({
+      department_id: departmentId,
+    });
+
+  const { data: requestAreas } = useGetSingleDepartment({
+    department_id: departmentId,
+    component: "request-area",
+  });
+  console.log({ requestAreas });
+
+  const departmentName = singleDepartmentInfo?.name;
+
   const [openDeleteDeptModal, setOpenDeleteDeptModal] = useState(false);
   const [openEditDepartmentModal, setOpenEditDepartmentModal] = useState(false);
   const [openAddHODModal, setOpenAddHODModal] = useState(false);
-  const { pathname } = useLocation();
-  const pathArray = pathname.split("/");
+
   const basePath = `/${pathArray[1]}/${pathArray[2]}`;
 
   const tabsList: Record<any, any> = {
@@ -30,8 +47,15 @@ export const DepartmentPage: React.FC = () => {
       : {}),
   };
 
+  const breadCrumbItems = [
+    { label: "Departments", link: "/departments" },
+    { label: singleDepartmentInfo?.name as string },
+  ];
+
   return (
     <div className="flex flex-col pt-4 pb-9 gap-y-4 view-page-container overflow-y-scroll px-4">
+      <Breadcrumb showBack items={breadCrumbItems} />
+
       <div className="flex gap-4 flex-col md:flex-row justify-between py-1">
         <h4 className="capitalize font-bold text-2xl md:text-xl text-text-primary">
           {departmentName} Department
@@ -44,7 +68,7 @@ export const DepartmentPage: React.FC = () => {
             onClick={() => setOpenDeleteDeptModal(true)}
           >
             <Icon icon="lucide:trash" className="size-4" />
-            Delete Department
+            Delete
           </Button>
 
           <Button
@@ -53,7 +77,7 @@ export const DepartmentPage: React.FC = () => {
             className="!text-sm w-full md:unset"
           >
             <Icon icon="lucide:edit-2" className="size-4" />
-            Edit Department
+            Edit
           </Button>
 
           <Button
@@ -62,7 +86,7 @@ export const DepartmentPage: React.FC = () => {
             className="!text-sm w-full md:unset"
           >
             <Icon icon="lucide:plus" className="size-4" />
-            Add HOD
+            Add Request Area
           </Button>
         </div>
       </div>
@@ -101,13 +125,13 @@ export const DepartmentPage: React.FC = () => {
       <DeleteDepartmentModal
         isOpen={openDeleteDeptModal}
         onClose={() => setOpenDeleteDeptModal(false)}
-        onDelete={() => {}}
+        departmentInfo={singleDepartmentInfo as FetchedDepartmentType}
       />
 
       <EditDepartmentModal
         isOpen={openEditDepartmentModal}
         onClose={() => setOpenEditDepartmentModal(false)}
-        onUpdateDepartment={() => {}}
+        departmentInfo={singleDepartmentInfo as FetchedDepartmentType}
       />
 
       <AddHODModal

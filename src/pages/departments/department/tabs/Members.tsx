@@ -1,14 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation, useSearchParams } from "react-router";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { setPaginationParams } from "@/hooks/usePaginationParams";
+import {
+  getPaginationParams,
+  setPaginationParams,
+} from "@/hooks/usePaginationParams";
 import { UsersFilter } from "@/components/pages/users";
 import { cn } from "@/libs/cn";
-import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import {
   ApproveMemberRequestModal,
   RemoveMemberModal,
 } from "@/components/pages/departments";
+import { useGetAllUsers } from "@/services/hooks/queries/useDepartments";
+import {
+  FetchedUserCountType,
+  FetchedUsersStatisticsType,
+  FetchedUsersType,
+} from "@/types/departments";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface MembersTabProps {
   isChildrenDept?: boolean;
@@ -17,80 +29,80 @@ interface MembersTabProps {
 export const MembersTab: React.FC = ({
   isChildrenDept = false,
 }: MembersTabProps) => {
+  const { pathname } = useLocation();
+  const pathArray = pathname.split("/");
+  const departmentId = pathArray[2];
+
+  const [userFilter, setUserFilter] = useState({});
+
+  const [page, setPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handlePageChange = (page: number) => {
+    setPage(page);
+    setPaginationParams(page, itemsPerPage, searchParams, setSearchParams);
+  };
+
+  const { value, onChangeHandler } = useDebounce(300);
+
+  const { data: deptMembers, isLoading: isLoadingMembers } = useGetAllUsers<
+    FetchedUsersType[]
+  >({
+    q: value,
+    department_id: departmentId,
+    page: page.toString(),
+    item_per_page: itemsPerPage.toString(),
+    ...userFilter,
+  });
+
+  const { data: deptMembersCount } = useGetAllUsers<FetchedUserCountType>({
+    q: value,
+    department_id: departmentId,
+    ...userFilter,
+    component: "count",
+  });
+
+  const { data: deptMembersStatistics } =
+    useGetAllUsers<FetchedUsersStatisticsType>({
+      department_id: pathArray[2],
+      component: "count-department",
+    });
+
+  console.log({ deptMembers, deptMembersStatistics, deptMembersCount });
+
   const deptStatistics = [
-    { id: 1, label: "All Members", icon: "lucide:users", value: "12,345" },
-    { id: 2, label: "Pending Members", icon: "lucide:users", value: "12,345" },
-    { id: 3, label: "Approved Members", icon: "lucide:users", value: "12,345" },
-    { id: 4, label: "HODS", icon: "lucide:life-buoy", value: "2" },
+    {
+      id: 1,
+      label: "All Members",
+      icon: "lucide:users",
+      value: deptMembersStatistics?.total_member,
+    },
+    {
+      id: 2,
+      label: "Pending Members",
+      icon: "lucide:users",
+      value: deptMembersStatistics?.pending_member,
+    },
+    {
+      id: 3,
+      label: "Approved Members",
+      icon: "lucide:users",
+      value: deptMembersStatistics?.approve_member,
+    },
+    {
+      id: 4,
+      label: "Declined Members",
+      icon: "lucide:life-buoy",
+      value: deptMembersStatistics?.decline_member,
+    },
   ];
 
   const childrenDeptStatistics = [
     { id: 1, label: "Members", icon: "lucide:users", value: "12,345" },
     { id: 2, label: "Teachers", icon: "lucide:users", value: "12,345" },
     { id: 3, label: "HODS", icon: "lucide:life-buoy", value: "2" },
-  ];
-
-  const deptMembers = [
-    {
-      id: 1,
-      firstName: "Albert",
-      lastName: "Flores",
-      profileImg:
-        "https://plus.unsplash.com/premium_photo-1682144187125-b55e638cf286?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      role: "Member",
-      membership_status: "pending",
-    },
-    {
-      id: 2,
-      firstName: "Theresa",
-      lastName: "Webb",
-      profileImg:
-        "https://images.unsplash.com/photo-1636406269177-4827c00bb263?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Female",
-      role: "HOD",
-      membership_status: "approved",
-    },
-    {
-      id: 3,
-      firstName: "Ronals",
-      lastName: "Richards",
-      profileImg:
-        "https://images.unsplash.com/photo-1715029005043-e88d219a3c48?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      role: "Member",
-      membership_status: "approved",
-    },
-    {
-      id: 4,
-      firstName: "Bessie",
-      lastName: "Cooper",
-      profileImg:
-        "https://plus.unsplash.com/premium_photo-1664536392896-cd1743f9c02c?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      role: "HOD",
-      membership_status: "approved",
-    },
-    {
-      id: 5,
-      firstName: "Floyd",
-      lastName: "Miles",
-      profileImg:
-        "https://images.unsplash.com/photo-1636377985931-898218afd306?q=80&w=2864&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      role: "Member",
-      membership_status: "approved",
-    },
   ];
 
   const [openApproveMemberRequestModal, setOpenApproveMemberRequestModal] =
@@ -112,13 +124,13 @@ export const MembersTab: React.FC = ({
           <div className="flex items-center gap-x-3 whitespace-nowrap">
             <div className="size-8">
               <img
-                src={item?.profileImg}
+                src={item?.avatar}
                 alt="profile"
                 className="w-full h-full rounded-full object-cover"
               />
             </div>
-            <p className="text-sm text-text-secondary">
-              {item?.firstName} {item?.lastName}
+            <p className="text-sm text-text-secondary capitalize">
+              {item?.name}
             </p>
           </div>
         );
@@ -131,7 +143,8 @@ export const MembersTab: React.FC = ({
         const item = row?.original;
         return (
           <p className="text-sm text-text-secondary whitespace-nowrap">
-            {item?.date} • {item?.time}
+            {format(item?.createdAt, "dd MMM, yyyy")} •{" "}
+            {format(item?.createdAt, "p")}
           </p>
         );
       },
@@ -139,32 +152,42 @@ export const MembersTab: React.FC = ({
     {
       header: () => "Gender",
       accessorKey: "gender",
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original;
+        return (
+          <p className="text-sm text-text-secondary capitalize">
+            {item?.gender}
+          </p>
+        );
+      },
     },
     {
       header: () => "Role",
-      accessorKey: "role",
+      accessorKey: "account_type",
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original;
+        return (
+          <p className="text-sm text-text-secondary whitespace-nowrap capitalize">
+            {item?.account_type}
+          </p>
+        );
+      },
     },
     {
       header: () => "Membership Status",
-      accessorKey: "membership_status",
+      accessorKey: "status",
       cell: ({ row }: { row: any }) => {
         const item = row?.original;
         return (
           <div className="font-medium text-sm capitalize">
-            <RenderIf
-              condition={item?.membership_status?.toLowerCase() === "pending"}
-            >
-              <p className="text-amber">{item?.membership_status}</p>
+            <RenderIf condition={item?.status === 0}>
+              <p className="text-amber">Pending</p>
             </RenderIf>
-            <RenderIf
-              condition={item?.membership_status?.toLowerCase() === "approved"}
-            >
-              <p className="text-[#008E5B]">{item?.membership_status}</p>
+            <RenderIf condition={item?.status === 1}>
+              <p className="text-[#008E5B]">Active</p>
             </RenderIf>
-            <RenderIf
-              condition={item?.membership_status?.toLowerCase() === "suspended"}
-            >
-              <p className="text-accent-primary">{item?.membership_status}</p>
+            <RenderIf condition={item?.status === 2}>
+              <p className="text-accent-primary">Suspended</p>
             </RenderIf>
           </div>
         );
@@ -213,15 +236,11 @@ export const MembersTab: React.FC = ({
     },
   ];
 
-  const [page, setPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const location = useLocation();
 
-  const [searchParams, setSearchParams] = useState("");
-
-  const handlePageChange = (page: number) => {
-    setPage(page);
-    setPaginationParams(page, itemsPerPage, searchParams, setSearchParams);
-  };
+  useEffect(() => {
+    getPaginationParams(location, setPage, () => {});
+  }, [location, setPage]);
 
   return (
     <div className="flex flex-col gap-5">
@@ -251,11 +270,18 @@ export const MembersTab: React.FC = ({
 
       <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
         <div className="flex-1 md:max-w-96">
-          <SearchInput placeholder="Search member name" />
+          <SearchInput
+            placeholder="Search member name"
+            onChange={onChangeHandler}
+          />
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto">
-          <UsersFilter theme="grey" setFilters={undefined} isLoading={false} />
+          <UsersFilter
+            theme="grey"
+            setFilters={setUserFilter}
+            isLoading={isLoadingMembers}
+          />
           <TableAction theme="grey" block>
             Export
             <Icon
@@ -272,7 +298,7 @@ export const MembersTab: React.FC = ({
           data={deptMembers ?? []}
           page={page}
           perPage={itemsPerPage}
-          totalCount={deptMembers.length}
+          totalCount={deptMembersCount?.total}
           onPageChange={handlePageChange}
           emptyStateText="We couldn't find any member."
         />
