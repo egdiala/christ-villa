@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import {
   Description,
   Dialog,
@@ -13,6 +14,7 @@ interface LogoutModalProps {
 }
 
 export const LogoutModal = ({ isOpen, onClose }: LogoutModalProps) => {
+  const navigate = useNavigate();
   return (
     <Dialog
       open={isOpen}
@@ -45,7 +47,15 @@ export const LogoutModal = ({ isOpen, onClose }: LogoutModalProps) => {
               <Button theme="tertiary" onClick={onClose} block>
                 Cancel
               </Button>
-              <Button theme="primary" block>
+              <Button
+                theme="primary"
+                block
+                onClick={() => {
+                  localStorage.clear();
+                  onClose();
+                  navigate("/auth/login");
+                }}
+              >
                 Log Out
               </Button>
             </div>

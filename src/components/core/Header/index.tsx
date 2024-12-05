@@ -2,15 +2,14 @@ import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import { useRouteTitle } from "@/hooks/useRouteTitle";
 import { NotificationsModal } from "@/components/pages/profile";
-import { getItem } from "@/utils/localStorage";
-import { APP_USERDATA_STORAGE_KEY } from "@/constants/utils";
+import { getAdminData } from "@/utils/authUtil";
 
 interface HeaderProps {
   close: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ close }) => {
-  const loggedInUser = JSON.parse(getItem(APP_USERDATA_STORAGE_KEY));
+  const loggedInUser = getAdminData();
 
   const avatar =
     loggedInUser?.avatar ||
@@ -46,7 +45,7 @@ export const Header: React.FC<HeaderProps> = ({ close }) => {
           className="flex items-center gap-1 p-2 bg-white rounded-full cursor-pointer"
         >
           <div className="size-6 rounded-full overflow-hidden">
-            <img src={avatar} className="size-6" />
+            <img alt="avatar" src={avatar} className="size-6" />
           </div>
           <h2 className="text-text-primary text-sm font-medium">
             {loggedInUser?.name}
