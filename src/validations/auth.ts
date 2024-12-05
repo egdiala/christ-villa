@@ -22,10 +22,11 @@ export const loginSchema = Yup.object().shape({
 });
 
 export const changePasswordSchema = Yup.object().shape({
+  old_password: PasswordSchema,
   new_password: PasswordSchema,
   confirm_password: Yup.string()
     .oneOf([Yup.ref("new_password")], "Passwords must match")
-    .required("Confirm New Password is required")
+    .required("Confirm New Password is required"),
 });
 
 export const forgotPasswordSchema = Yup.object().shape({
