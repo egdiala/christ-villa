@@ -1,15 +1,18 @@
 import { cn } from "@/libs/cn"
 import { useState } from "react"
-import { useNavigate } from "react-router"
+import { useNavigate, useParams } from "react-router"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { SearchInput, Table, TableAction } from "@/components/core"
 import { Menu, MenuButton, MenuHeading, MenuItem, MenuItems, MenuSection } from '@headlessui/react'
 import { ConnectGroupFilter, AddGroupMemberModal, EditConnectGroupModal, DeleteConnectGroupModal, SuspendConnectGroupModal, RemoveMemberModal } from "@/components/pages/connect-groups"
+import { useGetConnectGroup } from "@/services/hooks/queries"
 
 export const ConnectGroupPage: React.FC = () => {
+    const { id } = useParams()
     const navigate = useNavigate()
     const [page, setPage] = useState(1)
     const [itemsPerPage] = useState(10)
+    const { data } = useGetConnectGroup<any[]>({ id: id as string })
     const [toggleModals, setToggleModals] = useState({
         openAddMember: false,
         openEditGroup: false,
@@ -17,27 +20,6 @@ export const ConnectGroupPage: React.FC = () => {
         openSuspendGroup: false,
         openRemoveMember: false
     })
-
-    const sampleData = [
-        {
-            name: "Project Alpha",
-            description: "A cutting-edge AI research project.",
-            members: 12,
-            status: "Active",
-        },
-        {
-            name: "Marketing Campaign X",
-            description: "A digital marketing initiative for Q4.",
-            members: 8,
-            status: "Suspended",
-        },
-        {
-            name: "Website Redesign",
-            description: "Overhaul the company website for better UX.",
-            members: 5,
-            status: "Active",
-        },
-    ];
 
     const columns = [
         {
@@ -162,10 +144,10 @@ export const ConnectGroupPage: React.FC = () => {
             <div>
                 <Table
                     columns={columns}
-                    data={sampleData}
+                    data={data ?? []}
                     page={page}
                     perPage={itemsPerPage}
-                    totalCount={sampleData.length}
+                    totalCount={0}
                     onPageChange={handlePageChange}
                     onClick={() => navigate("/connect-groups/1")}
                     emptyStateText="We couldn't find any connect groups."
