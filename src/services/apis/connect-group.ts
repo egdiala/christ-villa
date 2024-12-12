@@ -26,6 +26,7 @@ export const editConnectGroup = async (payload: EditConnectGroupType) => {
 };
 
 export const deleteConnectGroup = async (query: DeleteConnectGroupQuery) => {
-    const res = await axiosInstance.delete(`${GET_CONNECT_GROUPS_API}${createQueryString(query)}`);
+    const { id, ...rest } = query
+    const res = await axiosInstance.delete(`${GET_CONNECT_GROUPS_API}/${id}${createQueryString(rest)}`);
     return res.data;
 };

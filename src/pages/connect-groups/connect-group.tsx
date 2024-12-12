@@ -7,7 +7,7 @@ import { useGetConnectGroup } from "@/services/hooks/queries"
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core"
 import type { FetchedConnectGroupCountStatusType } from "@/types/connect-group"
 import { Menu, MenuButton, MenuHeading, MenuItem, MenuItems, MenuSection } from '@headlessui/react'
-import { ConnectGroupFilter, AddGroupMemberModal, EditConnectGroupModal, DeleteConnectGroupModal, SuspendConnectGroupModal, RemoveMemberModal } from "@/components/pages/connect-groups"
+import { ConnectGroupFilter, EditConnectGroupModal, DeleteConnectGroupModal, RemoveMemberModal } from "@/components/pages/connect-groups"
 
 export const ConnectGroupPage: React.FC = () => {
     const { id } = useParams()
@@ -16,10 +16,8 @@ export const ConnectGroupPage: React.FC = () => {
     const [itemsPerPage] = useState(10)
     const { data, isLoading } = useGetConnectGroup<FetchedConnectGroupCountStatusType>({ id: id as string, component: "count-status" })
     const [toggleModals, setToggleModals] = useState({
-        openAddMember: false,
         openEditGroup: false,
         openDeleteGroup: false,
-        openSuspendGroup: false,
         openRemoveMember: false
     })
 
@@ -107,16 +105,6 @@ export const ConnectGroupPage: React.FC = () => {
                                     Edit Group
                                 </TableAction>
                             </div>
-                            <div className="flex items-center gap-2 w-full sm:w-auto">
-                                <TableAction type="button" theme="grey" className="group" onClick={() => setToggleModals((prev) => ({ ...prev, openSuspendGroup: true }))} block>
-                                    <Icon icon="lucide:ban" className="size-4" />
-                                    Suspend Group
-                                </TableAction>
-                                <TableAction type="button" theme="primary" onClick={() => setToggleModals((prev) => ({ ...prev, openAddMember: true }))} block>
-                                    <Icon icon="lucide:plus" className="size-4" />
-                                    Add Member
-                                </TableAction>
-                            </div>
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
@@ -160,10 +148,8 @@ export const ConnectGroupPage: React.FC = () => {
                         />
                     </div>
                     <RemoveMemberModal isOpen={toggleModals.openRemoveMember} onClose={() => setToggleModals((prev) => ({ ...prev, openRemoveMember: false }))} />
-                    <SuspendConnectGroupModal isOpen={toggleModals.openSuspendGroup} onClose={() => setToggleModals((prev) => ({ ...prev, openSuspendGroup: false }))} />
                     <DeleteConnectGroupModal isOpen={toggleModals.openDeleteGroup} connectGroup={data!} onClose={() => setToggleModals((prev) => ({ ...prev, openDeleteGroup: false }))} />
                     <EditConnectGroupModal isOpen={toggleModals.openEditGroup} connectGroup={data!} onClose={() => setToggleModals((prev) => ({ ...prev, openEditGroup: false }))} />
-                    <AddGroupMemberModal isOpen={toggleModals.openAddMember} onClose={() => setToggleModals((prev) => ({ ...prev, openAddMember: false }))} />
                 </div>
             </RenderIf>
             <RenderIf condition={isLoading}>

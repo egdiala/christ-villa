@@ -1,7 +1,5 @@
-export { AddGroupMemberModal } from "./AddGroupMember"
 export { ConnectGroupFilter } from "./ConnectGroupFilter"
 export { CreateConnectGroupModal } from "./CreateConnectGroup"
 export { DeleteConnectGroupModal } from "./DeleteConnectGroup"
 export { EditConnectGroupModal } from "./EditConnectGroup"
 export { RemoveMemberModal } from "./RemoveMember"
-export { SuspendConnectGroupModal } from "./SuspendConnectGroup"
