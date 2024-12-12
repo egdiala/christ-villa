@@ -20,3 +20,6 @@ export const GET_CONNECT_GROUPS_API = "admin/ops/connect-groups";
 
 // Profile
 export const CHANGE_PASSWORD_API = "admin/ops/change-password";
+
+// Requests
+export const GET_REQUESTS_API = "admin/users/requests"

@@ -35,7 +35,7 @@ export const ConnectGroupsPage: React.FC = () => {
         },
         {
             header: () => "Date Created",
-            accessorKey: "comment",
+            accessorKey: "createdAt",
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedConnectGroupType
                 return (
