@@ -5,6 +5,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useGetDashboardStatistics } from "@/services/hooks/queries/useDashboard";
 interface DashboardGraphProps {
   totalRequests: number;
 }
@@ -40,6 +41,11 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export const DashboardGraph = ({ totalRequests }: DashboardGraphProps) => {
+  const { data: requestsMonthly } = useGetDashboardStatistics({
+    component: "dashboard-request-monthly",
+  });
+  console.log({ requestsMonthly });
+
   return (
     <div className="border border-blue-4 grid gap-y-[41px] rounded-2xl p-4 h-full content-start">
       <div className="max-w-[124px] grid gap-y-1 bg-light-blue-4 p-2">

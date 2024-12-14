@@ -2,8 +2,15 @@ import { useState } from "react";
 import { RenderIf, Table } from "@/components/core";
 import { useNavigate } from "react-router";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
+import { useGetDashboardStatistics } from "@/services/hooks/queries/useDashboard";
 
 export const DashboardPendingMembersTable = () => {
+  const { data: pendingUserStatistics } = useGetDashboardStatistics({
+    component: "dashboard-pending-user",
+  });
+
+  console.log({ pendingUserStatistics });
+
   const imgUrl =
     "https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
@@ -103,10 +110,10 @@ export const DashboardPendingMembersTable = () => {
       header: () => "Gender",
       accessorKey: "gender",
     },
-    {
-      header: () => "User Type",
-      accessorKey: "type",
-    },
+    // {
+    //   header: () => "User Type",
+    //   accessorKey: "type",
+    // },
     {
       header: () => "Profile Status",
       accessorKey: "status",
