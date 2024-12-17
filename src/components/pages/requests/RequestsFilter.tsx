@@ -14,17 +14,17 @@ interface RequestsFilterProps {
 export const RequestsFilter: React.FC<RequestsFilterProps> = ({ isLoading, setFilters, theme = "grey" }) => {
 
     const requestStatus = [
-        { label: "All Request types", name: "accepted", value: "REQUEST_ACCEPTED" },
-        { label: "Pending", name: "at_pickup", value: "ARRIVED_AT_PICKUP" },
-        { label: "Completed", name: "picked_up", value: "PICKED_RIDER" },
-        { label: "Rejected", name: "drop_off", value: "ENROUTE_TO_DROPOFF" },
+        { label: "All Request types", name: "accepted", value: "" },
+        { label: "Pending", name: "at_pickup", value: "0" },
+        { label: "Completed", name: "picked_up", value: "1" },
+        { label: "Rejected", name: "drop_off", value: "2" },
     ]
 
     const [statusFilters, setStatusFilters] = useState("");
 
     const applyFilter = (fn?: () => void) => {
         setFilters({
-            request_status: statusFilters,
+            status: statusFilters,
         });
         fn?.();
     };

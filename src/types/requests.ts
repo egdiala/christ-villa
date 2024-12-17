@@ -27,6 +27,7 @@ export interface FetchedRequestType {
         phone_number: string;
         user_type: string;
     },
+    department: string;
     data: {
         url: string;
         notice_reason: string;

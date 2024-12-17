@@ -1,18 +1,27 @@
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core"
-import { Loader } from "@/components/core/Button/Loader"
-import { DateFilter, RequestsFilter } from "@/components/pages/requests"
-import { useGetRequests } from "@/services/hooks/queries"
-import { RequestStatus, type FetchedRequestCountStatusType, type FetchedRequestCountType, type FetchedRequestType } from "@/types/requests"
-import { Icon } from "@iconify/react/dist/iconify.js"
-import { format } from "date-fns"
 import { useMemo, useState } from "react"
+import { cn } from "@/libs/cn"
+import { format } from "date-fns"
+import { Icon } from "@iconify/react/dist/iconify.js"
+import { Loader } from "@/components/core/Button/Loader"
+import { useGetRequests } from "@/services/hooks/queries"
+import { DateFilter, RequestsFilter, UpdateRequestStatusModal, ViewRequestModal } from "@/components/pages/requests"
+import { RenderIf, Table, TableAction } from "@/components/core"
+import { Menu, MenuButton, MenuHeading, MenuItem, MenuItems, MenuSection } from '@headlessui/react'
+import { RequestStatus, type FetchedRequestCountStatusType, type FetchedRequestCountType, type FetchedRequestType } from "@/types/requests"
 
 export const RequestsPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const [itemsPerPage] = useState(10)
-    const { data: requests, isLoading } = useGetRequests<FetchedRequestType[]>({ page: page.toString(), item_per_page: itemsPerPage.toString() }) 
-    const { data: requestsCount, isLoading: isLoadingCount } = useGetRequests<FetchedRequestCountType>({ component: "count" }) 
+    const [requestFilters, setRequestFilters] = useState({})
+    const [dateFilters, setDateFilters] = useState({})
+    const { data: requests, isLoading } = useGetRequests<FetchedRequestType[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), ...requestFilters, ...dateFilters }) 
+    const { data: requestsCount, isLoading: isLoadingCount } = useGetRequests<FetchedRequestCountType>({ component: "count", ...requestFilters, ...dateFilters }) 
     const { data: requestsCountStatus } = useGetRequests<FetchedRequestCountStatusType>({ component: "count-status" }) 
+    const [toggleModals, setToggleModals] = useState({
+        openRequestStatusModal: false,
+        openViewRequestModal: false,
+        activeRequest: null as FetchedRequestType | null
+    })
 
     const columns = [
         {
@@ -49,6 +58,12 @@ export const RequestsPage: React.FC = () => {
         {
             header: () => "Department",
             accessorKey: "department",
+            cell: ({ row }: { row: any }) => {
+                const item = row.original as FetchedRequestType
+                return (
+                    <div className="capitalize">{item?.department || "-"}</div>
+                )
+            }
         },
         {
             header: () => "Status",
@@ -56,13 +71,36 @@ export const RequestsPage: React.FC = () => {
             cell: ({ row }: { row: any }) => {
                 const item = row.original as FetchedRequestType
                 return (
-                    <div className="capitalize">{RequestStatus[item?.status]}</div>
+                    <div className={cn("capitalize", item?.status === 0 ? "text-amber" : "", item?.status === 1 ? "text-green-base" : "", item?.status === 2 ? "text-accent-primary" : "")}>{RequestStatus[item?.status]}</div>
                 )
             }
         },
         {
             header: () => "Actions",
             accessorKey: "actions",
+            cell: ({ row }: { row: any }) => {
+                const item = row.original as FetchedRequestType
+                return (
+                    <div className="text-right">
+                        <Menu>
+                            <MenuButton type="button" className="group p-2 grid place-content-center rounded-lg bg-red-5 hover:bg-red-2 transition-colors duration-300 ease-out"><Icon icon="lucide:ellipsis" className="group-hover:text-white text-text-secondary size-4" /></MenuButton>
+                            <MenuItems transition anchor="bottom end" className="w-52 origin-top-right rounded-xl bg-white px-2.5 py-3.5 transition duration-100 ease-out [--anchor-gap:var(--spacing-1)] focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0">
+                                <MenuSection className="space-y-4">
+                                    <MenuHeading as="h1" className="font-semibold text-base text-grey-dark-1">Actions</MenuHeading>
+                                    <div className="grid gap-1">
+                                        <MenuItem as="button" type="button" className="flex items-center w-full rounded hover:bg-red-5 px-2 py-1.5 text-sm/6 text-text-secondary" onClick={() => setToggleModals((prev) => ({ ...prev, openViewRequestModal: true, activeRequest: item }))}>
+                                            View
+                                        </MenuItem>
+                                        <MenuItem as="button" type="button" className="flex items-center w-full rounded hover:bg-red-5 px-2 py-1.5 text-sm/6 text-text-secondary" onClick={() => setToggleModals((prev) => ({ ...prev, openRequestStatusModal: true, activeRequest: item }))}>
+                                            Update Status
+                                        </MenuItem>
+                                    </div>
+                                </MenuSection>
+                            </MenuItems>
+                        </Menu>
+                    </div>
+                )
+            }
         },
     ];
 
@@ -97,14 +135,11 @@ export const RequestsPage: React.FC = () => {
                     )
                 }
             </div>
-            <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
-                <div className="flex-1 md:max-w-96">
-                    <SearchInput placeholder="Search requester name" />
-                </div>
+            <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-end">
                 
                 <div className="flex items-center gap-4 w-full sm:w-auto">
-                    <DateFilter theme="grey" setFilters={undefined} isLoading={false} />
-                    <RequestsFilter theme="grey" setFilters={undefined} isLoading={false} />
+                    <DateFilter theme="grey" setFilters={setDateFilters} isLoading={isLoading} />
+                    <RequestsFilter theme="grey" setFilters={setRequestFilters} isLoading={isLoading} />
                     <TableAction theme="grey" block>
                         Export
                         <Icon icon="lucide:cloud-download" className="size-4 text-accent-primary" />
@@ -127,6 +162,8 @@ export const RequestsPage: React.FC = () => {
                     <Loader className="spinner size-6 text-accent-primary" />
                 </div>
             </RenderIf>
+            <ViewRequestModal activeRequest={toggleModals.activeRequest!} isOpen={toggleModals.openViewRequestModal} onClose={() => setToggleModals((prev) => ({ ...prev, openViewRequestModal: false, activeRequest: null }))} />
+            <UpdateRequestStatusModal activeRequest={toggleModals.activeRequest!} isOpen={toggleModals.openRequestStatusModal} onClose={() => setToggleModals((prev) => ({ ...prev, openRequestStatusModal: false, activeRequest: null }))} />
         </div>
     )
 }
