@@ -5,24 +5,25 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-interface DashboardGraphProps {
-  totalRequests: number;
-}
+import { useGetDashboardStatistics } from "@/services/hooks/queries/useDashboard";
+import { FetchedDashboardGraphType } from "@/types/dashboard";
+import { GraphFilter } from "./GraphFilter";
+import { useState } from "react";
 
-const chartData = [
-  { month: "January", completed: 186, pending: 80, rejected: 100 },
-  { month: "February", completed: 305, pending: 200, rejected: 250 },
-  { month: "March", completed: 237, pending: 120, rejected: 180 },
-  { month: "April", completed: 73, pending: 190, rejected: 150 },
-  { month: "May", completed: 209, pending: 130, rejected: 170 },
-  { month: "June", completed: 214, pending: 140, rejected: 190 },
-  { month: "July", completed: 186, pending: 80, rejected: 100 },
-  { month: "August", completed: 305, pending: 200, rejected: 250 },
-  { month: "September", completed: 237, pending: 120, rejected: 180 },
-  { month: "October", completed: 73, pending: 190, rejected: 150 },
-  { month: "November", completed: 209, pending: 130, rejected: 170 },
-  { month: "December", completed: 214, pending: 140, rejected: 190 },
-];
+const months: Record<string, string> = {
+  1: "January",
+  2: "February",
+  3: "March",
+  4: "April",
+  5: "May",
+  6: "June",
+  7: "July",
+  8: "August",
+  9: "September",
+  10: "October",
+  11: "November",
+  12: "December",
+};
 
 const chartConfig = {
   completed: {
@@ -39,12 +40,35 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export const DashboardGraph = ({ totalRequests }: DashboardGraphProps) => {
+export const DashboardGraph = () => {
+  const [graphFilter, setGraphFilter] = useState({});
+
+  const { data: requestsMonthly } = useGetDashboardStatistics<
+    FetchedDashboardGraphType[]
+  >({
+    component: "dashboard-request-monthly",
+    ...graphFilter,
+  });
+  const monthlyRequests = requestsMonthly?.map((rMonthly) => {
+    return {
+      month: months[rMonthly.month],
+      completed: rMonthly.total_completed || "0", // to ensure tooltip value for 0 is displayed when response from endpoint is 0
+      pending: rMonthly.total_pending || "0",
+      rejected: rMonthly.total_rejected || "0",
+    };
+  });
+
   return (
     <div className="border border-blue-4 grid gap-y-[41px] rounded-2xl p-4 h-full content-start">
-      <div className="max-w-[124px] grid gap-y-1 bg-light-blue-4 p-2">
-        <p className="capitalize text-xs text-text-primary">Total Requests</p>
-        <h2 className="text-xl text-text-primary">{totalRequests}</h2>
+      <div className="w-full flex justify-between items-center">
+        <div className="max-w-[124px] grid gap-y-1 bg-light-blue-4 p-2">
+          <p className="capitalize text-xs text-text-primary">Total Requests</p>
+          <h2 className="text-xl text-text-primary">
+            {requestsMonthly?.length ?? 0}
+          </h2>
+        </div>
+
+        <GraphFilter setFilters={setGraphFilter} isLoading={false} />
       </div>
       <div className="grid w-full h-full">
         <ChartContainer
@@ -53,7 +77,7 @@ export const DashboardGraph = ({ totalRequests }: DashboardGraphProps) => {
         >
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={monthlyRequests}
             margin={{
               left: 12,
               right: 12,

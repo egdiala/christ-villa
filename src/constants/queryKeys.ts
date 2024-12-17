@@ -22,3 +22,6 @@ export const GET_CONNECT_GROUPS = "get-connect-groups";
 
 // Requests
 export const GET_REQUESTS = "get-requests";
+
+// Dashboard
+export const GET_DASHBOARD_STATISTICS = "get-dashboard-statistics";
