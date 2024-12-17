@@ -1,15 +1,39 @@
-import { useState } from "react";
+import { useGetDashboardStatistics } from "@/services/hooks/queries/useDashboard";
+import { FetchedDashboardChildrenChurchStatsType } from "@/types/dashboard";
 import { Icon } from "@iconify/react";
-import { Button } from "@/components/core";
-import { AttendanceModal } from "./AttendanceModal";
 
 export const DashboardChildrenChurchCard = () => {
-  const childrenChurchStats = [
-    { id: 1, icon: "lucide:presentation", title: "Teachers", count: 340 },
-    { id: 2, icon: "lucide:baby", title: "Pupils", count: 340 },
-  ];
+  const { data: childrenChurchStatistics } =
+    useGetDashboardStatistics<FetchedDashboardChildrenChurchStatsType>({
+      component: "dashboard-children-church",
+    });
 
-  const [openAttendanceModal, setOpenAttendanceModal] = useState(false);
+  const childrenChurchStats = [
+    {
+      id: 1,
+      icon: "lucide:presentation",
+      title: "Teachers",
+      count: childrenChurchStatistics?.total_teacher ?? 0,
+    },
+    {
+      id: 2,
+      icon: "lucide:baby",
+      title: "Pupils",
+      count: childrenChurchStatistics?.total_pupil ?? 0,
+    },
+    {
+      id: 3,
+      icon: "lucide:baby",
+      title: "Male Pupils",
+      count: childrenChurchStatistics?.total_male ?? 0,
+    },
+    {
+      id: 4,
+      icon: "lucide:baby",
+      title: "Female Pupils",
+      count: childrenChurchStatistics?.total_female ?? 0,
+    },
+  ];
 
   return (
     <div className="border border-blue-4 p-4 rounded-2xl flex flex-col gap-y-[25.33px] justify-between content-start h-full">
@@ -31,7 +55,7 @@ export const DashboardChildrenChurchCard = () => {
         </div>
       </div>
 
-      <div className="p-4 bg-light-blue-4 rounded-2xl grid gap-y-4">
+      {/* <div className="p-4 bg-light-blue-4 rounded-2xl grid gap-y-4">
         <div className="grid gap-y-1">
           <p className="text-sm text-text-secondary font-medium">
             Last Attendance
@@ -47,12 +71,12 @@ export const DashboardChildrenChurchCard = () => {
             View
           </Button>
         </div>
-      </div>
+      </div> */}
 
-      <AttendanceModal
+      {/* <AttendanceModal
         isOpen={openAttendanceModal}
         onClose={() => setOpenAttendanceModal(false)}
-      />
+      /> */}
     </div>
   );
 };

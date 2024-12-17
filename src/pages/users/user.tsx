@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import blankImage from "@/assets/blank.svg";
 import { Breadcrumb, Button, RenderIf } from "@/components/core";
 import { cn } from "@/libs/cn";
 import {
@@ -69,10 +70,7 @@ export const UserPage: React.FC = () => {
   const [openApproveMemberModal, setOpenApproveMemberModal] = useState(false);
   const [openEditUserTypeModal, setOpenEditUserTypeModal] = useState(false);
 
-  const breadcrumbItems = [
-    { label: "Users", link: "/users" },
-    { label: user?.name as string },
-  ];
+  const breadcrumbItems = [{ label: "Users" }, { label: user?.name as string }];
   return (
     <div className="w-full">
       <RenderIf condition={!isLoading}>
@@ -134,7 +132,7 @@ export const UserPage: React.FC = () => {
                 <div className="absolute top-4">
                   <div className="w-[150px] md:w-[128px] h-[150px] md:h-[136px] rounded-[32px] overflow-hidden">
                     <img
-                      src={user?.avatar}
+                      src={user?.avatar || blankImage}
                       alt="user profile"
                       className="object-cover w-full h-full"
                     />

@@ -22,4 +22,7 @@ export const GET_CONNECT_GROUPS_API = "admin/ops/connect-groups";
 export const CHANGE_PASSWORD_API = "admin/ops/change-password";
 
 // Requests
-export const GET_REQUESTS_API = "admin/users/requests"
+export const GET_REQUESTS_API = "admin/users/requests";
+
+// Dashboard
+export const GET_DASHBOARD_STATISTICS_API = "admin/ops/dashboard-stats";

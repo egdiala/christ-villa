@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 import { Icon } from "@iconify/react";
 import { format } from "date-fns";
+import blankImage from "@/assets/blank.svg";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { DateFilter } from "@/components/pages/requests";
 import { UsersFilter } from "@/components/pages/users";
@@ -77,7 +78,7 @@ export const UsersPage: React.FC = () => {
           <div className="flex items-center gap-x-3 whitespace-nowrap">
             <div className="size-8">
               <img
-                src={item?.avatar}
+                src={item?.avatar || blankImage}
                 alt="profile"
                 className="w-full h-full rounded-full object-cover"
               />
