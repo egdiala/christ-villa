@@ -24,8 +24,7 @@ const chartData = [
   { month: "October", completed: 0, pending: 0, rejected: 0 },
   { month: "November", completed: 0, pending: 0, rejected: 0 },
   { month: "December", completed: 0, pending: 0, rejected: 0 },
-]
-
+];
 
 const chartConfig = {
   completed: {
@@ -52,28 +51,28 @@ export const DashboardGraph = () => {
     ...graphFilter,
   });
 
-    const monthlyRequests = useMemo(() => {
-      return chartData.map(data => {
-          // Find corresponding jobYearlyData entry based on the month number
-          const jobData = requestsMonthly?.find(job => {
-              const monthName = format(new Date(2023, job?.month - 1), "MMMM"); // Get the full month name
-              return monthName === data.month;
-          });
-          
-          if (jobData) {
-              // Update the data with values from jobYearlyData
-              return {
-                  ...data,
-                  completed: jobData.total_completed,
-                  pending: jobData.total_pending,
-                  rejected: jobData.total_rejected,
-              };
-          }
-
-          // Return the original data if no match is found
-          return data;
+  const monthlyRequests = useMemo(() => {
+    return chartData.map((data) => {
+      // Find corresponding jobYearlyData entry based on the month number
+      const jobData = requestsMonthly?.find((job) => {
+        const monthName = format(new Date(2023, job?.month - 1), "MMMM"); // Get the full month name
+        return monthName === data.month;
       });
-  }, [requestsMonthly])
+
+      if (jobData) {
+        // Update the data with values from jobYearlyData
+        return {
+          ...data,
+          completed: jobData.total_completed,
+          pending: jobData.total_pending,
+          rejected: jobData.total_rejected,
+        };
+      }
+
+      // Return the original data if no match is found
+      return data;
+    });
+  }, [requestsMonthly]);
 
   return (
     <div className="border border-blue-4 grid gap-y-[41px] rounded-2xl p-4 h-full content-start">
@@ -111,9 +110,7 @@ export const DashboardGraph = () => {
             <ChartTooltip
               cursor={false}
               wrapperStyle={{ backgroundColor: "bg-text-primary" }}
-              content={
-                <ChartTooltipContent className="dashboard-request-graph-tooltip" />
-              }
+              content={<ChartTooltipContent />}
               labelClassName="dashboard-tooltip-label"
             />
             <Line
