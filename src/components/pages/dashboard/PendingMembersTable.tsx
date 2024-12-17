@@ -1,76 +1,22 @@
 import { useState } from "react";
-import { RenderIf, Table } from "@/components/core";
 import { useNavigate } from "react-router";
+import { format } from "date-fns";
+import blankImage from "@/assets/blank.svg";
+import { Table } from "@/components/core";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
 import { useGetDashboardStatistics } from "@/services/hooks/queries/useDashboard";
+import {
+  FetchedDashboardPendingMembersType,
+  PendingMembersStatus,
+} from "@/types/dashboard";
+import { cn } from "@/lib/utils";
 
 export const DashboardPendingMembersTable = () => {
-  const { data: pendingUserStatistics } = useGetDashboardStatistics({
+  const { data: pendingUserStatistics } = useGetDashboardStatistics<
+    FetchedDashboardPendingMembersType[]
+  >({
     component: "dashboard-pending-user",
   });
-
-  console.log({ pendingUserStatistics });
-
-  const imgUrl =
-    "https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-
-  const pendingMembers = [
-    {
-      id: 1,
-      firstName: "Albert",
-      lastName: "Flores",
-      profileImg: imgUrl,
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      type: "Member",
-      status: "pending",
-    },
-    {
-      id: 2,
-      firstName: "Albert",
-      lastName: "Flores",
-      profileImg: imgUrl,
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      type: "Member",
-      status: "pending",
-    },
-    {
-      id: 3,
-      firstName: "Albert",
-      lastName: "Flores",
-      profileImg: imgUrl,
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      type: "Member",
-      status: "pending",
-    },
-    {
-      id: 4,
-      firstName: "Albert",
-      lastName: "Flores",
-      profileImg: imgUrl,
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      type: "Member",
-      status: "pending",
-    },
-    {
-      id: 5,
-      firstName: "Albert",
-      lastName: "Flores",
-      profileImg: imgUrl,
-      date: "Today",
-      time: "12:34pm",
-      gender: "Male",
-      type: "Member",
-      status: "pending",
-    },
-  ];
 
   const columns = [
     {
@@ -82,14 +28,12 @@ export const DashboardPendingMembersTable = () => {
           <div className="flex items-center gap-x-3 whitespace-nowrap">
             <div className="size-8">
               <img
-                src={item?.profileImg}
+                src={item?.avatar || blankImage}
                 alt="profile"
                 className="w-full h-full rounded-full object-cover"
               />
             </div>
-            <p className="text-sm text-text-secondary">
-              {item?.firstName} {item?.lastName}
-            </p>
+            <p className="text-sm text-text-secondary">{item?.name}</p>
           </div>
         );
       },
@@ -101,7 +45,8 @@ export const DashboardPendingMembersTable = () => {
         const item = row?.original;
         return (
           <p className="text-sm text-text-secondary whitespace-nowrap">
-            {item?.date} • {item?.time}
+            {format(item?.createdAt, "dd MMM, yyyy")} •{" "}
+            {format(item?.createdAt, "p")}
           </p>
         );
       },
@@ -120,16 +65,17 @@ export const DashboardPendingMembersTable = () => {
       cell: ({ row }: { row: any }) => {
         const item = row?.original;
         return (
-          <div className="font-medium text-sm">
-            <RenderIf condition={item?.status?.toLowerCase() === "pending"}>
-              <p className="text-amber">{item?.status}</p>
-            </RenderIf>
-            <RenderIf condition={item?.status?.toLowerCase() === "completed"}>
-              <p className="text-green-base">{item?.status}</p>
-            </RenderIf>
-            <RenderIf condition={item?.status?.toLowerCase() === "rejected"}>
-              <p className="text-accent-primary">{item?.status}</p>
-            </RenderIf>
+          <div
+            className={cn(
+              "font-medium text-sm capitalize",
+              item?.status === 0
+                ? "text-amber"
+                : item?.status === 1
+                ? "text-green-base"
+                : "text-accent-primary"
+            )}
+          >
+            {PendingMembersStatus[item?.status]}
           </div>
         );
       },
@@ -146,30 +92,24 @@ export const DashboardPendingMembersTable = () => {
     setPaginationParams(page, itemsPerPage, searchParams, setSearchParams);
   };
 
-  //   const prev = () => {
-  //     if (page > 1) {
-  //       handlePageChange(page - 1);
-  //     }
-  //   };
-
-  //   const next = () => {
-  //     if (page < pendingMembers.length) {
-  //       handlePageChange(page + 1);
-  //     }
-  //   };
-
   return (
     <div className="border border-blue-4 p-4 rounded-2xl grid gap-y-5">
       <h2 className="font-bold text-xl text-text-primary">Pending Members</h2>
       <Table
         columns={columns}
-        data={pendingMembers ?? []}
+        data={pendingUserStatistics?.slice(0, 10) ?? []}
         onPageChange={handlePageChange}
         page={page}
         perPage={itemsPerPage}
-        totalCount={pendingMembers?.length}
+        totalCount={
+          pendingUserStatistics
+            ? pendingUserStatistics!.length > 10
+              ? 10
+              : pendingUserStatistics!.length
+            : 0
+        }
         emptyStateText="No pending members."
-        onClick={({ original }) => navigate(`/users/${original?.id}`)}
+        onClick={({ original }) => navigate(`/users/${original?.user_id}`)}
         paginateData={false}
       />
     </div>

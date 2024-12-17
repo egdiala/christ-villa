@@ -56,7 +56,7 @@ export const DashboardPage: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-10 lg:grid-cols-12 gap-6">
         <div className="md:col-span-6 lg:col-span-7">
-          <DashboardGraph totalRequests={4535} />
+          <DashboardGraph />
         </div>
         <div className="md:col-span-4 lg:col-span-5">
           <DashboardChildrenChurchCard />

@@ -19,3 +19,25 @@ export type FetchedDashboardChildrenChurchStatsType = {
   total_male: number;
   total_female: number;
 };
+
+export type FetchedDashboardPendingMembersType = {
+  avatar: string;
+  createdAt: string;
+  gender: string;
+  name: string;
+  status: number;
+  user_id: string;
+};
+
+export type FetchedDashboardGraphType = {
+  total_pending: number;
+  total_completed: number;
+  total_rejected: number;
+  month: number;
+};
+
+export enum PendingMembersStatus {
+  Pending = 0,
+  Approved = 1,
+  Suspended = 2,
+}
