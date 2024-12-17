@@ -4,6 +4,7 @@ export interface FetchDashboardStatsQuery {
     | "dashboard-pending-user"
     | "dashboard-user-count"
     | "dashboard-request-monthly";
+  year?: string;
 }
 
 export type FetchedDashboardUsersStatisticsType = {

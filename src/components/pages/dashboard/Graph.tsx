@@ -41,10 +41,13 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export const DashboardGraph = () => {
+  const [graphFilter, setGraphFilter] = useState({});
+
   const { data: requestsMonthly } = useGetDashboardStatistics<
     FetchedDashboardGraphType[]
   >({
     component: "dashboard-request-monthly",
+    ...graphFilter,
   });
   const monthlyRequests = requestsMonthly?.map((rMonthly) => {
     return {
@@ -54,10 +57,6 @@ export const DashboardGraph = () => {
       rejected: rMonthly.total_rejected || "0",
     };
   });
-
-  const [graphFilter, setGraphFilter] = useState({});
-
-  console.log({ graphFilter });
 
   return (
     <div className="border border-blue-4 grid gap-y-[41px] rounded-2xl p-4 h-full content-start">
