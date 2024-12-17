@@ -8,22 +8,24 @@ import {
 import { useGetDashboardStatistics } from "@/services/hooks/queries/useDashboard";
 import { FetchedDashboardGraphType } from "@/types/dashboard";
 import { GraphFilter } from "./GraphFilter";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { format } from "date-fns";
 
-const months: Record<string, string> = {
-  1: "January",
-  2: "February",
-  3: "March",
-  4: "April",
-  5: "May",
-  6: "June",
-  7: "July",
-  8: "August",
-  9: "September",
-  10: "October",
-  11: "November",
-  12: "December",
-};
+const chartData = [
+  { month: "January", completed: 0, pending: 0, rejected: 0 },
+  { month: "February", completed: 0, pending: 0, rejected: 0 },
+  { month: "March", completed: 0, pending: 0, rejected: 0 },
+  { month: "April", completed: 0, pending: 0, rejected: 0 },
+  { month: "May", completed: 0, pending: 0, rejected: 0 },
+  { month: "June", completed: 0, pending: 0, rejected: 0 },
+  { month: "July", completed: 0, pending: 0, rejected: 0 },
+  { month: "August", completed: 0, pending: 0, rejected: 0 },
+  { month: "September", completed: 0, pending: 0, rejected: 0 },
+  { month: "October", completed: 0, pending: 0, rejected: 0 },
+  { month: "November", completed: 0, pending: 0, rejected: 0 },
+  { month: "December", completed: 0, pending: 0, rejected: 0 },
+]
+
 
 const chartConfig = {
   completed: {
@@ -49,14 +51,29 @@ export const DashboardGraph = () => {
     component: "dashboard-request-monthly",
     ...graphFilter,
   });
-  const monthlyRequests = requestsMonthly?.map((rMonthly) => {
-    return {
-      month: months[rMonthly.month],
-      completed: rMonthly.total_completed || "0", // to ensure tooltip value for 0 is displayed when response from endpoint is 0
-      pending: rMonthly.total_pending || "0",
-      rejected: rMonthly.total_rejected || "0",
-    };
-  });
+
+    const monthlyRequests = useMemo(() => {
+      return chartData.map(data => {
+          // Find corresponding jobYearlyData entry based on the month number
+          const jobData = requestsMonthly?.find(job => {
+              const monthName = format(new Date(2023, job?.month - 1), "MMMM"); // Get the full month name
+              return monthName === data.month;
+          });
+          
+          if (jobData) {
+              // Update the data with values from jobYearlyData
+              return {
+                  ...data,
+                  completed: jobData.total_completed,
+                  pending: jobData.total_pending,
+                  rejected: jobData.total_rejected,
+              };
+          }
+
+          // Return the original data if no match is found
+          return data;
+      });
+  }, [requestsMonthly])
 
   return (
     <div className="border border-blue-4 grid gap-y-[41px] rounded-2xl p-4 h-full content-start">
@@ -70,7 +87,7 @@ export const DashboardGraph = () => {
 
         <GraphFilter setFilters={setGraphFilter} isLoading={false} />
       </div>
-      <div className="grid w-full h-full">
+      <div className="flex-1">
         <ChartContainer
           config={chartConfig}
           className="dashboard-request-graph"
