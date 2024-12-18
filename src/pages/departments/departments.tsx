@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
-import { Button, SearchInput, Table, TableAction } from "@/components/core";
+import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import {
   getPaginationParams,
   setPaginationParams,
@@ -14,6 +14,7 @@ import {
   FetchedDepartmentsStatisticsType,
   FetchedDepartmentsType,
 } from "@/types/departments";
+import { Loader } from "@/components/core/Button/Loader";
 
 export const DepartmentsPage: React.FC = () => {
   const { data: departmentsStatistics } =
@@ -59,7 +60,7 @@ export const DepartmentsPage: React.FC = () => {
     item_per_page: itemsPerPage.toString(),
   });
 
-  const { data: departmentsCount } =
+  const { data: departmentsCount, isLoading: isLoadingCount } =
     useGetAllDepartments<FetchedDepartmentsCountType>({
       q: value,
       component: "count",
@@ -158,19 +159,26 @@ export const DepartmentsPage: React.FC = () => {
       </div>
 
       <div>
-        <Table
-          columns={columns}
-          data={departments ?? []}
-          page={page}
-          perPage={itemsPerPage}
-          totalCount={departmentsCount?.total}
-          onPageChange={handlePageChange}
-          emptyStateText="We couldn't find any department."
-          onClick={({ original }) =>
-            navigate(`/departments/${original?.department_id}/members`)
-          }
-          loading={isLoading}
-        />
+        <RenderIf condition={!isLoading && !isLoadingCount}>
+          <Table
+            columns={columns}
+            data={departments ?? []}
+            page={page}
+            perPage={itemsPerPage}
+            totalCount={departmentsCount?.total}
+            onPageChange={handlePageChange}
+            emptyStateText="We couldn't find any department."
+            onClick={({ original }) =>
+              navigate(`/departments/${original?.department_id}/members`)
+            }
+            loading={isLoading}
+          />
+        </RenderIf>
+        <RenderIf condition={isLoading || isLoadingCount}>
+            <div className="flex w-full h-96 items-center justify-center">
+                <Loader className="spinner size-6 text-accent-primary" />
+            </div>
+        </RenderIf>
       </div>
 
       <AddNewDepartmentModal

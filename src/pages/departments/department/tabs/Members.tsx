@@ -21,6 +21,7 @@ import {
   FetchedUsersType,
 } from "@/types/departments";
 import { useDebounce } from "@/hooks/useDebounce";
+import { Loader } from "@/components/core/Button/Loader";
 
 interface MembersTabProps {
   isChildrenDept?: boolean;
@@ -57,7 +58,7 @@ export const MembersTab: React.FC = ({
     ...userFilter,
   });
 
-  const { data: deptMembersCount } = useGetAllUsers<FetchedUserCountType>({
+  const { data: deptMembersCount, isLoading: isLoadingCount } = useGetAllUsers<FetchedUserCountType>({
     q: value,
     department_id: departmentId,
     ...userFilter,
@@ -293,15 +294,22 @@ export const MembersTab: React.FC = ({
       </div>
 
       <div>
-        <Table
-          columns={columns}
-          data={deptMembers ?? []}
-          page={page}
-          perPage={itemsPerPage}
-          totalCount={deptMembersCount?.total}
-          onPageChange={handlePageChange}
-          emptyStateText="We couldn't find any member."
-        />
+        <RenderIf condition={!isLoadingMembers && !isLoadingCount}>
+          <Table
+            columns={columns}
+            data={deptMembers ?? []}
+            page={page}
+            perPage={itemsPerPage}
+            totalCount={deptMembersCount?.total}
+            onPageChange={handlePageChange}
+            emptyStateText="We couldn't find any member."
+          />
+        </RenderIf>
+        <RenderIf condition={isLoadingMembers || isLoadingCount}>
+            <div className="flex w-full h-96 items-center justify-center">
+                <Loader className="spinner size-6 text-accent-primary" />
+            </div>
+        </RenderIf>
       </div>
 
       <ApproveMemberRequestModal
