@@ -5,28 +5,29 @@ import {
 } from "@headlessui/react";
 import caution from "@/assets/caution.gif";
 import { Button } from "@/components/core";
-import { useDeleteUser } from "@/services/hooks/mutations/useUsers";
-import { FetchedUserType } from "@/types/users";
+import { useDeleteChurchLeader } from "@/services/hooks/mutations/useChurchLeaders";
+import { FetchedChurchLeadersType } from "@/types/church-leaders";
 
-interface DeleteUserModalProps {
-  isOpen: boolean;
+interface DeleteChurchLeaderProps {
+  value: {
+    leader: FetchedChurchLeadersType;
+    isOpen: boolean;
+  };
   onClose: () => void;
-  user: FetchedUserType;
 }
 
-export const DeleteUserModal = ({
-  isOpen,
+export const DeleteChurchLeaderModal = ({
+  value,
   onClose,
-  user,
-}: DeleteUserModalProps) => {
-  const { mutate, isPending } = useDeleteUser(() => onClose());
-  const handleDeleteUser = () => {
-    mutate({ user_id: user?.user_id });
+}: DeleteChurchLeaderProps) => {
+  const { mutate, isPending } = useDeleteChurchLeader(() => onClose());
+  const handleDeleteChurchLeader = () => {
+    mutate(value.leader?.request_id);
   };
 
   return (
     <Dialog
-      open={isOpen}
+      open={value.isOpen}
       onClose={onClose}
       as="div"
       className="relative z-10 focus:outline-none"
@@ -41,11 +42,11 @@ export const DeleteUserModal = ({
 
             <Description className="grid gap-y-2">
               <h4 className="font-bold text-xl text-text-primary">
-                Delete {user?.name}?
+                Delete {value.leader?.leader_name}?
               </h4>
               <p className="text-sm text-text-secondary">
-                This action would remove {user?.name} from the system and is
-                irreversible.
+                This action would remove {value.leader?.leader_name} from the
+                system and is irreversible.
               </p>
             </Description>
 
@@ -60,7 +61,7 @@ export const DeleteUserModal = ({
               </Button>
               <Button
                 theme="primary"
-                onClick={handleDeleteUser}
+                onClick={handleDeleteChurchLeader}
                 className="w-full"
                 loading={isPending}
                 disabled={isPending}

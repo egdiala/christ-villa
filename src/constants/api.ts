@@ -26,3 +26,6 @@ export const GET_REQUESTS_API = "admin/users/requests";
 
 // Dashboard
 export const GET_DASHBOARD_STATISTICS_API = "admin/ops/dashboard-stats";
+
+// Church Leadership
+export const GET_CHURCH_LEADERSHIP_API = "admin/users/church-leadership";
