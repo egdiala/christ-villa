@@ -51,26 +51,26 @@ export const DashboardGraph = () => {
     ...graphFilter,
   });
 
-  const monthlyRequests = useMemo(() => {
-    return chartData.map((data) => {
-      // Find corresponding jobYearlyData entry based on the month number
-      const jobData = requestsMonthly?.find((job) => {
-        const monthName = format(new Date(2023, job?.month - 1), "MMMM"); // Get the full month name
-        return monthName === data.month;
-      });
+    const monthlyRequests = useMemo(() => {
+      return chartData.map(data => {
+          // Find corresponding jobYearlyData entry based on the month number
+          const jobData = requestsMonthly?.find(job => {
+              const monthName = format(new Date(2023, job?.month - 1), "MMMM"); // Get the full month name
+              return monthName === data.month;
+          });
+          
+          if (jobData) {
+              // Update the data with values from jobYearlyData
+              return {
+                  ...data,
+                  completed: jobData.total_completed || "0",
+                  pending: jobData.total_pending || "0",
+                  rejected: jobData.total_rejected || "0",
+              };
+          }
 
-      if (jobData) {
-        // Update the data with values from jobYearlyData
-        return {
-          ...data,
-          completed: jobData.total_completed,
-          pending: jobData.total_pending,
-          rejected: jobData.total_rejected,
-        };
-      }
-
-      // Return the original data if no match is found
-      return data;
+          // Return the original data if no match is found
+          return data;
     });
   }, [requestsMonthly]);
 
