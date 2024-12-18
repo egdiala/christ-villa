@@ -2,7 +2,7 @@ import { axiosInstance } from "../axiosInstance";
 import { GET_CHURCH_LEADERSHIP_API } from "@/constants/api";
 import { createQueryString } from "@/utils/createQuery";
 import type {
-  CreateChurchLeaderType,
+  // CreateChurchLeaderType,
   FetchChurchLeadersQuery,
   UpdateChurchLeaderType,
 } from "@/types/church-leaders";
@@ -14,11 +14,14 @@ export const getChurchLeadership = async (query: FetchChurchLeadersQuery) => {
   return res.data;
 };
 
-export const createChurchLeader = async (payload: CreateChurchLeaderType) => {
+export const createChurchLeader = async (payload: FormData) => {
   const res = await axiosInstance.post(
     `${GET_CHURCH_LEADERSHIP_API}`,
-    payload
-    // { headers: { "Content-Type": "multipart/form-data" } }
+    payload,
+    { headers: {
+        "Accept": "application/form-data",
+        "Content-Type": "multipart/form-data"
+        } }
   );
   return res.data;
 };

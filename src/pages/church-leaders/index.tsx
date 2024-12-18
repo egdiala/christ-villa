@@ -96,6 +96,14 @@ export const ChurchLeadershipPage: React.FC = () => {
     {
       header: () => "Position",
       accessorKey: "leader_position",
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original;
+        return (
+          <div className="capitalize">
+            {item?.leader_position}
+          </div>
+        );
+      },
     },
     {
       header: () => "Action",

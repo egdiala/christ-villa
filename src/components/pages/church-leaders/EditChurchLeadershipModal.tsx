@@ -95,14 +95,12 @@ export const EditChurchLeadershipModal = ({
                 <Button
                   theme="tertiary"
                   onClick={handleClose}
-                  className="w-1/2 md:w-auto"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   theme="primary"
-                  className="w-1/2 md:w-auto"
                   loading={isPending}
                   disabled={!isValid || isPending}
                 >

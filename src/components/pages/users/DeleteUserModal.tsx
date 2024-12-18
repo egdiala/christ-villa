@@ -2,9 +2,8 @@ import {
   Description,
   Dialog,
   DialogPanel,
-  DialogTitle,
 } from "@headlessui/react";
-import { Icon } from "@iconify/react";
+import caution from "@/assets/caution.gif";
 import { Button } from "@/components/core";
 import { useDeleteUser } from "@/services/hooks/mutations/useUsers";
 import { FetchedUserType } from "@/types/users";
@@ -38,12 +37,7 @@ export const DeleteUserModal = ({
             transition
             className="max-w-[350px] h-full space-y-5 bg-white p-5 rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
           >
-            <DialogTitle className="font-bold">
-              <Icon
-                icon="lucide:triangle-alert"
-                className="size-12 text-accent-primary"
-              />
-            </DialogTitle>
+            <img src={caution} alt="caution" className="size-12" />
 
             <Description className="grid gap-y-2">
               <h4 className="font-bold text-xl text-text-primary">

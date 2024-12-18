@@ -20,30 +20,27 @@ export const AddChurchLeadershipModal = ({
   isOpen,
   onClose,
 }: AddChurchLeadershipModalProps) => {
-  const { handleSubmit, register, isValid, resetForm, setFieldValue } =
+  const { handleSubmit, register, isValid, resetForm, setFieldValue, values } =
     useFormikWrapper({
       validateOnMount: true,
       initialValues: {
         leader_name: "",
         leader_position: "",
-        // file: "",
+        file: null as File | null,
       },
       validationSchema: createChurchLeaderSchema,
-      onSubmit(values) {
-        mutate(values);
+      onSubmit:() => {
+        const formData = new FormData();
+        formData.append("leader_name", values.leader_name);
+        formData.append("leader_position", values.leader_position);
+        if (values?.file !== null) {
+            formData.append("file", values.file);
+            mutate(formData)
+        } else {
+            mutate(formData)
+        }
       },
     });
-
-  const handleFileChange = (e: any) => {
-    const file = e;
-
-    // Encode the file using the FileReader API
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFieldValue("file", reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
 
   const handleClose = () => {
     resetForm();
@@ -82,7 +79,7 @@ export const AddChurchLeadershipModal = ({
             <Description className="px-6 grid gap-y-4">
               <Input
                 placeholder="Name"
-                label="Name"
+                label="Name" type="text"
                 {...register("leader_name")}
               />
               <SelectInput
@@ -90,7 +87,7 @@ export const AddChurchLeadershipModal = ({
                 label="Position"
                 {...register("leader_position")}
               />
-              <FileUpload label="Image" onChange={handleFileChange} />
+              <FileUpload label="Image" accept="image/*" value={values?.file?.name} onChange={(v) => setFieldValue("file", v)} />
             </Description>
 
             <div className="flex gap-4 pt-10 justify-end px-6 pb-6">
