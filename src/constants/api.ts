@@ -5,6 +5,7 @@ export const FORGOT_PASSWORD_API = "admin/auths/forgot-password";
 
 // Departments
 export const DEPARTMENTS_API = "admin/ops/departments";
+export const ASSIGN_DEPARTMENT_REQUEST_API = "admin/ops/assign-department-requests"
 export const DEPARTMENT_REQUESTS_API = "admin/users/requests";
 export const DEPARTMENT_TIME_OFFS_API = "admin/users/department-timeoffs";
 export const DEPARTMENT_MATERIALS_API = "admin/users/department-materials";

@@ -29,8 +29,15 @@ export const RequestsTab: React.FC = () => {
     page: page.toString(),
     item_per_page: itemsPerPage.toString(),
   });
-
   console.log({ departmentRequests });
+
+  const { data: departmentRequestsCountStatus } = useGetDepartmentRequests({
+    q: value,
+    department_id: departmentId,
+    component: "count-status",
+  });
+
+  console.log({ departmentRequestsCountStatus });
 
   const requestStatistics = [
     { id: 1, label: "Total requests", value: "12,345" },

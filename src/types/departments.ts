@@ -57,7 +57,7 @@ export type UpdateMemberStatusType = {
 
 export type AssignDepartmentRequestType = {
   department_id: string;
-  request_areas: { name: string; value: string }[];
+  request_areas: string[];
 };
 
 export interface FetchDepartmentRequestsQuery {

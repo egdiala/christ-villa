@@ -1,5 +1,6 @@
 import { axiosInstance } from "../axiosInstance";
 import {
+  ASSIGN_DEPARTMENT_REQUEST_API,
   DEPARTMENT_MATERIALS_API,
   DEPARTMENT_REQUESTS_API,
   DEPARTMENT_TIME_OFFS_API,
@@ -69,9 +70,8 @@ export const updateMemberStatus = async (payload: UpdateMemberStatusType) => {
 export const assignDepartmentRequest = async (
   payload: AssignDepartmentRequestType
 ) => {
-  const { department_id } = payload;
   const res = await axiosInstance.post(
-    `${DEPARTMENTS_API}/${department_id}`,
+    ASSIGN_DEPARTMENT_REQUEST_API,
     payload
   );
   return res.data;
