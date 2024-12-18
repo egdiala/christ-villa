@@ -45,14 +45,14 @@ export const useGetSingleDepartment = <T>(query: FetchDepartmentsQuery) => {
   });
 };
 
-export const useGetDepartmentRequests = (
+export const useGetDepartmentRequests = <T>(
   query: FetchDepartmentRequestsQuery
 ) => {
   const { department_id } = query;
   return useQuery({
     queryKey: [GET_DEPARTMENT_REQUESTS, query],
     queryFn: () => getDepartmentRequests(query),
-    select: (res) => res.data,
+    select: (res) => res.data as T,
     enabled: !!department_id,
   });
 };

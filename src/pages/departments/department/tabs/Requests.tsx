@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
+import blankImage from "@/assets/blank.svg";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
 import { DateFilter, RequestsFilter } from "@/components/pages/requests";
@@ -11,6 +12,11 @@ import {
 import { useGetDepartmentRequests } from "@/services/hooks/queries/useDepartments";
 import { useLocation, useSearchParams } from "react-router";
 import { useDebounce } from "@/hooks/useDebounce";
+import { FetchedDepartmentRequestCountStatusType, FetchedDepartmentRequestType } from "@/types/departments";
+import { Loader } from "@/components/core/Button/Loader";
+import { format } from "date-fns";
+import { cn } from "@/libs/cn";
+import { RequestStatus } from "@/types/requests";
 
 export const RequestsTab: React.FC = () => {
   const { pathname } = useLocation();
@@ -23,108 +29,55 @@ export const RequestsTab: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { value, onChangeHandler } = useDebounce(300);
 
-  const { data: departmentRequests } = useGetDepartmentRequests({
+  const { data: departmentRequests, isLoading } = useGetDepartmentRequests<FetchedDepartmentRequestType[]>({
     q: value,
     department_id: departmentId,
     page: page.toString(),
     item_per_page: itemsPerPage.toString(),
   });
-  console.log({ departmentRequests });
 
-  const { data: departmentRequestsCountStatus } = useGetDepartmentRequests({
+  const { data: departmentRequestsCount, isLoading: isLoadingCount } = useGetDepartmentRequests<{ total: number; }>({
     q: value,
+    department_id: departmentId,
+    component: "count"
+  });
+
+  const { data: departmentRequestsCountStatus } = useGetDepartmentRequests<FetchedDepartmentRequestCountStatusType>({
     department_id: departmentId,
     component: "count-status",
   });
 
-  console.log({ departmentRequestsCountStatus });
 
-  const requestStatistics = [
-    { id: 1, label: "Total requests", value: "12,345" },
-    { id: 2, label: "Pending requests", value: "35" },
-    { id: 3, label: "Completed req.", value: "456" },
-    {
-      id: 4,
-      label: "Rejected req.",
-      value: "5",
-    },
-  ];
-
-  const requests = [
-    {
-      id: 1,
-      firstName: "Albert",
-      lastName: "Flores",
-      profileImg:
-        "https://plus.unsplash.com/premium_photo-1682144187125-b55e638cf286?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      request_type: "Ride request",
-      status: "pending",
-    },
-    {
-      id: 2,
-      firstName: "Theresa",
-      lastName: "Webb",
-      profileImg:
-        "https://images.unsplash.com/photo-1636406269177-4827c00bb263?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      request_type: "Academic Assistance",
-      status: "completed",
-    },
-    {
-      id: 3,
-      firstName: "Ronals",
-      lastName: "Richards",
-      profileImg:
-        "https://images.unsplash.com/photo-1715029005043-e88d219a3c48?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      request_type: "Time off Request",
-      status: "rejected",
-    },
-    {
-      id: 4,
-      firstName: "Bessie",
-      lastName: "Cooper",
-      profileImg:
-        "https://plus.unsplash.com/premium_photo-1664536392896-cd1743f9c02c?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      request_type: "Ride request",
-      status: "rejected",
-    },
-    {
-      id: 5,
-      firstName: "Floyd",
-      lastName: "Miles",
-      profileImg:
-        "https://images.unsplash.com/photo-1636377985931-898218afd306?q=80&w=2864&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      request_type: "Ride request",
-      status: "rejected",
-    },
-  ];
+  const requestStatistics = useMemo(() => {
+    return [
+      { id: 1, label: "Total requests", value: departmentRequestsCountStatus?.total_count || 0 },
+      { id: 2, label: "Pending requests", value: departmentRequestsCountStatus?.pending_req || 0 },
+      { id: 3, label: "Completed req.", value: departmentRequestsCountStatus?.pending_req || 0 },
+      {
+        id: 4,
+        label: "Rejected req.",
+        value: departmentRequestsCountStatus?.decline_req || 0,
+      },
+    ]
+  },[departmentRequestsCountStatus?.decline_req, departmentRequestsCountStatus?.pending_req, departmentRequestsCountStatus?.total_count])
 
   const columns = [
     {
       header: () => "Requester Name",
       accessorKey: "name",
       cell: ({ row }: { row: any }) => {
-        const item = row?.original;
+        const item = row?.original as FetchedDepartmentRequestType;
         return (
           <div className="flex items-center gap-x-3 whitespace-nowrap">
             <div className="size-8">
               <img
-                src={item?.profileImg}
+                src={blankImage}
                 alt="profile"
                 className="w-full h-full rounded-full object-cover"
               />
             </div>
-            <p className="text-sm text-text-secondary">
-              {item?.firstName} {item?.lastName}
+            <p className="text-sm text-text-secondary capitalize">
+              {item?.user_data?.name}
             </p>
           </div>
         );
@@ -134,10 +87,11 @@ export const RequestsTab: React.FC = () => {
       header: () => "Reg. Date & Time",
       accessorKey: "reg_date",
       cell: ({ row }: { row: any }) => {
-        const item = row?.original;
+        const item = row?.original as FetchedDepartmentRequestType;
         return (
           <p className="text-sm text-text-secondary whitespace-nowrap">
-            {item?.date} • {item?.time}
+                      {format(item?.createdAt, "dd MMM, yyyy")} •{" "}
+                      {format(item?.createdAt, "p")}
           </p>
         );
       },
@@ -146,10 +100,10 @@ export const RequestsTab: React.FC = () => {
       header: () => "Request type",
       accessorKey: "request_type",
       cell: ({ row }: { row: any }) => {
-        const item = row?.original;
+        const item = row?.original as FetchedDepartmentRequestType;
         return (
-          <p className="text-sm text-text-secondary max-w-[14ch] truncate">
-            {item?.request_type}
+          <p className="text-sm text-text-secondary capitalize truncate">
+            {item?.request_type?.replace(/_/g, " ") || item?.request_area?.replace(/_/g, " ")}
           </p>
         );
       },
@@ -158,19 +112,9 @@ export const RequestsTab: React.FC = () => {
       header: () => "Status",
       accessorKey: "status",
       cell: ({ row }: { row: any }) => {
-        const item = row?.original;
+        const item = row?.original as FetchedDepartmentRequestType;
         return (
-          <div className="font-medium text-sm capitalize">
-            <RenderIf condition={item?.status?.toLowerCase() === "pending"}>
-              <p className="text-amber">{item?.status}</p>
-            </RenderIf>
-            <RenderIf condition={item?.status?.toLowerCase() === "completed"}>
-              <p className="text-[#008E5B]">{item?.status}</p>
-            </RenderIf>
-            <RenderIf condition={item?.status?.toLowerCase() === "rejected"}>
-              <p className="text-accent-primary">{item?.status}</p>
-            </RenderIf>
-          </div>
+          <div className={cn("capitalize", item?.status === 0 ? "text-amber" : "", item?.status === 1 ? "text-green-base" : "", item?.status === 2 ? "text-accent-primary" : "")}>{RequestStatus[item?.status]}</div>
         );
       },
     },
@@ -234,26 +178,33 @@ export const RequestsTab: React.FC = () => {
       </div>
 
       <div>
-        <Table
-          columns={columns}
-          data={requests ?? []}
-          page={page}
-          perPage={itemsPerPage}
-          totalCount={requests.length}
-          onPageChange={handlePageChange}
-          emptyStateText="We couldn't find any requests."
-          onClick={({ original }) => {
-            if (original?.request_type?.toLowerCase() === "ride request") {
-              setOpenTripDetails(true);
-            } else if (
-              original?.request_type?.toLowerCase() === "academic assistance"
-            ) {
-              setOpenAcademicAssistanceDetails(true);
-            } else {
-              setOpenTimeOffDetails(true);
-            }
-          }}
-        />
+        <RenderIf condition={!isLoading && !isLoadingCount}>
+          <Table
+            columns={columns}
+            data={departmentRequests ?? []}
+            page={page}
+            perPage={itemsPerPage}
+            totalCount={departmentRequestsCount?.total}
+            onPageChange={handlePageChange}
+            emptyStateText="We couldn't find any requests."
+            onClick={({ original }) => {
+              if (original?.request_type?.toLowerCase() === "ride request") {
+                setOpenTripDetails(true);
+              } else if (
+                original?.request_type?.toLowerCase() === "academic assistance"
+              ) {
+                setOpenAcademicAssistanceDetails(true);
+              } else {
+                setOpenTimeOffDetails(true);
+              }
+            }}
+          />
+        </RenderIf>
+        <RenderIf condition={isLoading || isLoadingCount}>
+            <div className="flex w-full h-96 items-center justify-center">
+                <Loader className="spinner size-6 text-accent-primary" />
+            </div>
+        </RenderIf>
       </div>
 
       <AcademicAssistanceRequestModal

@@ -16,6 +16,7 @@ import {
 } from "./modules";
 import { AlertRecipientsPage } from "@/pages/alert-recipients";
 import { ChurchLeadershipPage } from "@/pages/church-leaders";
+import { ChurchCalendarPage } from "@/pages/church-calendar";
 
 function LocationProvider({ children }: { children: ReactNode }) {
   return <AnimatePresence mode="wait">{children}</AnimatePresence>;
@@ -131,6 +132,16 @@ const Router = () => {
             <DashboardLayout>
               <LocationProvider>
                 <ChurchLeadershipPage />
+              </LocationProvider>
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/church-calendar"
+          element={
+            <DashboardLayout>
+              <LocationProvider>
+                <ChurchCalendarPage />
               </LocationProvider>
             </DashboardLayout>
           }

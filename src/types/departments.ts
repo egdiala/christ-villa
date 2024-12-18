@@ -147,3 +147,33 @@ export type FetchedUsersType = {
   updatedAt: string;
   user_id: string;
 };
+
+export interface FetchedDepartmentRequestCountStatusType {
+  total_count: number;
+    pending_req: number;
+    approve_req: number;
+    decline_req: number;
+}
+
+export interface FetchedDepartmentRequestType {
+  user_id: string;
+  status: number;
+  data: {
+    title: string;
+    description: string;
+  },
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  request_type?: string;
+  request_area: string;
+  approved_by: string;
+  request_id: string;
+  department: string;
+  user_data: {
+    _id: string;
+    name: string;
+    email: string;
+    phone_number: string;
+    user_type: string;
+  }
+}

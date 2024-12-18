@@ -80,7 +80,7 @@ export const EditChurchLeadershipModal = ({
             <Description className="px-6 grid gap-y-4">
               <Input
                 placeholder="Name"
-                label="Name"
+                label="Name" type="text"
                 {...register("leader_name")}
               />
               <SelectInput
