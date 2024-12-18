@@ -24,8 +24,7 @@ const chartData = [
   { month: "October", completed: 0, pending: 0, rejected: 0 },
   { month: "November", completed: 0, pending: 0, rejected: 0 },
   { month: "December", completed: 0, pending: 0, rejected: 0 },
-]
-
+];
 
 const chartConfig = {
   completed: {
@@ -72,8 +71,8 @@ export const DashboardGraph = () => {
 
           // Return the original data if no match is found
           return data;
-      });
-  }, [requestsMonthly])
+    });
+  }, [requestsMonthly]);
 
   return (
     <div className="border border-blue-4 grid gap-y-[41px] rounded-2xl p-4 h-full content-start">
@@ -111,9 +110,7 @@ export const DashboardGraph = () => {
             <ChartTooltip
               cursor={false}
               wrapperStyle={{ backgroundColor: "bg-text-primary" }}
-              content={
-                <ChartTooltipContent />
-              }
+              content={<ChartTooltipContent />}
               labelClassName="dashboard-tooltip-label"
             />
             <Line
