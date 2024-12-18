@@ -64,9 +64,9 @@ export const DashboardGraph = () => {
               // Update the data with values from jobYearlyData
               return {
                   ...data,
-                  completed: jobData.total_completed,
-                  pending: jobData.total_pending,
-                  rejected: jobData.total_rejected,
+                  completed: jobData.total_completed || "0",
+                  pending: jobData.total_pending || "0",
+                  rejected: jobData.total_rejected || "0",
               };
           }
 
@@ -112,7 +112,7 @@ export const DashboardGraph = () => {
               cursor={false}
               wrapperStyle={{ backgroundColor: "bg-text-primary" }}
               content={
-                <ChartTooltipContent className="dashboard-request-graph-tooltip" />
+                <ChartTooltipContent />
               }
               labelClassName="dashboard-tooltip-label"
             />
