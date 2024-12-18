@@ -46,10 +46,10 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({ label, error, show
                         className={`${showPassword ? "toggle-password-icon" : "hidden"}`}
                     >
                         <RenderIf condition={togglePassword}>
-                            <Icon icon="solar:eye-closed-bold" className="size-5 right-3 text-grey-dark-1 -mt-[22px] absolute z-10" />
+                            <Icon icon="lucide:eye-off" className="size-5 right-3 text-text-secondary -mt-[22px] absolute z-10" />
                         </RenderIf>
                         <RenderIf condition={!togglePassword}>
-                            <Icon icon="solar:eye-bold" className="size-5 right-3 text-grey-dark-1 -mt-[22px] absolute z-10" />
+                            <Icon icon="lucide:eye" className="size-5 right-3 text-text-secondary -mt-[22px] absolute z-10" />
                         </RenderIf>
                     </button>
                 </RenderIf>

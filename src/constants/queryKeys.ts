@@ -1,73 +1,30 @@
-// Roles
-export const GET_ROLES = "get-roles"
-export const GET_ROLE = "get-role"
-export const GET_ROLE_LISTS = "get-role-lists"
-
 // Admins
-export const GET_ADMINS = "get-admins"
-export const GET_ADMIN = "get-admin"
-export const GET_ADMIN_PROFILE = "get-admin-profile"
-export const GET_ACTIVITY_LOGS = "get-activity-logs"
+export const GET_ADMINS = "get-admins";
+export const GET_ADMIN = "get-admin";
 
-// Banks
-export const GET_BANK_LIST = "get-bank-lists"
-export const GET_FEE_BANK_LOGS = "get-fee-bank-logs"
-export const VALIDATE_BANK_ACCOUNT = "validate-bank-account"
+// Departments
+export const GET_DEPARTMENTS = "get-departments";
+export const GET_DEPARTMENT = "get-department";
+export const GET_DEPARTMENT_REQUESTS = "get-department-requests";
+export const GET_DEPARTMENT_REQUEST = "get-department-request";
+export const GET_DEPARTMENT_TIME_OFFS = "get-department-time-offs";
+export const GET_DEPARTMENT_TIME_OFF = "get-department-time-off";
+export const GET_DEPARTMENT_MATERIALS = "get-department-materials";
+export const GET_DEPARTMENT_MATERIAL = "get-department-material";
 
-// Charge Stations
-export const GET_CHARGE_STATIONS = "get-charge-stations"
-export const GET_CHARGE_STATION = "get-charge-station"
+// Users
+export const GET_USERS = "get-users";
+export const GET_USER = "get-user";
 
-// Drivers
-export const GET_DRIVERS = "get-drivers"
-export const GET_DRIVER = "get-driver"
+// Connect Groups
+export const GET_CONNECT_GROUP = "get-connect-group";
+export const GET_CONNECT_GROUPS = "get-connect-groups";
 
-// Riders
-export const GET_RIDERS = "get-riders"
-export const GET_RIDER = "get-rider"
+// Requests
+export const GET_REQUESTS = "get-requests";
 
-// Vehicles
-export const GET_VEHICLES = "get-vehicles"
-export const GET_VEHICLE = "get-vehicle"
+// Dashboard
+export const GET_DASHBOARD_STATISTICS = "get-dashboard-statistics";
 
-// Notifications
-export const GET_NOTIFICATIONS = "get-notifications"
-
-// OEMs
-export const GET_OEMS = "get-oems"
-export const GET_OEM = "get-oem"
-
-// Service Requests
-export const GET_SERVICE_REQUESTS = "get-service-requests"
-export const GET_SERVICE_REQUEST = "get-service-request"
-
-// Organizations
-export const GET_ORGANIZATIONS = "get-organizations"
-export const GET_ORGANIZATION = "get-organization"
-
-// Payments
-export const GET_LEASE_PAYMENTS = "get-lease-payments"
-export const GET_COMMUTE_PAYMENTS = "get-commute-payments"
-export const GET_RECONCILIATION = "get-reconciliation"
-export const GET_PAYOUTS = "get-payouts"
-
-// Fees
-export const GET_FEES = "get-fees"
-
-// Trips
-export const GET_TRIPS = "get-trips"
-export const GET_TRIP = "get-trip"
-export const GET_VEHICLE_DISTANCE_FOR_ORG = "get-vehicle-distance-for-organization"
-
-// Ratings
-export const GET_RATINGS = "get-ratings"
-
-// Wallet
-export const GET_WALLET_STATS = "get-wallet-stats"
-export const GET_WALLET_TRANSACTION = "get-wallet-transaction"
-
-// Other
-export const GET_INDUSTRIES = "get-industries"
-
-// CountryStateCity
-export const GET_STATES_BY_COUNTRY = "get-states-by-country"
+// Church Leaders
+export const GET_CHURCH_LEADERSHIP = "get-church-leadership";

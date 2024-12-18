@@ -28,9 +28,9 @@ interface ModuleListItemProps {
   close?: () => void;
 }
 
-export const ModuleListItem: React.FC<ModuleListItemProps> = ({ close, count, icon, name, to }) => {
+export const ModuleListItem: React.FC<ModuleListItemProps> = ({ count, icon, name, to }) => {
     return (
-        <NavLink to={to} onClick={() => close?.()}>
+        <NavLink to={to}>
             {({ isActive }) => (
                 <div className={cn("ego-module-list-item group", isActive ? "ego-module-list-item--active" : "ego-module-list-item--inactive")}>
                     <Icon icon={icon} className={cn("size-5 transition-all duration-300 ease-out", isActive ? "text-accent-tertiary group-hover:text-accent-tertiary" : "text-white group-hover:text-white")} />

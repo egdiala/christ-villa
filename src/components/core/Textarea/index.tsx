@@ -51,7 +51,7 @@ export const TextArea: React.FC<TextAreaProps> = ({ containerVariant, label, id,
     <div className={`${containerVariant} ego-input--outer`}>
       <Field>
         <RenderIf condition={!!label}>
-          <Label className="ego-input--label">Description</Label>
+          <Label className="ego-input--label">{label}</Label>
         </RenderIf>
         <RenderIf condition={!!help}>
           <Description className="ego-input--help">This will be shown under the product title.</Description>

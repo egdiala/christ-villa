@@ -1,9 +1,11 @@
 import { Header, Sidebar } from "@/components/core";
+import { isAuthenticated } from "@/utils/authUtil";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState, type PropsWithChildren } from "react";
+import { Navigate } from "react-router";
 
 const ProtectedLayout = ({ children }: PropsWithChildren) => {
-
+    const isLoggedIn = isAuthenticated();
     const [showSidebar, setShowSidebar] = useState(false)
     
     useEffect(() => {
@@ -12,12 +14,18 @@ const ProtectedLayout = ({ children }: PropsWithChildren) => {
         } else {
             document.body.style.overflow = "scroll"
         }
-    },[showSidebar])
+    }, [showSidebar])
+    
+    if (!isLoggedIn) {
+        localStorage.clear();
+        return <Navigate to="/auth/login" replace />;
+    }
+
 
   
     return (
         <motion.div className="relative bg-gray-50 isolate flex min-h-dvh w-full overflow-hidden">
-            <Sidebar showSidebar={showSidebar} close={() => setShowSidebar(false)} />
+            <Sidebar showSidebar={showSidebar} />
                 <div className="relative h-full flex-1 flex flex-col xl:pl-60">
                     <Header close={() => setShowSidebar(!showSidebar)} />
                     <main className="flex-1 overflow-hidden">

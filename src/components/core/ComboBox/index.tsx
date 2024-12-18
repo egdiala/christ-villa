@@ -30,6 +30,7 @@ interface ComboBoxProps<T> {
    */
   disabled?: boolean;
   selected?: T;
+  multiple?: boolean;
   defaultValue?: T;
   // eslint-disable-next-line no-unused-vars
   setSelected: (value: T) => void;
@@ -46,17 +47,17 @@ interface ComboBoxProps<T> {
   [key: PropertyKey]: unknown;
 }
 
-export const ComboBox: React.FC<ComboBoxProps<any>> = ({ label, help, error, selected, options, onChange, displayValue, defaultValue, optionLabel, setSelected, onClose, disabled = false, ...props }) => {
+export const ComboBox: React.FC<ComboBoxProps<any>> = ({ label, help, error, selected, options, onChange, displayValue, defaultValue, optionLabel, setSelected, onClose, disabled = false, multiple = false, ...props }) => {
     return (
         <Field disabled={disabled} className="relative ego-input--outer">
             <RenderIf condition={!!label}>
                 <label className="ego-input--label">{label}</label>
             </RenderIf>
-            <Combobox disabled={disabled} value={selected} defaultValue={defaultValue} virtual={{ options }} onChange={(value) => setSelected(value)} onClose={onClose}>
+            <Combobox disabled={disabled} multiple={multiple} value={selected} defaultValue={defaultValue} virtual={{ options }} onChange={(value) => setSelected(value)} onClose={onClose}>
                 <div className="relative">
                 <ComboboxInput
                     className="ego-input pl-2 pr-8"
-                    displayValue={(item) => displayValue?.(item)!}
+                    displayValue={(item: any) => displayValue?.(item) as string}
                     onChange={(event) => onChange(event.target.value)}
                     {...props}
                 />

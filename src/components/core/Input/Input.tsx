@@ -52,7 +52,7 @@ export const Input: React.FC<InputProps> = ({ label, error, optional, iconLeft, 
         <RenderIf condition={!!iconLeft}>
           <Icon
             icon={iconLeft as string | IconifyIcon}
-            className="size-5 left-3 text-grey-dark-3 peer-focus:text-green-1 mt-[13px] inset-x-0 absolute"
+            className="size-5 left-3 text-grey-dark-3 peer-focus:text-light-blue-1 mt-[13px] inset-x-0 absolute"
           />
         </RenderIf>
         <input
@@ -62,7 +62,7 @@ export const Input: React.FC<InputProps> = ({ label, error, optional, iconLeft, 
         <RenderIf condition={!!iconRight}>
           <Icon
             icon={iconRight as string | IconifyIcon}
-            className="size-5 right-3 text-grey-dark-3 peer-focus:text-green-1 -mt-[2.1rem] absolute"
+            className="size-5 right-3 text-grey-dark-3 peer-focus:text-light-blue-1 -mt-[2.1rem] absolute"
           />
         </RenderIf>
       </div>
