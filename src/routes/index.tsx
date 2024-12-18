@@ -15,6 +15,7 @@ import {
   UsersRoutes,
 } from "./modules";
 import { AlertRecipientsPage } from "@/pages/alert-recipients";
+import { ChurchLeadershipPage } from "@/pages/church-leaders";
 
 function LocationProvider({ children }: { children: ReactNode }) {
   return <AnimatePresence mode="wait">{children}</AnimatePresence>;
@@ -120,6 +121,16 @@ const Router = () => {
             <DashboardLayout>
               <LocationProvider>
                 <EngagePage />
+              </LocationProvider>
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/church-leaders"
+          element={
+            <DashboardLayout>
+              <LocationProvider>
+                <ChurchLeadershipPage />
               </LocationProvider>
             </DashboardLayout>
           }
