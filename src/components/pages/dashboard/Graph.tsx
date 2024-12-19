@@ -75,7 +75,7 @@ export const DashboardGraph = () => {
   }, [requestsMonthly]);
 
   return (
-    <div className="border border-blue-4 grid gap-y-[41px] rounded-2xl p-4 h-full content-start">
+    <div className="border border-blue-4 grid gap-y-2 rounded-2xl p-4 h-full content-start">
       <div className="w-full flex justify-between items-center">
         <div className="max-w-[124px] grid gap-y-1 bg-light-blue-4 p-2">
           <p className="capitalize text-xs text-text-primary">Total Requests</p>
@@ -89,7 +89,7 @@ export const DashboardGraph = () => {
       <div className="flex-1">
         <ChartContainer
           config={chartConfig}
-          className="dashboard-request-graph"
+          className="min-h-auto max-h-96 w-full md:ml-0 pl-0"
         >
           <LineChart
             accessibilityLayer
@@ -109,9 +109,7 @@ export const DashboardGraph = () => {
             />
             <ChartTooltip
               cursor={false}
-              wrapperStyle={{ backgroundColor: "bg-text-primary" }}
-              content={<ChartTooltipContent />}
-              labelClassName="dashboard-tooltip-label"
+              content={<ChartTooltipContent className="bg-white" />}
             />
             <Line
               dataKey="completed"

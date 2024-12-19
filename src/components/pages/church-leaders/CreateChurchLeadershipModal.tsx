@@ -5,11 +5,10 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { Icon } from "@iconify/react";
-import { Button, FileUpload, Input, SelectInput } from "@/components/core";
+import { Button, FileUpload, Input } from "@/components/core";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { createChurchLeaderSchema } from "@/validations/church-leaders";
 import { useAddChurchLeader } from "@/services/hooks/mutations/useChurchLeaders";
-import { leaderPositions } from "@/types/church-leaders";
 
 interface AddChurchLeadershipModalProps {
   isOpen: boolean;
@@ -82,9 +81,10 @@ export const AddChurchLeadershipModal = ({
                 label="Name" type="text"
                 {...register("leader_name")}
               />
-              <SelectInput
-                options={leaderPositions}
+              <Input
+                type="text"
                 label="Position"
+                placeholder="Position"
                 {...register("leader_position")}
               />
               <FileUpload label="Image" accept="image/*" value={values?.file?.name} onChange={(v) => setFieldValue("file", v)} />
