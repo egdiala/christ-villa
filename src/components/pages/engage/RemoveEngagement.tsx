@@ -2,22 +2,24 @@ import {
   Description,
   Dialog,
   DialogPanel,
-  DialogTitle,
 } from "@headlessui/react";
-import { Icon } from "@iconify/react";
+import caution from "@/assets/caution.gif";
 import { Button } from "@/components/core";
+import type { FetchedAnnouncementType } from "@/types/engage";
+import { useDeleteAnnouncement } from "@/services/hooks/mutations";
 
 interface RemoveEngagementModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onDelete: () => void;
+  announcement: FetchedAnnouncementType;
 }
 
 export const RemoveEngagementModal = ({
   isOpen,
   onClose,
-  onDelete,
+  announcement
 }: RemoveEngagementModalProps) => {
+  const { mutate, isPending } = useDeleteAnnouncement(() => onClose())
   return (
     <Dialog
       open={isOpen}
@@ -31,28 +33,23 @@ export const RemoveEngagementModal = ({
             transition
             className="max-w-[350px] h-full space-y-5 bg-white p-5 rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
           >
-            <DialogTitle className="font-bold">
-              <Icon
-                icon="lucide:triangle-alert"
-                className="size-12 text-accent-primary"
-              />
-            </DialogTitle>
+            <img src={caution} alt="caution" className="size-12" />
 
             <Description className="grid gap-y-2">
               <h4 className="font-bold text-xl text-text-primary">
-                Delete [announcement name]?
+                Delete {announcement?.title}?
               </h4>
               <p className="text-sm text-text-secondary">
-                This action would remove [announcement name] from the system and
+                This action would remove {announcement?.title} from the system and
                 is irreversible.
               </p>
             </Description>
 
             <div className="flex gap-4 w-full">
-              <Button theme="tertiary" onClick={onClose} className="w-full">
+              <Button theme="tertiary" onClick={onClose} type="button">
                 Cancel
               </Button>
-              <Button theme="primary" onClick={onDelete} className="w-full">
+              <Button theme="primary" disabled={isPending} loading={isPending} onClick={() => mutate(announcement?.request_id)} type="button">
                 Delete
               </Button>
             </div>

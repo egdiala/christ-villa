@@ -12,6 +12,10 @@ export const GET_DEPARTMENT_TIME_OFF = "get-department-time-off";
 export const GET_DEPARTMENT_MATERIALS = "get-department-materials";
 export const GET_DEPARTMENT_MATERIAL = "get-department-material";
 
+// Engage
+export const GET_ANNOUNCEMENTS = "get-announcements";
+export const GET_ANNOUNCEMENT = "get-announcement";
+
 // Users
 export const GET_USERS = "get-users";
 export const GET_USER = "get-user";
