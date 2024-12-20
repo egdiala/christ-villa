@@ -34,21 +34,12 @@ export const EngagePage: React.FC = () => {
 
   const columns = [
     {
-      header: () => "Sent by",
-      accessorKey: "name",
-      cell: () => {
-        // const item = row?.original as FetchedAnnouncementType;
+      header: () => "Title",
+      accessorKey: "title",
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original as FetchedAnnouncementType;
         return (
-          <div className="flex items-center gap-x-3 whitespace-nowrap">
-            {/* <div className="size-8">
-              <img
-                src={item?.avatar}
-                alt="profile"
-                className="w-full h-full rounded-full object-cover"
-              />
-            </div>
-            <p className="text-sm text-text-secondary">{item?.name}</p> */}
-          </div>
+            <div className="text-sm capitalize whitespace-nowrap text-text-secondary">{item?.title}</div>
         );
       },
     },
