@@ -138,6 +138,7 @@ export const DepartmentPage: React.FC = () => {
         isOpen={openAddHODModal}
         onClose={() => setOpenAddHODModal(false)}
         departmentId={departmentId}
+        singleDepartmentInfo={singleDepartmentInfo!}
       />
     </div>
   );

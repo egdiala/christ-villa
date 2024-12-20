@@ -8,17 +8,20 @@ import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOption
 import { cn } from "@/libs/cn";
 import { Loader } from "@/components/core/Button/Loader";
 import { useAssignDepartmentRequest } from "@/services/hooks/mutations/useDepartments";
+import { FetchedDepartmentType } from "@/types/departments";
 
 interface AddHODModalProps {
   isOpen: boolean;
   onClose: () => void;
   departmentId: string;
+  singleDepartmentInfo: FetchedDepartmentType;
 }
 
 export const AddHODModal = ({
   isOpen,
   departmentId,
   onClose,
+  singleDepartmentInfo
 }: AddHODModalProps) => {
   const [query, setQuery] = useState("")
   const { mutate, isPending } = useAssignDepartmentRequest(() => close())
@@ -37,7 +40,7 @@ export const AddHODModal = ({
   
   const { setFieldValue, values, errors, resetForm, submitForm } = useFormikWrapper({
     initialValues: {
-      request_areas: [] as string[],
+      request_areas: singleDepartmentInfo?.request_areas as string[],
       department_id: departmentId
     },
     enableReinitialize: true,
