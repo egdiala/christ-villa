@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useSearchParams } from "react-router";
+import { useLocation, useParams, useSearchParams } from "react-router";
 import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
@@ -30,9 +30,8 @@ interface MembersTabProps {
 export const MembersTab: React.FC = ({
   isChildrenDept = false,
 }: MembersTabProps) => {
-  const { pathname } = useLocation();
-  const pathArray = pathname.split("/");
-  const departmentId = pathArray[2];
+  const { id } = useParams();
+  const departmentId = id as string;
 
   const [userFilter, setUserFilter] = useState({});
 
@@ -67,7 +66,7 @@ export const MembersTab: React.FC = ({
 
   const { data: deptMembersStatistics } =
     useGetAllUsers<FetchedUsersStatisticsType>({
-      department_id: pathArray[2],
+      department_id: departmentId,
       component: "count-department",
     });
 

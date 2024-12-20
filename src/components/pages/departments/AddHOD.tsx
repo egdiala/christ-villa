@@ -135,12 +135,12 @@ export const AddHODModal = ({
                     </Combobox>
                 </Field>
             </div>
-            <RenderIf condition={values.request_areas.length > 0}>
+            <RenderIf condition={values?.request_areas?.length > 0}>
                 <div className="flex items-center gap-4 flex-wrap px-6">
-                {requestArea?.filter((area) => values.request_areas.includes(area.value)).map((item) => (
+                {requestArea?.filter((area) => values?.request_areas?.includes(area?.value)).map((item) => (
                     <div className="border rounded border-grey-dark-3 text-xs flex items-center gap-2 p-2" key={item.value}>
                         {item.label}
-                        <button type="button" onClick={() => setFieldValue("request_areas", values.request_areas.filter((v) => v !== item.value))}><Icon icon="ri:close-line" className="size-4 text-gray-400" /></button>
+                        <button type="button" onClick={() => setFieldValue("request_areas", values?.request_areas?.filter((v) => v !== item?.value))}><Icon icon="ri:close-line" className="size-4 text-gray-400" /></button>
                     </div>
                 ))}
                 </div>
@@ -159,7 +159,7 @@ export const AddHODModal = ({
                   theme="primary"
                   onClick={() => submitForm()}
                   loading={isPending}
-                  disabled={(values.request_areas.length === 0) || isPending}
+                  disabled={(values?.request_areas?.length === 0) || isPending}
                   block
                 >
                   Add Request Area
