@@ -3,6 +3,7 @@ import { useLocation, useParams, useSearchParams } from "react-router";
 import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
+import blankImage from "@/assets/blank.svg";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import {
   getPaginationParams,
@@ -22,6 +23,7 @@ import {
 } from "@/types/departments";
 import { useDebounce } from "@/hooks/useDebounce";
 import { Loader } from "@/components/core/Button/Loader";
+import { UsersStatus } from "@/types/users";
 
 interface MembersTabProps {
   isChildrenDept?: boolean;
@@ -57,12 +59,13 @@ export const MembersTab: React.FC = ({
     ...userFilter,
   });
 
-  const { data: deptMembersCount, isLoading: isLoadingCount } = useGetAllUsers<FetchedUserCountType>({
-    q: value,
-    department_id: departmentId,
-    ...userFilter,
-    component: "count",
-  });
+  const { data: deptMembersCount, isLoading: isLoadingCount } =
+    useGetAllUsers<FetchedUserCountType>({
+      q: value,
+      department_id: departmentId,
+      ...userFilter,
+      component: "count",
+    });
 
   const { data: deptMembersStatistics } =
     useGetAllUsers<FetchedUsersStatisticsType>({
@@ -75,25 +78,25 @@ export const MembersTab: React.FC = ({
       id: 1,
       label: "All Members",
       icon: "lucide:users",
-      value: deptMembersStatistics?.total_member,
+      value: deptMembersStatistics?.total_member ?? 0,
     },
     {
       id: 2,
       label: "Pending Members",
       icon: "lucide:users",
-      value: deptMembersStatistics?.pending_member,
+      value: deptMembersStatistics?.pending_member ?? 0,
     },
     {
       id: 3,
       label: "Approved Members",
       icon: "lucide:users",
-      value: deptMembersStatistics?.approve_member,
+      value: deptMembersStatistics?.approve_member ?? 0,
     },
     {
       id: 4,
       label: "Declined Members",
       icon: "lucide:life-buoy",
-      value: deptMembersStatistics?.decline_member,
+      value: deptMembersStatistics?.decline_member ?? 0,
     },
   ];
 
@@ -122,7 +125,7 @@ export const MembersTab: React.FC = ({
           <div className="flex items-center gap-x-3 whitespace-nowrap">
             <div className="size-8">
               <img
-                src={item?.avatar}
+                src={item?.avatar || blankImage}
                 alt="profile"
                 className="w-full h-full rounded-full object-cover"
               />
@@ -177,16 +180,17 @@ export const MembersTab: React.FC = ({
       cell: ({ row }: { row: any }) => {
         const item = row?.original;
         return (
-          <div className="font-medium text-sm capitalize">
-            <RenderIf condition={item?.status === 0}>
-              <p className="text-amber">Pending</p>
-            </RenderIf>
-            <RenderIf condition={item?.status === 1}>
-              <p className="text-[#008E5B]">Active</p>
-            </RenderIf>
-            <RenderIf condition={item?.status === 2}>
-              <p className="text-accent-primary">Suspended</p>
-            </RenderIf>
+          <div
+            className={cn(
+              "font-medium text-sm capitalize",
+              item?.status === 0
+                ? "text-amber"
+                : item?.status === 1
+                ? "text-green-base"
+                : "text-accent-primary"
+            )}
+          >
+            {UsersStatus[item?.status]}
           </div>
         );
       },
@@ -195,7 +199,6 @@ export const MembersTab: React.FC = ({
       header: () => "Action",
       accessorKey: "action",
       cell: () => {
-        // const item = row?.original;
         return (
           <Popover className="relative">
             <PopoverButton>
@@ -303,9 +306,9 @@ export const MembersTab: React.FC = ({
           />
         </RenderIf>
         <RenderIf condition={isLoadingMembers || isLoadingCount}>
-            <div className="flex w-full h-96 items-center justify-center">
-                <Loader className="spinner size-6 text-accent-primary" />
-            </div>
+          <div className="flex w-full h-96 items-center justify-center">
+            <Loader className="spinner size-6 text-accent-primary" />
+          </div>
         </RenderIf>
       </div>
 

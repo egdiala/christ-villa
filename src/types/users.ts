@@ -88,6 +88,6 @@ export type FetchedUserType = {
 
 export enum UsersStatus {
   Pending = 0,
-  Approved = 1,
+  Active = 1,
   Suspended = 2,
 }

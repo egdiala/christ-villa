@@ -33,7 +33,9 @@ export const DashboardPendingMembersTable = () => {
                 className="w-full h-full rounded-full object-cover"
               />
             </div>
-            <p className="text-sm text-text-secondary">{item?.name}</p>
+            <p className="text-sm text-text-secondary capitalize">
+              {item?.name}
+            </p>
           </div>
         );
       },
@@ -54,6 +56,14 @@ export const DashboardPendingMembersTable = () => {
     {
       header: () => "Gender",
       accessorKey: "gender",
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original;
+        return (
+          <p className="text-sm text-text-secondary capitalize">
+            {item?.gender || "-"}
+          </p>
+        );
+      },
     },
     // {
     //   header: () => "User Type",
