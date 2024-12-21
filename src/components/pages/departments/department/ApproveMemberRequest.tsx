@@ -5,22 +5,44 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { Icon } from "@iconify/react";
+import caution from "@/assets/caution.gif";
 import { Button } from "@/components/core";
+import { useUpdateMemberStatus } from "@/services/hooks/mutations/useDepartments";
+import { FetchedUsersType } from "@/types/users";
+import { successToast } from "@/utils/createToast";
 
 interface ApproveMemberModalProps {
-  isOpen: boolean;
+  value: { isOpen: boolean; member: FetchedUsersType; deptId: string };
   onClose: () => void;
-  onApprove: () => void;
 }
 
 export const ApproveMemberRequestModal = ({
-  isOpen,
+  value,
   onClose,
-  onApprove,
 }: ApproveMemberModalProps) => {
+  const handleClose = () => {
+    successToast({
+      message: `${value.member.name} has been successfully ${
+        value.member.status !== 1 ? "Approved" : "Suspended"
+      }`,
+    });
+    onClose();
+  };
+
+  const { mutate, isPending } = useUpdateMemberStatus(handleClose);
+
+  const handleApproveOrSuspendMember = () => {
+    mutate({
+      request_type: "1",
+      user_id: value.member.user_id,
+      status: value.member.status !== 1 ? "1" : "2",
+      department_id: value.deptId,
+    });
+  };
+
   return (
     <Dialog
-      open={isOpen}
+      open={value.isOpen}
       onClose={onClose}
       as="div"
       className="relative z-10 focus:outline-none"
@@ -32,28 +54,46 @@ export const ApproveMemberRequestModal = ({
             className="max-w-[350px] space-y-5 bg-white p-5 rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
           >
             <DialogTitle className="font-bold">
-              <Icon
-                icon="lucide:octagon-alert"
-                className="size-12 text-green-1"
-              />
+              {value.member.status !== 1 ? (
+                <Icon
+                  icon="lucide:octagon-alert"
+                  className="size-12 text-green-1"
+                />
+              ) : (
+                <img src={caution} alt="caution" className="size-12" />
+              )}
             </DialogTitle>
 
             <Description className="grid gap-y-2">
               <h4 className="font-bold text-xl text-text-primary">
-                Approve request to join department?
+                {value.member.status !== 1 ? "Approve" : "Suspend"} member in
+                this Department?
               </h4>
               <p className="text-sm text-text-secondary">
-                This action would add [member name] to this department. You can
-                remove this member anytime.
+                This action would{" "}
+                {value.member.status !== 1 ? "approve" : "suspend"}{" "}
+                {value.member.name} in this department. You can{" "}
+                {value.member.status === 2 ? "suspend" : "approve"} this member
+                anytime.
               </p>
             </Description>
 
             <div className="flex gap-4 w-full">
-              <Button theme="tertiary" onClick={onClose} block>
+              <Button
+                disabled={isPending}
+                theme="tertiary"
+                onClick={onClose}
+                block
+              >
                 Cancel
               </Button>
-              <Button theme="primary" onClick={onApprove} block>
-                Approve
+              <Button
+                theme="primary"
+                onClick={handleApproveOrSuspendMember}
+                loading={isPending}
+                block
+              >
+                {value.member.status !== 1 ? "Approve" : "Suspend"}
               </Button>
             </div>
           </DialogPanel>

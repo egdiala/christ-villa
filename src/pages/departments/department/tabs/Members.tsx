@@ -107,12 +107,36 @@ export const MembersTab: React.FC = ({
   ];
 
   const [openApproveMemberRequestModal, setOpenApproveMemberRequestModal] =
-    useState(false);
-  const [openRemoveMemberModal, setOpenRemoveMemberModal] = useState(false);
+    useState({ isOpen: false, member: {} as FetchedUsersType, deptId: "" });
+  const [openRemoveMemberModal, setOpenRemoveMemberModal] = useState({
+    isOpen: false,
+    member: {} as FetchedUsersType,
+    deptId: "",
+  });
 
   const actions = [
-    { label: "Approve", onClick: () => setOpenApproveMemberRequestModal(true) },
-    { label: "Remove", onClick: () => setOpenRemoveMemberModal(true) },
+    {
+      label: (member: FetchedUsersType) => {
+        return member.status !== 1 ? "Approve" : "Suspend";
+      },
+      onClick: (member: FetchedUsersType) =>
+        setOpenApproveMemberRequestModal({
+          isOpen: true,
+          member: member,
+          deptId: departmentId,
+        }),
+    },
+    {
+      label: (member: FetchedUsersType) => {
+        return "Remove";
+      },
+      onClick: (member: FetchedUsersType) =>
+        setOpenRemoveMemberModal({
+          isOpen: true,
+          member: member,
+          deptId: departmentId,
+        }),
+    },
   ];
 
   const columns = [
@@ -198,7 +222,8 @@ export const MembersTab: React.FC = ({
     {
       header: () => "Action",
       accessorKey: "action",
-      cell: () => {
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original;
         return (
           <Popover className="relative">
             <PopoverButton>
@@ -222,11 +247,11 @@ export const MembersTab: React.FC = ({
               <div className="grid gap-y-1">
                 {actions.map((action) => (
                   <button
-                    onClick={action.onClick}
-                    key={action.label}
+                    onClick={() => action.onClick(item)}
+                    key={action.label(item)}
                     className="text-start px-2 py-[6.5px] text-sm text-text-secondary hover:bg-red-5 hover:rounded-md"
                   >
-                    {action.label}
+                    {action.label(item)}
                   </button>
                 ))}
               </div>
@@ -313,15 +338,25 @@ export const MembersTab: React.FC = ({
       </div>
 
       <ApproveMemberRequestModal
-        isOpen={openApproveMemberRequestModal}
-        onClose={() => setOpenApproveMemberRequestModal(false)}
-        onApprove={() => {}}
+        value={openApproveMemberRequestModal}
+        onClose={() =>
+          setOpenApproveMemberRequestModal({
+            isOpen: false,
+            member: {} as FetchedUsersType,
+            deptId: "",
+          })
+        }
       />
 
       <RemoveMemberModal
-        isOpen={openRemoveMemberModal}
-        onClose={() => setOpenRemoveMemberModal(false)}
-        onRemove={() => {}}
+        value={openRemoveMemberModal}
+        onClose={() =>
+          setOpenRemoveMemberModal({
+            isOpen: false,
+            member: {} as FetchedUsersType,
+            deptId: "",
+          })
+        }
       />
     </div>
   );
