@@ -1,17 +1,21 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { cn } from "@/libs/cn"
 import { format } from "date-fns"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import { Loader } from "@/components/core/Button/Loader"
 import { useGetRequests } from "@/services/hooks/queries"
-import { DateFilter, RequestsFilter, UpdateRequestStatusModal, ViewRequestModal } from "@/components/pages/requests"
+import { useLocation, useSearchParams } from "react-router"
 import { RenderIf, Table, TableAction } from "@/components/core"
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams"
 import { Menu, MenuButton, MenuHeading, MenuItem, MenuItems, MenuSection } from '@headlessui/react'
+import { DateFilter, RequestsFilter, UpdateRequestStatusModal, ViewRequestModal } from "@/components/pages/requests"
 import { RequestStatus, type FetchedRequestCountStatusType, type FetchedRequestCountType, type FetchedRequestType } from "@/types/requests"
 
 export const RequestsPage: React.FC = () => {
+    const location = useLocation()
     const [page, setPage] = useState(1)
     const [itemsPerPage] = useState(10)
+    const [searchParams, setSearchParams] = useSearchParams()
     const [requestFilters, setRequestFilters] = useState({})
     const [dateFilters, setDateFilters] = useState({})
     const { data: requests, isLoading } = useGetRequests<FetchedRequestType[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), ...requestFilters, ...dateFilters }) 
@@ -107,8 +111,12 @@ export const RequestsPage: React.FC = () => {
     const handlePageChange = (page: number) => {
         // in a real page, this function would paginate the data from the backend
         setPage(page)
-        // setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
+        setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
     };
+    
+    useEffect(() => {
+        getPaginationParams(location, setPage, () => {})
+    }, [location, setPage])
     
     const requestCards = useMemo(() => {
         return [

@@ -1,5 +1,6 @@
 export * from "./useAdmins"
 export * from "./useAnnouncements"
+export * from "./useCalendar"
 export * from "./useConnectGroups"
 export * from "./useRequests"
 export * from "./useUsers"

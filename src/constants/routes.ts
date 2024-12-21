@@ -13,7 +13,6 @@ export const appRoutes = [
 
 export const setupRoutes = [
   { to: "/admin-accounts", name: "Admin Accounts", icon: "lucide:square-user" },
-  { to: "/announcements", name: "Announcements", icon: "lucide:volume-2" },
   { to: "/church-leaders", name: "Church Leaders", icon: "lucide:award" },
   { to: "/church-calendar", name: "Church Calendar", icon: "lucide:calendar" },
 ];
