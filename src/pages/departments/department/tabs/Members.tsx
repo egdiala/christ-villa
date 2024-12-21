@@ -127,7 +127,7 @@ export const MembersTab: React.FC = ({
         }),
     },
     {
-      label: (member: FetchedUsersType) => {
+      label: () => {
         return "Remove";
       },
       onClick: (member: FetchedUsersType) =>
