@@ -8,7 +8,7 @@ export const appRoutes = [
     name: "Connect Groups",
     icon: "lucide:loader-pinwheel",
   },
-  { to: "/engage", name: "Engage", icon: "lucide:volume-2" },
+  { to: "/engage", name: "Announcements", icon: "lucide:volume-2" },
 ];
 
 export const setupRoutes = [
