@@ -77,6 +77,7 @@ export const RemoveMemberModal = ({
                 theme="primary"
                 onClick={handleRemoveMember}
                 loading={isPending}
+                disabled={isPending}
                 block
               >
                 Remove

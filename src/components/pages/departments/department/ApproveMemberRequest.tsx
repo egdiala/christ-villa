@@ -91,6 +91,7 @@ export const ApproveMemberRequestModal = ({
                 theme="primary"
                 onClick={handleApproveOrSuspendMember}
                 loading={isPending}
+                disabled={isPending}
                 block
               >
                 {value.member.status !== 1 ? "Approve" : "Suspend"}
