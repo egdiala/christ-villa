@@ -2,22 +2,24 @@ import {
   Description,
   Dialog,
   DialogPanel,
-  DialogTitle,
 } from "@headlessui/react";
-import { Icon } from "@iconify/react";
+import caution from "@/assets/caution.gif";
 import { Button } from "@/components/core";
+import { FetchedDepartmentActivities } from "@/types/departments";
+import { useDeleteDepartmentMaterial } from "@/services/hooks/mutations/useDepartments";
 
 interface DeleteActivityModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onDelete: () => void;
+  item: FetchedDepartmentActivities;
 }
 
 export const DeleteActivityModal = ({
   isOpen,
   onClose,
-  onDelete,
+  item,
 }: DeleteActivityModalProps) => {
+  const { mutate, isPending } = useDeleteDepartmentMaterial(() => onClose())
   return (
     <Dialog
       open={isOpen}
@@ -31,19 +33,14 @@ export const DeleteActivityModal = ({
             transition
             className="max-w-[350px] space-y-5 bg-white p-5 rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
           >
-            <DialogTitle className="font-bold">
-              <Icon
-                icon="lucide:triangle-alert"
-                className="size-12 text-accent-primary"
-              />
-            </DialogTitle>
+            <img src={caution} alt="caution" className="size-12" />
 
             <Description className="grid gap-y-2">
               <h4 className="font-bold text-xl text-text-primary">
-                Delete [Activity name]?
+                Delete {item?.title}?
               </h4>
               <p className="text-sm text-text-secondary">
-                This action would remove [activity name] from the system and is
+                This action would remove {item?.title} from the system and is
                 irreversible.
               </p>
             </Description>
@@ -52,7 +49,7 @@ export const DeleteActivityModal = ({
               <Button theme="tertiary" onClick={onClose} block>
                 Cancel
               </Button>
-              <Button theme="primary" onClick={onDelete} block>
+              <Button theme="primary" type="button" loading={isPending} disabled={isPending} onClick={() => mutate(item?.material_id)} block>
                 Delete
               </Button>
             </div>

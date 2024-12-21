@@ -93,14 +93,14 @@ export const useGetDepartmentTimeOff = (
   });
 };
 
-export const useGetDepartmentMaterials = (
+export const useGetDepartmentMaterials = <T>(
   query: FetchDepartmentMaterialsQuery
 ) => {
   const { department_id } = query;
   return useQuery({
     queryKey: [GET_DEPARTMENT_MATERIALS, query],
     queryFn: () => getDepartmentMaterials(query),
-    select: (res) => res.data,
+    select: (res) => res.data as T,
     enabled: !!department_id,
   });
 };

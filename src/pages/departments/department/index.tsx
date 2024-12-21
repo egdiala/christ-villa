@@ -21,12 +21,6 @@ export const DepartmentPage: React.FC = () => {
       department_id: departmentId,
     });
 
-  const { data: requestAreas } = useGetSingleDepartment({
-    department_id: departmentId,
-    component: "request-area",
-  });
-  console.log({ requestAreas });
-
   const departmentName = singleDepartmentInfo?.name;
 
   const [openDeleteDeptModal, setOpenDeleteDeptModal] = useState(false);

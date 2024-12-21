@@ -177,3 +177,20 @@ export interface FetchedDepartmentRequestType {
     user_type: string;
   }
 }
+
+export interface FetchedDepartmentActivities {
+    department_id: string;
+    title: string;
+    url: string;
+    uploaded_by: string;
+    createdAt: string;
+    updatedAt: string;
+    material_id: string;
+    user_data: {
+        _id: string;
+        name: string;
+        email: string;
+        phone_number: string;
+        user_type: string;
+    }
+}

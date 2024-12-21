@@ -70,8 +70,6 @@ export const MembersTab: React.FC = ({
       component: "count-department",
     });
 
-  console.log({ deptMembers, deptMembersStatistics, deptMembersCount });
-
   const deptStatistics = [
     {
       id: 1,

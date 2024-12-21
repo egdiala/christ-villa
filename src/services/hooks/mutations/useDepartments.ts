@@ -7,12 +7,14 @@ import {
   assignDepartmentRequest,
   createDepartment,
   deleteDepartment,
+  deleteDepartmentMaterial,
   deleteDepartmentRequest,
   updateDepartment,
   updateMemberStatus,
 } from "@/services/apis/departments";
 import {
   GET_DEPARTMENT,
+  GET_DEPARTMENT_MATERIALS,
   GET_DEPARTMENT_REQUESTS,
   GET_DEPARTMENT_TIME_OFFS,
   GET_DEPARTMENTS,
@@ -66,6 +68,24 @@ export const useDeleteDepartment = (fn?: (v: any) => void) => {
       });
       queryClient.invalidateQueries({ queryKey: [GET_DEPARTMENTS] });
       navigate("/departments");
+      fn?.(response);
+    },
+    onError: (err: any) => {
+      errorToast(err);
+    },
+  });
+};
+
+export const useDeleteDepartmentMaterial = (fn?: (v: any) => void) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteDepartmentMaterial,
+    onSuccess: (response: any) => {
+      successToast({
+        message: "Material deleted successfully!",
+      });
+      queryClient.invalidateQueries({ queryKey: [GET_DEPARTMENT_MATERIALS] });
       fn?.(response);
     },
     onError: (err: any) => {

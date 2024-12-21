@@ -1,118 +1,67 @@
 import { useState } from "react";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
-import { useLocation } from "react-router";
-import { SearchInput, Table, TableAction } from "@/components/core";
+import { useParams } from "react-router";
+import blankImage from "@/assets/blank.svg";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
+import { SearchInput, Table, TableAction } from "@/components/core";
+import type { FetchedDepartmentActivities } from "@/types/departments";
 import { DateFilter, RequestsFilter } from "@/components/pages/requests";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
-import { DeleteActivityModal } from "@/components/pages/departments/department/DeleteActivity";
 import { useGetDepartmentMaterials } from "@/services/hooks/queries/useDepartments";
+import { DeleteActivityModal } from "@/components/pages/departments/department/DeleteActivity";
 
 export const ActivitiesTab: React.FC = () => {
-  const { pathname } = useLocation();
-  const pathArray = pathname.split("/");
-  const departmentId = pathArray[2];
+  const { id } = useParams();
+  const departmentId = id as string;
 
-  const { data: departmentActivities } = useGetDepartmentMaterials({
-    department_id: departmentId,
-  });
-  console.log({ departmentActivities });
+  const [page, setPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
-  const activities = [
-    {
-      id: 1,
-      firstName: "Albert",
-      lastName: "Flores",
-      profileImg:
-        "https://plus.unsplash.com/premium_photo-1682144187125-b55e638cf286?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      activity: "Uploaded a document",
-      description: "Training material",
-    },
-    {
-      id: 2,
-      firstName: "Theresa",
-      lastName: "Webb",
-      profileImg:
-        "https://images.unsplash.com/photo-1636406269177-4827c00bb263?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      activity: "Uploaded a document",
-      description: "Training material",
-    },
-    {
-      id: 3,
-      firstName: "Ronals",
-      lastName: "Richards",
-      profileImg:
-        "https://images.unsplash.com/photo-1715029005043-e88d219a3c48?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      activity: "Uploaded a document",
-      description: "Training material",
-    },
-    {
-      id: 4,
-      firstName: "Bessie",
-      lastName: "Cooper",
-      profileImg:
-        "https://plus.unsplash.com/premium_photo-1664536392896-cd1743f9c02c?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      activity: "Uploaded a document",
-      description: "Training material",
-    },
-    {
-      id: 5,
-      firstName: "Floyd",
-      lastName: "Miles",
-      profileImg:
-        "https://images.unsplash.com/photo-1636377985931-898218afd306?q=80&w=2864&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      date: "Today",
-      time: "12:34pm",
-      activity: "Uploaded a document",
-      description: "Training material",
-    },
-  ];
+  const [searchParams, setSearchParams] = useState("");
 
-  const [_, setOpenFile] = useState(false);
-  const [openDeleteFileModal, setOpenDeleteFileModal] = useState(false);
+  const { data: departmentActivities } = useGetDepartmentMaterials<FetchedDepartmentActivities[]>({ department_id: departmentId, page: page.toString(), item_per_page: itemsPerPage.toString() });
+  const { data: departmentActivitiesCount } = useGetDepartmentMaterials<{ total: number; }>({ component: "count", department_id: departmentId });
+
+  const [toggleModals, setToggleModals] = useState({
+    openDeleteFileModal: false,
+    activeItem: null as FetchedDepartmentActivities | null
+  })
+
 
   const actions = [
-    { label: "View File", onClick: () => setOpenFile(true) },
-    { label: "Delete File", onClick: () => setOpenDeleteFileModal(true) },
+    { label: "View File", onClick: (item: FetchedDepartmentActivities) => window.open(item?.url, "_blank") },
+    { label: "Delete File", onClick: (item: FetchedDepartmentActivities) => setToggleModals((prev) => ({ ...prev, openDeleteFileModal: true, activeItem: item })) },
   ];
 
   const columns = [
     {
       header: () => "Date & Time",
-      accessorKey: "date_time",
+      accessorKey: "createdAt",
       cell: ({ row }: { row: any }) => {
-        const item = row?.original;
+        const item = row?.original as FetchedDepartmentActivities;
         return (
-          <p className="text-sm text-text-secondary whitespace-nowrap">
-            {item?.date} • {item?.time}
-          </p>
+          <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">
+            <span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
         );
       },
     },
     {
       header: () => "Activity By",
-      accessorKey: "name",
+      accessorKey: "user_data.name",
       cell: ({ row }: { row: any }) => {
-        const item = row?.original;
+        const item = row?.original as FetchedDepartmentActivities;
         return (
           <div className="flex items-center gap-x-3 whitespace-nowrap">
             <div className="size-8">
               <img
-                src={item?.profileImg}
+                src={blankImage}
                 alt="profile"
                 className="w-full h-full rounded-full object-cover"
               />
             </div>
             <p className="text-sm text-text-secondary">
-              {item?.firstName} {item?.lastName}
+              {item?.user_data?.name}
             </p>
           </div>
         );
@@ -120,24 +69,12 @@ export const ActivitiesTab: React.FC = () => {
     },
     {
       header: () => "Activity",
-      accessorKey: "activity",
+      accessorKey: "title",
       cell: ({ row }: { row: any }) => {
-        const item = row?.original;
+        const item = row?.original as FetchedDepartmentActivities;
         return (
           <p className="text-sm text-text-secondary whitespace-nowrap">
-            {item?.activity}
-          </p>
-        );
-      },
-    },
-    {
-      header: () => "Description",
-      accessorKey: "description",
-      cell: ({ row }: { row: any }) => {
-        const item = row?.original;
-        return (
-          <p className="text-sm text-text-secondary whitespace-nowrap">
-            {item?.description}
+            {item?.title}
           </p>
         );
       },
@@ -145,20 +82,15 @@ export const ActivitiesTab: React.FC = () => {
     {
       header: () => "Action",
       accessorKey: "action",
-      cell: () => {
-        // const item = row?.original;
+      cell: ({ row }: { row: any }) => {
+        const item = row?.original as FetchedDepartmentActivities;
         return (
           <Popover className="relative">
-            <PopoverButton>
-              <TableAction
-                theme="tertiary"
-                className="!text-accent-primary !bg-red-5 !text-sm font-bold !p-1.5"
-              >
+            <PopoverButton as={TableAction} theme="tertiary" className="!text-accent-primary !bg-red-5 !text-sm font-bold !p-1.5">
                 <Icon
                   icon="lucide:ellipsis"
                   className="size-4 text-text-secondary"
                 />
-              </TableAction>
             </PopoverButton>
             <PopoverPanel
               anchor="bottom end"
@@ -170,7 +102,7 @@ export const ActivitiesTab: React.FC = () => {
               <div className="grid gap-y-1">
                 {actions.map((action) => (
                   <button
-                    onClick={action.onClick}
+                    onClick={() => action.onClick(item)}
                     key={action.label}
                     className="text-start px-2 py-[6.5px] text-sm text-text-secondary hover:bg-red-5 hover:rounded-md"
                   >
@@ -184,11 +116,6 @@ export const ActivitiesTab: React.FC = () => {
       },
     },
   ];
-
-  const [page, setPage] = useState(1);
-  const [itemsPerPage] = useState(10);
-
-  const [searchParams, setSearchParams] = useState("");
 
   const handlePageChange = (page: number) => {
     setPage(page);
@@ -222,19 +149,19 @@ export const ActivitiesTab: React.FC = () => {
       <div>
         <Table
           columns={columns}
-          data={activities ?? []}
+          data={departmentActivities ?? []}
           page={page}
           perPage={itemsPerPage}
-          totalCount={activities.length}
+          totalCount={departmentActivitiesCount?.total}
           onPageChange={handlePageChange}
           emptyStateText="We couldn't find any activity."
         />
       </div>
 
       <DeleteActivityModal
-        isOpen={openDeleteFileModal}
-        onClose={() => setOpenDeleteFileModal(false)}
-        onDelete={() => {}}
+        item={toggleModals.activeItem!}
+        isOpen={toggleModals.openDeleteFileModal}
+        onClose={() => setToggleModals((prev) => ({ ...prev, openDeleteFileModal: false, activeItem: null }))}
       />
     </div>
   );

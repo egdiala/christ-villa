@@ -155,6 +155,11 @@ export const getDepartmentMaterials = async (
   return res.data;
 };
 
+export const deleteDepartmentMaterial = async (material_id: string) => {
+  const res = await axiosInstance.delete(`${DEPARTMENT_MATERIALS_API}/${material_id}`);
+  return res.data;
+};
+
 export const getDepartmentMaterial = async (
   query: FetchDepartmentMaterialsQuery
 ) => {
