@@ -15,7 +15,7 @@ export const DashboardStatCard = ({
   className,
 }: StatCardProps) => {
   return (
-      <div className={cn("flex items-center gap-4 p-4 rounded-lg bg-light-blue-4", className)}>
+      <div className={cn("flex items-center gap-4 p-4 rounded-2xl border border-blue-4", className)}>
         <div className="grid place-content-center rounded-full size-12 bg-light-blue-3">
           <Icon
             icon={icon}
