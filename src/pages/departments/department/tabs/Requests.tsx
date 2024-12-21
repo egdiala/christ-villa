@@ -12,7 +12,10 @@ import {
 import { useGetDepartmentRequests } from "@/services/hooks/queries/useDepartments";
 import { useLocation, useSearchParams } from "react-router";
 import { useDebounce } from "@/hooks/useDebounce";
-import { FetchedDepartmentRequestCountStatusType, FetchedDepartmentRequestType } from "@/types/departments";
+import {
+  FetchedDepartmentRequestCountStatusType,
+  FetchedDepartmentRequestType,
+} from "@/types/departments";
 import { Loader } from "@/components/core/Button/Loader";
 import { format } from "date-fns";
 import { cn } from "@/libs/cn";
@@ -26,40 +29,69 @@ export const RequestsTab: React.FC = () => {
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
+  const [requestFilter, setRequestFilter] = useState({});
+  const [dateFilter, setDateFilter] = useState({
+    start_date: "",
+    end_date: "",
+  });
+
   const [searchParams, setSearchParams] = useSearchParams();
   const { value, onChangeHandler } = useDebounce(300);
 
-  const { data: departmentRequests, isLoading } = useGetDepartmentRequests<FetchedDepartmentRequestType[]>({
+  const { data: departmentRequests, isLoading } = useGetDepartmentRequests<
+    FetchedDepartmentRequestType[]
+  >({
     q: value,
     department_id: departmentId,
     page: page.toString(),
     item_per_page: itemsPerPage.toString(),
+    ...requestFilter,
+    ...dateFilter,
   });
 
-  const { data: departmentRequestsCount, isLoading: isLoadingCount } = useGetDepartmentRequests<{ total: number; }>({
-    q: value,
-    department_id: departmentId,
-    component: "count"
-  });
+  const { data: departmentRequestsCount, isLoading: isLoadingCount } =
+    useGetDepartmentRequests<{ total: number }>({
+      q: value,
+      department_id: departmentId,
+      component: "count",
+      ...requestFilter,
+      ...dateFilter,
+    });
 
-  const { data: departmentRequestsCountStatus } = useGetDepartmentRequests<FetchedDepartmentRequestCountStatusType>({
-    department_id: departmentId,
-    component: "count-status",
-  });
-
+  const { data: departmentRequestsCountStatus } =
+    useGetDepartmentRequests<FetchedDepartmentRequestCountStatusType>({
+      department_id: departmentId,
+      component: "count-status",
+    });
 
   const requestStatistics = useMemo(() => {
     return [
-      { id: 1, label: "Total requests", value: departmentRequestsCountStatus?.total_count || 0 },
-      { id: 2, label: "Pending requests", value: departmentRequestsCountStatus?.pending_req || 0 },
-      { id: 3, label: "Completed req.", value: departmentRequestsCountStatus?.pending_req || 0 },
+      {
+        id: 1,
+        label: "Total requests",
+        value: departmentRequestsCountStatus?.total_count ?? 0,
+      },
+      {
+        id: 2,
+        label: "Pending requests",
+        value: departmentRequestsCountStatus?.pending_req ?? 0,
+      },
+      {
+        id: 3,
+        label: "Completed req.",
+        value: departmentRequestsCountStatus?.pending_req ?? 0,
+      },
       {
         id: 4,
         label: "Rejected req.",
-        value: departmentRequestsCountStatus?.decline_req || 0,
+        value: departmentRequestsCountStatus?.decline_req ?? 0,
       },
-    ]
-  },[departmentRequestsCountStatus?.decline_req, departmentRequestsCountStatus?.pending_req, departmentRequestsCountStatus?.total_count])
+    ];
+  }, [
+    departmentRequestsCountStatus?.decline_req,
+    departmentRequestsCountStatus?.pending_req,
+    departmentRequestsCountStatus?.total_count,
+  ]);
 
   const columns = [
     {
@@ -77,7 +109,7 @@ export const RequestsTab: React.FC = () => {
               />
             </div>
             <p className="text-sm text-text-secondary capitalize">
-              {item?.user_data?.name}
+              {item?.user_data?.name || "-"}
             </p>
           </div>
         );
@@ -90,8 +122,8 @@ export const RequestsTab: React.FC = () => {
         const item = row?.original as FetchedDepartmentRequestType;
         return (
           <p className="text-sm text-text-secondary whitespace-nowrap">
-                      {format(item?.createdAt, "dd MMM, yyyy")} •{" "}
-                      {format(item?.createdAt, "p")}
+            {format(item?.createdAt, "dd MMM, yyyy")} •{" "}
+            {format(item?.createdAt, "p")}
           </p>
         );
       },
@@ -103,7 +135,8 @@ export const RequestsTab: React.FC = () => {
         const item = row?.original as FetchedDepartmentRequestType;
         return (
           <p className="text-sm text-text-secondary capitalize truncate">
-            {item?.request_type?.replace(/_/g, " ") || item?.request_area?.replace(/_/g, " ")}
+            {item?.request_type?.replace(/_/g, " ") ||
+              item?.request_area?.replace(/_/g, " ")}
           </p>
         );
       },
@@ -114,7 +147,16 @@ export const RequestsTab: React.FC = () => {
       cell: ({ row }: { row: any }) => {
         const item = row?.original as FetchedDepartmentRequestType;
         return (
-          <div className={cn("capitalize", item?.status === 0 ? "text-amber" : "", item?.status === 1 ? "text-green-base" : "", item?.status === 2 ? "text-accent-primary" : "")}>{RequestStatus[item?.status]}</div>
+          <div
+            className={cn(
+              "capitalize",
+              item?.status === 0 ? "text-amber" : "",
+              item?.status === 1 ? "text-green-base" : "",
+              item?.status === 2 ? "text-accent-primary" : ""
+            )}
+          >
+            {RequestStatus[item?.status]}
+          </div>
         );
       },
     },
@@ -161,11 +203,15 @@ export const RequestsTab: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto">
-          <DateFilter theme="grey" setFilters={undefined} isLoading={false} />
+          <DateFilter
+            theme="grey"
+            setFilters={setDateFilter}
+            isLoading={isLoading}
+          />
           <RequestsFilter
             theme="grey"
-            setFilters={undefined}
-            isLoading={false}
+            setFilters={setRequestFilter}
+            isLoading={isLoading}
           />
           <TableAction theme="grey" block>
             Export
@@ -201,9 +247,9 @@ export const RequestsTab: React.FC = () => {
           />
         </RenderIf>
         <RenderIf condition={isLoading || isLoadingCount}>
-            <div className="flex w-full h-96 items-center justify-center">
-                <Loader className="spinner size-6 text-accent-primary" />
-            </div>
+          <div className="flex w-full h-96 items-center justify-center">
+            <Loader className="spinner size-6 text-accent-primary" />
+          </div>
         </RenderIf>
       </div>
 

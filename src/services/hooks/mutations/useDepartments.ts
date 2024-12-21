@@ -18,6 +18,7 @@ import {
   GET_DEPARTMENT_REQUESTS,
   GET_DEPARTMENT_TIME_OFFS,
   GET_DEPARTMENTS,
+  GET_USERS,
 } from "@/constants/queryKeys";
 
 export const useAddDepartment = (fn?: (v: any) => void) => {
@@ -100,10 +101,8 @@ export const useUpdateMemberStatus = (fn?: (v: any) => void) => {
   return useMutation({
     mutationFn: updateMemberStatus,
     onSuccess: (response: any) => {
-      successToast({
-        message: "Status has been successfully updated!",
-      });
       queryClient.invalidateQueries({ queryKey: [GET_DEPARTMENT] });
+      queryClient.invalidateQueries({ queryKey: [GET_USERS] });
       fn?.(response);
     },
     onError: (err: any) => {

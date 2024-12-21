@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { errorToast, successToast } from "@/utils/createToast";
 import {
@@ -24,13 +25,13 @@ export const useUpdateUserStatus = (fn?: (v: any) => void) => {
 };
 
 export const useDeleteUser = (fn?: (v: any) => void) => {
-  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: deleteUser,
     onSuccess: (response: any) => {
       successToast({ message: "User has been successfully deleted!" });
-      queryClient.invalidateQueries({ queryKey: [GET_USER] });
+      navigate("/users");
       fn?.(response);
     },
     onError: (err: any) => {
