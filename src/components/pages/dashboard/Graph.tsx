@@ -89,7 +89,7 @@ export const DashboardGraph = () => {
       <div className="flex-1">
         <ChartContainer
           config={chartConfig}
-          className="min-h-auto max-h-96 w-full md:ml-0 pl-0"
+          className="min-h-auto max-h-64 w-full md:ml-0 pl-0"
         >
           <LineChart
             accessibilityLayer

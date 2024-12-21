@@ -1,3 +1,4 @@
+import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 
 interface StatCardProps {
@@ -14,16 +15,17 @@ export const DashboardStatCard = ({
   className,
 }: StatCardProps) => {
   return (
-    <div
-      className={`border border-blue-4 rounded-2xl grid gap-y-[26px] p-6 flex-1 ${className}`}
-    >
-      <div className="bg-light-blue-3 rounded-full flex justify-center items-center p-3 size-12">
-        <Icon icon={icon} className="size-6 text-text-secondary" />
+      <div className={cn("flex items-center gap-4 p-4 rounded-2xl border border-blue-4", className)}>
+        <div className="grid place-content-center rounded-full size-12 bg-light-blue-3">
+          <Icon
+            icon={icon}
+            className="size-6 text-text-secondary"
+          />
+        </div>
+        <div className="grid gap-1">
+          <h1 className="text-sm text-text-secondary">{title}</h1>
+          <p className="text-2xl text-text-primary">{count}</p>
+        </div>
       </div>
-      <div className="grid gap-y-1">
-        <p className="text-sm text-text-secondary">{title}</p>
-        <h2 className="text-2xl text-text-primary">{count}</h2>
-      </div>
-    </div>
   );
 };

@@ -8,12 +8,11 @@ export const appRoutes = [
     name: "Connect Groups",
     icon: "lucide:loader-pinwheel",
   },
-  { to: "/engage", name: "Engage", icon: "lucide:volume-2" },
+  { to: "/engage", name: "Announcements", icon: "lucide:volume-2" },
 ];
 
 export const setupRoutes = [
   { to: "/admin-accounts", name: "Admin Accounts", icon: "lucide:square-user" },
-  { to: "/announcements", name: "Announcements", icon: "lucide:volume-2" },
   { to: "/church-leaders", name: "Church Leaders", icon: "lucide:award" },
   { to: "/church-calendar", name: "Church Calendar", icon: "lucide:calendar" },
 ];
