@@ -36,7 +36,7 @@ export const Profile = () => {
     <div className="flex flex-col gap-5 px-4 pt-3 md:pt-5 pb-5 md:pb-10 view-page-container overflow-y-scroll">
       <div className="flex gap-y-4 flex-col md:flex-row justify-between md:items-center">
         <h4 className="capitalize font-bold text-2xl md:text-xl text-text-primary">
-          John Doe
+          {loggedInUser?.name}
         </h4>
         <div className="flex gap-2 flex-col md:flex-row">
           <Button
