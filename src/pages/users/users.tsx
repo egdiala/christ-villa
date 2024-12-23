@@ -43,6 +43,7 @@ export const UsersPage: React.FC = () => {
   const { data: users, isLoading } = useGetAllUsers<FetchedUsersType[]>({
     q: value,
     page: page.toString(),
+    item_per_page: itemsPerPage.toString(),
     ...dateFilter,
     ...userFilter,
   });
@@ -110,7 +111,7 @@ export const UsersPage: React.FC = () => {
         const item = row?.original;
         return (
           <p className="text-sm text-text-secondary whitespace-nowrap capitalize">
-            {item?.gender}
+            {item?.gender || "-"}
           </p>
         );
       },

@@ -10,17 +10,18 @@ import { userTypes } from "@/constants/status";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { changeUserTypeSchema } from "@/validations/users";
 import { useChangeUserType } from "@/services/hooks/mutations/useUsers";
+import { FetchedUserType } from "@/types/users";
 
 interface EditUserTypeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  userId: string;
+  user: FetchedUserType;
 }
 
 export const EditUserTypeModal = ({
   isOpen,
   onClose,
-  userId,
+  user,
 }: EditUserTypeModalProps) => {
   const handleClose = () => {
     resetForm();
@@ -32,11 +33,12 @@ export const EditUserTypeModal = ({
   const { handleSubmit, register, isValid, resetForm } = useFormikWrapper({
     validateOnMount: true,
     initialValues: {
-      user_type: "",
+      user_type: user?.account_type,
     },
+    enableReinitialize: true,
     validationSchema: changeUserTypeSchema,
     onSubmit(values) {
-      mutate({ user_type: values.user_type, user_id: userId });
+      mutate({ user_type: values.user_type, user_id: user?.user_id });
     },
   });
 

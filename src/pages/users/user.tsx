@@ -42,10 +42,10 @@ export const UserPage: React.FC = () => {
     {
       id: 4,
       title: "Address",
-      value: user?.address,
+      value: user?.address || "-",
     },
-    { id: 5, title: "Profession", value: user?.profession },
-    { id: 6, title: "Marital Status", value: user?.marital_status },
+    { id: 5, title: "Profession", value: user?.profession || "-" },
+    { id: 6, title: "Marital Status", value: user?.marital_status || "-" },
     {
       id: 7,
       title: "Department(s)",
@@ -53,7 +53,7 @@ export const UserPage: React.FC = () => {
         ? "Not applicable"
         : user?.department_data
             ?.map((data: { name: string }) => data?.name)
-            ?.join(", "),
+            ?.join(", ") || "-",
     },
   ];
 
@@ -272,7 +272,7 @@ export const UserPage: React.FC = () => {
       <EditUserTypeModal
         isOpen={openEditUserTypeModal}
         onClose={() => setOpenEditUserTypeModal(false)}
-        userId={userId}
+        user={user as FetchedUserType}
       />
     </div>
   );
