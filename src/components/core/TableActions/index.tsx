@@ -46,7 +46,7 @@ export const TableAction: React.FC<TableActionProps> = forwardRef(({
   const width = block && "cv-button--block";
   
   return (
-    <button className={cn("w-fit", "cv-table-action", btn.themes[theme as keyof typeof btn.themes], width, className)} ref={ref} {...props}>
+    <button className={cn("w-fit", "group cv-table-action", btn.themes[theme as keyof typeof btn.themes], width, className)} ref={ref} {...props}>
       {children}
     </button>
   );

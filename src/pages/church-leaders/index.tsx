@@ -20,11 +20,13 @@ import {
   EditChurchLeadershipModal,
   DeleteChurchLeaderModal,
 } from "@/components/pages/church-leaders";
+import { AnimatePresence, motion } from "motion/react";
 
 export const ChurchLeadershipPage: React.FC = () => {
   const location = useLocation();
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [isGridView, setIsGridView] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams();
   const { value, onChangeHandler } = useDebounce(300);
 
@@ -61,11 +63,13 @@ export const ChurchLeadershipPage: React.FC = () => {
   const actions = [
     {
       label: "Update Leader",
+      icon: "lucide:pencil-line",
       onClick: (leader: FetchedChurchLeadersType) =>
         setOpenUpdateLeaderModal({ leader: leader, isOpen: true }),
     },
     {
       label: "Delete Leader",
+      icon: "lucide:trash-2",
       onClick: (leader: FetchedChurchLeadersType) =>
         setOpenDeleteLeaderModal({ leader: leader, isOpen: true }),
     },
@@ -169,6 +173,12 @@ export const ChurchLeadershipPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto">
+          <TableAction theme="ghost" onClick={() => setIsGridView(!isGridView)}>
+            <Icon
+              icon={isGridView ? "lucide:list" : "lucide:grid-2x2"}
+              className="size-4 group-hover:text-white text-accent-primary"
+            />
+          </TableAction>
           <TableAction theme="grey" block>
             Export
             <Icon
@@ -188,15 +198,48 @@ export const ChurchLeadershipPage: React.FC = () => {
         </div>
       </div>
       <RenderIf condition={!isLoading && !loadingLeadersCount}>
-        <Table
-          columns={columns}
-          data={data ?? []}
-          page={page}
-          perPage={itemsPerPage}
-          totalCount={leadersCount?.total}
-          onPageChange={handlePageChange}
-          emptyStateText="We couldn't find any leader."
-        />
+        <AnimatePresence>
+          {
+            isGridView ? (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="grid grid-cols-4 gap-6">
+                {
+                  data?.map((leader) =>
+                    <div key={leader?.request_id} className="flex flex-col items-center gap-4">
+                      <div className="size-40 rounded-full overflow-hidden">
+                        <img src={leader?.url} alt={leader?.leader_name} className="size-40 object-cover" />
+                      </div>
+                      <div className="flex flex-col items-center gap-2">
+                        <h2 className="text-grey-dark-1 text-xl font-medium">{leader?.leader_name}</h2>
+                        <p className="text-grey-dark-2 text-base">{leader?.leader_position}</p>
+                      </div>
+                      <div className="flex items-center gap-2 justify-center">
+                      {
+                        actions.map((action) =>
+                          <button key={action?.label} type="button" onClick={() => action?.onClick(leader)} className="size-8 p-2 grid place-content-center text-grey-dark-3 hover:text-grey-dark-1 hover:bg-grey-dark-4 rounded-full ease-out duration-300 transition-all">
+                            <Icon icon={action?.icon} />
+                          </button>
+                        )
+                      }
+                      </div>
+                    </div>
+                  )
+                }
+              </motion.div>
+            ) : (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <Table
+                  columns={columns}
+                  data={data ?? []}
+                  page={page}
+                  perPage={itemsPerPage}
+                  totalCount={leadersCount?.total}
+                  onPageChange={handlePageChange}
+                  emptyStateText="We couldn't find any leader."
+                />
+              </motion.div>
+            )
+          }
+        </AnimatePresence>
       </RenderIf>
       <RenderIf condition={isLoading || loadingLeadersCount}>
         <div className="flex w-full h-96 items-center justify-center">
