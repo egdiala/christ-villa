@@ -5,12 +5,9 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { Icon } from "@iconify/react";
-import { Button, Input, SelectInput } from "@/components/core";
+import { Button, Input } from "@/components/core";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
-import {
-  FetchedChurchLeadersType,
-  leaderPositions,
-} from "@/types/church-leaders";
+import { FetchedChurchLeadersType } from "@/types/church-leaders";
 import { useUpdateChurchLeader } from "@/services/hooks/mutations/useChurchLeaders";
 import { createChurchLeaderSchema } from "@/validations/church-leaders";
 
@@ -80,22 +77,21 @@ export const EditChurchLeadershipModal = ({
             <Description className="px-6 grid gap-y-4">
               <Input
                 placeholder="Name"
-                label="Name" type="text"
+                label="Name"
+                type="text"
                 {...register("leader_name")}
               />
-              <SelectInput
-                options={leaderPositions}
+              <Input
+                type="text"
                 label="Position"
+                placeholder="Position"
                 {...register("leader_position")}
               />
             </Description>
 
             <div className="flex gap-4 pt-10 justify-end px-6 pb-6">
               <div className="flex gap-4 w-full md:w-auto">
-                <Button
-                  theme="tertiary"
-                  onClick={handleClose}
-                >
+                <Button theme="tertiary" onClick={handleClose}>
                   Cancel
                 </Button>
                 <Button

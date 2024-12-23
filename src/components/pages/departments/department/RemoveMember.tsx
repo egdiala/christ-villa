@@ -4,23 +4,42 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { Icon } from "@iconify/react";
+import caution from "@/assets/caution.gif";
 import { Button } from "@/components/core";
+import { FetchedUsersType } from "@/types/users";
+import { useUpdateMemberStatus } from "@/services/hooks/mutations/useDepartments";
+import { successToast } from "@/utils/createToast";
 
 interface RemoveMemberModalProps {
-  isOpen: boolean;
+  value: { isOpen: boolean; member: FetchedUsersType; deptId: string };
   onClose: () => void;
-  onRemove: () => void;
 }
 
 export const RemoveMemberModal = ({
-  isOpen,
+  value,
   onClose,
-  onRemove,
 }: RemoveMemberModalProps) => {
+  const handleClose = () => {
+    successToast({
+      message: `${value.member.name} has been successfully removed from this department`,
+    });
+    onClose();
+  };
+
+  const { mutate, isPending } = useUpdateMemberStatus(handleClose);
+
+  const handleRemoveMember = () => {
+    mutate({
+      request_type: "2",
+      user_id: value.member.user_id,
+      status: value.member.status?.toString(),
+      department_id: value.deptId,
+    });
+  };
+
   return (
     <Dialog
-      open={isOpen}
+      open={value.isOpen}
       onClose={onClose}
       as="div"
       className="relative z-10 focus:outline-none"
@@ -32,27 +51,35 @@ export const RemoveMemberModal = ({
             className="max-w-[350px] space-y-5 bg-white p-5 rounded-lg backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full"
           >
             <DialogTitle className="font-bold">
-              <Icon
-                icon="lucide:triangle-alert"
-                className="size-12 text-accent-primary"
-              />
+              <img src={caution} alt="caution" className="size-12" />
             </DialogTitle>
 
             <Description className="grid gap-y-2">
               <h4 className="font-bold text-xl text-text-primary">
-                Remove [member name]?
+                Remove {value.member.name}?
               </h4>
               <p className="text-sm text-text-secondary">
-                This action would remove [member name] from this department and
-                is irreversible.
+                This action would remove {value.member.name} from this
+                department and is irreversible.
               </p>
             </Description>
 
             <div className="flex gap-4 w-full">
-              <Button theme="tertiary" onClick={onClose} block>
+              <Button
+                theme="tertiary"
+                disabled={isPending}
+                onClick={onClose}
+                block
+              >
                 Cancel
               </Button>
-              <Button theme="primary" onClick={onRemove} block>
+              <Button
+                theme="primary"
+                onClick={handleRemoveMember}
+                loading={isPending}
+                disabled={isPending}
+                block
+              >
                 Remove
               </Button>
             </div>

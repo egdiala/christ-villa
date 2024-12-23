@@ -19,19 +19,51 @@ export const ActivitiesTab: React.FC = () => {
   const [itemsPerPage] = useState(10);
 
   const [searchParams, setSearchParams] = useState("");
+  const [activitiesFilter, setActivitiesFilter] = useState({});
+  const [dateFilter, setDateFilter] = useState({
+    start_date: "",
+    end_date: "",
+  });
 
-  const { data: departmentActivities } = useGetDepartmentMaterials<FetchedDepartmentActivities[]>({ department_id: departmentId, page: page.toString(), item_per_page: itemsPerPage.toString() });
-  const { data: departmentActivitiesCount } = useGetDepartmentMaterials<{ total: number; }>({ component: "count", department_id: departmentId });
+  const { data: departmentActivities, isLoading } = useGetDepartmentMaterials<
+    FetchedDepartmentActivities[]
+  >({
+    department_id: departmentId,
+    page: page.toString(),
+    item_per_page: itemsPerPage.toString(),
+    ...dateFilter,
+    ...activitiesFilter,
+  });
+
+  const { data: departmentActivitiesCount } = useGetDepartmentMaterials<{
+    total: number;
+  }>({
+    component: "count",
+    department_id: departmentId,
+    ...dateFilter,
+    ...activitiesFilter,
+  });
 
   const [toggleModals, setToggleModals] = useState({
     openDeleteFileModal: false,
-    activeItem: null as FetchedDepartmentActivities | null
-  })
-
+    activeItem: null as FetchedDepartmentActivities | null,
+  });
 
   const actions = [
-    { label: "View File", onClick: (item: FetchedDepartmentActivities) => window.open(item?.url, "_blank") },
-    { label: "Delete File", onClick: (item: FetchedDepartmentActivities) => setToggleModals((prev) => ({ ...prev, openDeleteFileModal: true, activeItem: item })) },
+    {
+      label: "View File",
+      onClick: (item: FetchedDepartmentActivities) =>
+        window.open(item?.url, "_blank"),
+    },
+    {
+      label: "Delete File",
+      onClick: (item: FetchedDepartmentActivities) =>
+        setToggleModals((prev) => ({
+          ...prev,
+          openDeleteFileModal: true,
+          activeItem: item,
+        })),
+    },
   ];
 
   const columns = [
@@ -42,7 +74,11 @@ export const ActivitiesTab: React.FC = () => {
         const item = row?.original as FetchedDepartmentActivities;
         return (
           <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">
-            <span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
+            <span className="capitalize">
+              {format(item?.createdAt, "dd MMM, yyyy")}
+            </span>{" "}
+            • {format(item?.createdAt, "p")}
+          </div>
         );
       },
     },
@@ -86,11 +122,15 @@ export const ActivitiesTab: React.FC = () => {
         const item = row?.original as FetchedDepartmentActivities;
         return (
           <Popover className="relative">
-            <PopoverButton as={TableAction} theme="tertiary" className="!text-accent-primary !bg-red-5 !text-sm font-bold !p-1.5">
-                <Icon
-                  icon="lucide:ellipsis"
-                  className="size-4 text-text-secondary"
-                />
+            <PopoverButton
+              as={TableAction}
+              theme="tertiary"
+              className="!text-accent-primary !bg-red-5 !text-sm font-bold !p-1.5"
+            >
+              <Icon
+                icon="lucide:ellipsis"
+                className="size-4 text-text-secondary"
+              />
             </PopoverButton>
             <PopoverPanel
               anchor="bottom end"
@@ -130,11 +170,15 @@ export const ActivitiesTab: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto">
-          <DateFilter theme="grey" setFilters={undefined} isLoading={false} />
+          <DateFilter
+            theme="grey"
+            setFilters={setDateFilter}
+            isLoading={isLoading}
+          />
           <RequestsFilter
             theme="grey"
-            setFilters={undefined}
-            isLoading={false}
+            setFilters={setActivitiesFilter}
+            isLoading={isLoading}
           />
           <TableAction theme="grey" block>
             Export
@@ -161,7 +205,13 @@ export const ActivitiesTab: React.FC = () => {
       <DeleteActivityModal
         item={toggleModals.activeItem!}
         isOpen={toggleModals.openDeleteFileModal}
-        onClose={() => setToggleModals((prev) => ({ ...prev, openDeleteFileModal: false, activeItem: null }))}
+        onClose={() =>
+          setToggleModals((prev) => ({
+            ...prev,
+            openDeleteFileModal: false,
+            activeItem: null,
+          }))
+        }
       />
     </div>
   );
