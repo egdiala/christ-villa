@@ -26,7 +26,7 @@ export const ChurchLeadershipPage: React.FC = () => {
   const location = useLocation();
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [isGridView, setIsGridView] = useState(false)
+  const [isGridView, setIsGridView] = useState(true)
   const [searchParams, setSearchParams] = useSearchParams();
   const { value, onChangeHandler } = useDebounce(300);
 
@@ -204,12 +204,12 @@ export const ChurchLeadershipPage: React.FC = () => {
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {
                   data?.map((leader) =>
-                    <div key={leader?.request_id} className="flex flex-col items-center gap-4">
+                    <div key={leader?.request_id} className="flex flex-col justify-start items-center gap-4">
                       <div className="size-40 rounded-full overflow-hidden">
                         <img src={leader?.url} alt={leader?.leader_name} className="size-40 object-cover" />
                       </div>
                       <div className="flex flex-col items-center gap-2">
-                        <h2 className="text-grey-dark-1 text-xl font-medium">{leader?.leader_name}</h2>
+                        <h2 className="text-grey-dark-1 text-xl font-medium line-clamp-1">{leader?.leader_name}</h2>
                         <p className="text-grey-dark-2 text-base">{leader?.leader_position}</p>
                       </div>
                       <div className="flex items-center gap-2 justify-center">
