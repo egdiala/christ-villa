@@ -20,7 +20,7 @@ interface SelectInputProps {
   /**
    * Error message
    */
-  error?: string | boolean;
+  error?: string;
   /**
    * Options for select
    */

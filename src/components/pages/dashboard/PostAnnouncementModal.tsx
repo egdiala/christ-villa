@@ -1,25 +1,24 @@
-import {
-  Description,
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-} from "@headlessui/react";
+import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
-import {
-  Button,
-  FileUpload,
-  Input,
-  SelectInput,
-  TextArea,
-} from "@/components/core";
-import { useCreateAnnouncement } from "@/services/hooks/mutations";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { createAnnouncementSchema } from "@/validations/engage";
+import { useCreateAnnouncement } from "@/services/hooks/mutations";
+import { Description, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import { Button, FileUpload, Input, RenderIf, SelectInput, TextArea } from "@/components/core";
 
 interface PostAnnouncementModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const userTypes = [
+  { label: "All", value: "all" },
+  { label: "HOD", value: "hod" },
+  { label: "Member", value: "member" },
+  { label: "Minister", value: "minister" },
+  { label: "Partner", value: "partner" },
+  { label: "Pastor", value: "pastor" },
+]
 
 export const PostAnnouncementModal = ({
   isOpen,
@@ -32,6 +31,7 @@ export const PostAnnouncementModal = ({
       title: "",
       user_type: "",
       comment: "",
+      announcement_type: "",
       file: null as File | null
     },
     validationSchema: createAnnouncementSchema,
@@ -40,13 +40,25 @@ export const PostAnnouncementModal = ({
       const formData = new FormData();
       formData.append("title", values.title);
       formData.append("user_type", values.user_type);
-      formData.append("comment", values.comment);
-      if (values?.file?.name) {
-        formData.append("file", values.file);
+      if (values?.announcement_type === "media") {
+        formData.append("file", values.file as File);
+      } else {
+        formData.append("comment", values.comment);
       }
       mutate(formData)
     }
   })
+
+  const handleUserTypeSelect = (value: string) => {
+    const arrayItems = values.user_type.trim() === "" ? [] : values.user_type.split(",")
+    const foundItem = arrayItems.find((item) => item === value)
+    console.log(arrayItems)
+    if (foundItem) {
+      setFieldValue("user_type", arrayItems.filter((item) => item !== value).join(","))
+    } else {
+      setFieldValue("user_type", [...arrayItems, value].join(","))
+    }
+  }
 
   const close = () => {
     onClose();
@@ -83,23 +95,33 @@ export const PostAnnouncementModal = ({
 
             <Description className="grid gap-y-6 px-6 pb-6">
               <Input placeholder="Enter title of announcement" label="Title" type="text" {...register("title")} />
+              <div className="grid gap-1">
+                <span className="ego-input--label">Recipient</span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {
+                    userTypes.map((userType) => {
+                      const isSelected = values.user_type.split(",").includes(userType.value)
+                      return (
+                        <button type="button" key={userType?.value} onClick={() => handleUserTypeSelect(userType?.value)} className={cn("border rounded text-xs flex items-center gap-2 p-2", isSelected ? "text-white bg-accent-primary border-accent-primary" : "border-grey-dark-3")}>{userType?.label}</button>
+                      )
+                    })
+                  }
+                </div>
+              </div>
               <SelectInput
+                label="Announcement Type"
                 options={[
-                  { label: "All", value: "all" },
-                  { label: "HOD", value: "hod" },
-                  { label: "Member", value: "member" },
-                  { label: "Minister", value: "minister" },
-                  { label: "Partner", value: "partner" },
-                  { label: "Pastor", value: "pastor" },
+                  { label: "Text", value: "text" },
+                  { label: "Media", value: "media" },
                 ]}
-                label="Recipient"
-                placeholder="Select recipient"
-                {...register("user_type")}
+                {...register("announcement_type")}
               />
-
-              <TextArea placeholder="Enter text" label="Message Body" {...register("comment")} />
-
-              <FileUpload label="Upload file" accept="image/*" value={values?.file?.name} onChange={(v) => setFieldValue("file", v)} />
+              <RenderIf condition={values.announcement_type === "text"}>
+                <TextArea placeholder="Enter text" label="Message Body" {...register("comment")} />
+              </RenderIf>
+              <RenderIf condition={values.announcement_type === "media"}>
+                <FileUpload label="Upload file" accept="image/*" value={values?.file?.name} onChange={(v) => setFieldValue("file", v)} />
+              </RenderIf>
             </Description>
 
             <div className="flex items-center gap-4 pt-10 justify-end md:w-2/3 ml-auto px-6 pb-6">
