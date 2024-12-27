@@ -52,7 +52,6 @@ export const PostAnnouncementModal = ({
   const handleUserTypeSelect = (value: string) => {
     const arrayItems = values.user_type.trim() === "" ? [] : values.user_type.split(",")
     const foundItem = arrayItems.find((item) => item === value)
-    console.log(arrayItems)
     if (foundItem) {
       setFieldValue("user_type", arrayItems.filter((item) => item !== value).join(","))
     } else {
