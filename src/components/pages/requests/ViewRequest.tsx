@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { Button } from "@/components/core";
+import { Button, RenderIf } from "@/components/core";
 import type { FetchedRequestType } from "@/types/requests";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 
@@ -104,7 +104,6 @@ export const ViewRequestModal = ({ isOpen, onClose, activeRequest }: ViewRequest
     const close = () => {
         onClose()
     }
-
     return (
         <Dialog
         open={isOpen}
@@ -125,7 +124,12 @@ export const ViewRequestModal = ({ isOpen, onClose, activeRequest }: ViewRequest
                                 fieldKeys.map((item, idx) =>
                                     <div key={idx}>
                                         <div className="text-grey-dark-3 text-sm capitalize">{reqType[item]}</div>
-                                        <div className="font-medium text-grey-dark-1 capitalize">{activeRequest?.data[item] || "-"}</div>
+                                        <RenderIf condition={!!activeRequest?.data?.url}>
+                                            <a className="font-medium text-blue-500 underline line-clamp-2" href={activeRequest?.data[item]} target="_blank">{activeRequest?.data[item] || "-"}</a>
+                                        </RenderIf>
+                                        <RenderIf condition={!activeRequest?.data?.url}>
+                                            <div className="font-medium text-grey-dark-1 capitalize">{activeRequest?.data[item] || "-"}</div>
+                                        </RenderIf>
                                     </div>
                                 )
                             }
