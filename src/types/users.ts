@@ -7,7 +7,7 @@ export interface FetchUsersQuery {
   account_type?: string;
   page?: string;
   item_per_page?: string;
-  component?: "count" | "count-status" | "count-department";
+  component?: "count" | "count-status" | "count-department" | "export";
 }
 
 export interface FetchSingleUserQuery {

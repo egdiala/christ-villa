@@ -4,13 +4,13 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import type { FetchedConnectGroupMemberType } from "@/types/connect-group";
 import { useUpdateConnectGroupMember } from "@/services/hooks/mutations";
 
-interface RemoveMemberModalProps {
+interface MakeAdminModalProps {
   isOpen: boolean;
   onClose: () => void;
   member: FetchedConnectGroupMemberType
 }
 
-export const RemoveMemberModal = ({ isOpen, onClose, member }: RemoveMemberModalProps) => {
+export const MakeAdminModal = ({ isOpen, onClose, member }: MakeAdminModalProps) => {
   const { mutate, isPending } = useUpdateConnectGroupMember(`${member?.name} ${member?.status === 1 ? "suspended" : "approved"} successfully!`, () => onClose())
   return (
     <Dialog
@@ -26,10 +26,10 @@ export const RemoveMemberModal = ({ isOpen, onClose, member }: RemoveMemberModal
 
                     <div className="grid gap-2">
                         <DialogTitle className="font-bold text-xl text-text-primary">
-                          {member?.status === 1 ? "Suspend" : "Approve"} {member?.name}?
+                          {member?.account_type === "member" ? "Make" : "Remove"} Admin?
                         </DialogTitle>
                         <p className="text-sm text-text-secondary">
-                            This action would {member?.status === 1 ? "suspend" : "approve"} {member?.name} {member?.status === 1 ? "from" : "into"} this connect group
+                            This action would {member?.account_type === "member" ? "make" : "rescind"} {member?.name} as admin in this connect group
                         </p>
                     </div>
 
@@ -37,8 +37,8 @@ export const RemoveMemberModal = ({ isOpen, onClose, member }: RemoveMemberModal
                         <Button type="button" theme="tertiary" onClick={onClose} block>
                             Cancel
                         </Button>
-                        <Button type="button" theme="primary" loading={isPending} disabled={isPending} onClick={() => mutate({ id: member?.connect_group_id, status: member?.status === 1 ? "2" : "1", user_id: member?.user_id, request_type: "1" })} block>
-                            {member?.status === 1 ? "Suspend" : "Approve"}
+                        <Button type="button" theme="primary" loading={isPending} disabled={isPending} onClick={() => mutate({ id: member?.connect_group_id, status: member?.account_type === "member" ? "1" : "2", user_id: member?.user_id, request_type: "2" })} block>
+                            {member?.account_type === "member" ? "Make Admin" : "Remove Admin"}
                         </Button>
                     </div>
                 </DialogPanel>

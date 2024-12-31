@@ -5,9 +5,10 @@ import { Icon } from "@iconify/react/dist/iconify.js"
 import { Loader } from "@/components/core/Button/Loader"
 import { useGetConnectGroup } from "@/services/hooks/queries"
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core"
-import type { FetchedConnectGroupCountStatusType } from "@/types/connect-group"
+import type { FetchedConnectGroupCountStatusType, FetchedConnectGroupMemberType } from "@/types/connect-group"
 import { Menu, MenuButton, MenuHeading, MenuItem, MenuItems, MenuSection } from '@headlessui/react'
-import { ConnectGroupFilter, EditConnectGroupModal, DeleteConnectGroupModal, RemoveMemberModal } from "@/components/pages/connect-groups"
+import { ConnectGroupFilter, EditConnectGroupModal, DeleteConnectGroupModal, RemoveMemberModal, MakeAdminModal } from "@/components/pages/connect-groups"
+import { format } from "date-fns"
 
 export const ConnectGroupPage: React.FC = () => {
     const { id } = useParams()
@@ -15,43 +16,73 @@ export const ConnectGroupPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const [itemsPerPage] = useState(10)
     const { data, isLoading } = useGetConnectGroup<FetchedConnectGroupCountStatusType>({ id: id as string, component: "count-status" })
+    const { data: members, isLoading: isLoadingMembers } = useGetConnectGroup<FetchedConnectGroupMemberType[]>({ id: id as string, page: page.toString(), item_per_page: itemsPerPage.toString() })
+    const { data: membersCount, isLoading: isLoadingMembersCount } = useGetConnectGroup<{ total: number; }>({ id: id as string, component: "count" })
     const [toggleModals, setToggleModals] = useState({
         openEditGroup: false,
         openDeleteGroup: false,
-        openRemoveMember: false
+        openRemoveMember: false,
+        openMakeAdmin: false,
+        member: null as FetchedConnectGroupMemberType | null
     })
 
     const columns = [
         {
             header: () => "Name",
             accessorKey: "name",
+            cell: ({ row }: { row: any }) => {
+                const item = row.original as FetchedConnectGroupMemberType
+                return (
+                    <div className="capitalize">{item?.name}</div>
+                )
+            }
         },
         {
             header: () => "Reg. Date & Time",
             accessorKey: "createdAt",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedConnectGroupMemberType
+                return (
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">
+                        <span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
+                )
+            }
         },
         {
             header: () => "Gender",
             accessorKey: "gender",
+            cell: ({ row }: { row: any }) => {
+                const item = row.original as FetchedConnectGroupMemberType
+                return (
+                    <div className="capitalize">{item?.gender}</div>
+                )
+            }
         },
         {
             header: () => "Role",
-            accessorKey: "role",
+            accessorKey: "account_type",
+            cell: ({ row }: { row: any }) => {
+                const item = row.original as FetchedConnectGroupMemberType
+                return (
+                    <div className="capitalize">{item?.account_type}</div>
+                )
+            }
         },
         {
             header: () => "Status",
             accessorKey: "status",
             cell: ({ row }: { row: any }) => {
-                const item = row?.original;
+                const item = row?.original as FetchedConnectGroupMemberType
                 return (
-                    <span className={cn(item?.status?.toLowerCase() === "active" ? "text-green-base" : "text-accent-primary", "font-medium text-sm")}>{item?.status}</span>
+                    <span className={cn(item?.status === 1 ? "text-green-base" : "text-accent-primary", "font-medium text-sm")}>{item?.status === 1 ? "Approved" : "Suspended"}</span>
                 )
             }
         },
         {
             header: () => "Action",
             accessorKey: "action",
-            cell: () => {
+            cell: ({ row }: { row: any }) => {
+                const item = row?.original as FetchedConnectGroupMemberType
                 return (
                     <div className="text-right">
                         <Menu>
@@ -60,11 +91,11 @@ export const ConnectGroupPage: React.FC = () => {
                                 <MenuSection className="space-y-4">
                                     <MenuHeading as="h1" className="font-semibold text-base text-grey-dark-1">Actions</MenuHeading>
                                     <div className="grid gap-1">
-                                        <MenuItem as="button" type="button" className="flex items-center w-full rounded hover:bg-red-5 px-2 py-1.5 text-sm/6 text-text-secondary">
-                                            Approve
+                                        <MenuItem as="button" type="button" className="flex items-center w-full rounded hover:bg-red-5 px-2 py-1.5 text-sm/6 text-text-secondary" onClick={() => setToggleModals((prev) => ({ ...prev, openRemoveMember: true, member: item }))}>
+                                            {item?.status === 1 ? "Suspend" : "Approve"}
                                         </MenuItem>
-                                        <MenuItem as="button" type="button" className="flex items-center w-full rounded hover:bg-red-5 px-2 py-1.5 text-sm/6 text-text-secondary" onClick={() => setToggleModals((prev) => ({ ...prev, openRemoveMember: true }))}>
-                                            Remove
+                                        <MenuItem as="button" type="button" className="flex items-center w-full rounded hover:bg-red-5 px-2 py-1.5 text-sm/6 text-text-secondary" onClick={() => setToggleModals((prev) => ({ ...prev, openMakeAdmin: true, member: item }))}>
+                                            {item?.account_type === "member" ? "Make Admin" : "Remove Admin"}
                                         </MenuItem>
                                     </div>
                                 </MenuSection>
@@ -136,18 +167,26 @@ export const ConnectGroupPage: React.FC = () => {
                         </div>
                     </div>
                     <div>
-                        <Table
-                            columns={columns}
-                            data={[]}
-                            page={page}
-                            perPage={itemsPerPage}
-                            totalCount={0}
-                            onPageChange={handlePageChange}
-                            onClick={() => navigate("/connect-groups/1")}
-                            emptyStateText="We couldn't find any member."
-                        />
+                        <RenderIf condition={!isLoadingMembers && !isLoadingMembersCount}>
+                            <Table
+                                columns={columns}
+                                data={members ?? []}
+                                page={page}
+                                perPage={itemsPerPage}
+                                totalCount={membersCount?.total}
+                                onPageChange={handlePageChange}
+                                onClick={() => navigate("/connect-groups/1")}
+                                emptyStateText="We couldn't find any member."
+                            />
+                        </RenderIf>
+                        <RenderIf condition={isLoadingMembers || isLoadingMembersCount}>
+                            <div className="flex w-full h-96 items-center justify-center">
+                                <Loader className="spinner size-6 text-accent-primary" />
+                            </div>
+                        </RenderIf>
                     </div>
-                    <RemoveMemberModal isOpen={toggleModals.openRemoveMember} onClose={() => setToggleModals((prev) => ({ ...prev, openRemoveMember: false }))} />
+                    <MakeAdminModal isOpen={toggleModals.openMakeAdmin} member={toggleModals.member!} onClose={() => setToggleModals((prev) => ({ ...prev, openMakeAdmin: false, member: null }))} />
+                    <RemoveMemberModal isOpen={toggleModals.openRemoveMember} member={toggleModals.member!} onClose={() => setToggleModals((prev) => ({ ...prev, openRemoveMember: false, member: null }))} />
                     <DeleteConnectGroupModal isOpen={toggleModals.openDeleteGroup} connectGroup={data!} onClose={() => setToggleModals((prev) => ({ ...prev, openDeleteGroup: false }))} />
                     <EditConnectGroupModal isOpen={toggleModals.openEditGroup} connectGroup={data!} onClose={() => setToggleModals((prev) => ({ ...prev, openEditGroup: false }))} />
                 </div>

@@ -1,7 +1,7 @@
 import { GET_CONNECT_GROUP, GET_CONNECT_GROUPS } from "@/constants/queryKeys";
 import { errorToast, successToast } from "@/utils/createToast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createConnectGroup, deleteConnectGroup, editConnectGroup } from "@/services/apis/connect-group";
+import { createConnectGroup, deleteConnectGroup, editConnectGroup, updateConnectGroupMember } from "@/services/apis/connect-group";
 
 // eslint-disable-next-line no-unused-vars
 export const useCreateConnectGroup = (fn?: (v: any) => void) => {
@@ -27,6 +27,22 @@ export const useEditConnectGroup = (fn?: (v: any) => void) => {
         onSuccess: (response: any) => {
             queryClient.invalidateQueries({ queryKey: [GET_CONNECT_GROUP] });
             successToast({ message: "Connect Group Edited!" })
+            fn?.(response);
+        },
+        onError: (err: any) => {
+            errorToast(err)
+        },
+    });
+};
+
+// eslint-disable-next-line no-unused-vars
+export const useUpdateConnectGroupMember = (message: string, fn?: (v: any) => void) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: updateConnectGroupMember,
+        onSuccess: (response: any) => {
+            queryClient.invalidateQueries({ queryKey: [GET_CONNECT_GROUP] });
+            successToast({ message })
             fn?.(response);
         },
         onError: (err: any) => {

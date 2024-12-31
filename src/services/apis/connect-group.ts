@@ -1,7 +1,7 @@
 import { axiosInstance } from "../axiosInstance";
 import { createQueryString } from "@/utils/createQuery";
 import { GET_CONNECT_GROUPS_API } from "@/constants/api";
-import type { CreateConnectGroupType, DeleteConnectGroupQuery, EditConnectGroupType, FetchConnectGroupQuery, FetchConnectGroupsQuery } from "@/types/connect-group";
+import type { CreateConnectGroupType, DeleteConnectGroupQuery, EditConnectGroupType, FetchConnectGroupQuery, FetchConnectGroupsQuery, UpdateConnectGroupMemberType } from "@/types/connect-group";
 
 export const getConnectGroups = async (query: FetchConnectGroupsQuery) => {
     const res = await axiosInstance.get(`${GET_CONNECT_GROUPS_API}${createQueryString(query)}`);
@@ -28,5 +28,11 @@ export const editConnectGroup = async (payload: EditConnectGroupType) => {
 export const deleteConnectGroup = async (query: DeleteConnectGroupQuery) => {
     const { id, ...rest } = query
     const res = await axiosInstance.delete(`${GET_CONNECT_GROUPS_API}/${id}${createQueryString(rest)}`);
+    return res.data;
+};
+
+export const updateConnectGroupMember = async (payload: UpdateConnectGroupMemberType) => {
+    const { id, ...rest } = payload
+    const res = await axiosInstance.patch(`${GET_CONNECT_GROUPS_API}/${id}`, rest);
     return res.data;
 };

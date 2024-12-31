@@ -24,6 +24,7 @@ import { UsersStatus } from "../../types/users";
 export const UsersPage: React.FC = () => {
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [component, setComponent] = useState<"count" | "export">("count");
   const [dateFilter, setDateFilter] = useState({
     start_date: "",
     end_date: "",
@@ -53,7 +54,7 @@ export const UsersPage: React.FC = () => {
       q: value,
       ...dateFilter,
       ...userFilter,
-      component: "count",
+      component,
     });
 
   const { data: usersStatistics, isLoading: isLoadingStatistics } =
@@ -197,7 +198,7 @@ export const UsersPage: React.FC = () => {
             setFilters={setUserFilter}
             isLoading={isLoading}
           />
-          <TableAction theme="grey" block>
+          <TableAction type="button" theme="grey" block onClick={() => setComponent("export")}>
             Export
             <Icon
               icon="lucide:cloud-download"

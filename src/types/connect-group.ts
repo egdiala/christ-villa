@@ -27,6 +27,13 @@ export type EditConnectGroupType = {
     name: string;
 }
 
+export type UpdateConnectGroupMemberType = {
+    id: string;
+    request_type: "1" | "2"; // 1=Status Update | 2=Make Admin
+    user_id: string;
+    status: "1" | "2"; // Status (1=Approve | 2=Suspend/Reject) Make Admin (1=Admin | 2=Member)
+}
+
 export interface FetchedConnectGroupType {
     name: string;
     comment: string;
@@ -45,4 +52,16 @@ export interface FetchedConnectGroupCountStatusType {
 
 export interface FetchedConnectGroupCountType {
     total: number;
+}
+
+export interface FetchedConnectGroupMemberType {
+    name: string;
+    account_type: "member" | "hod";
+    gender: "male" | "female";
+    user_id: string;
+    connect_group_id: string;
+    is_admin: number;
+    status: number;
+    alert: number;
+    createdAt: Date | string;
 }
