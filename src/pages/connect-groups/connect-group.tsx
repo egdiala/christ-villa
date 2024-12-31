@@ -95,7 +95,7 @@ export const ConnectGroupPage: React.FC = () => {
                                             {item?.status === 1 ? "Suspend" : "Approve"}
                                         </MenuItem>
                                         <MenuItem as="button" type="button" className="flex items-center w-full rounded hover:bg-red-5 px-2 py-1.5 text-sm/6 text-text-secondary" onClick={() => setToggleModals((prev) => ({ ...prev, openMakeAdmin: true, member: item }))}>
-                                            {item?.account_type === "member" ? "Make Admin" : "Remove Admin"}
+                                            {item?.is_admin === 0 ? "Make Admin" : "Remove Admin"}
                                         </MenuItem>
                                     </div>
                                 </MenuSection>

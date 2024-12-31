@@ -20,6 +20,7 @@ import {
 import { Loader } from "@/components/core/Button/Loader";
 import { cn } from "@/libs/cn";
 import { UsersStatus } from "../../types/users";
+import * as XLSX from "xlsx";
 
 export const UsersPage: React.FC = () => {
   const [page, setPage] = useState(1);
@@ -49,8 +50,8 @@ export const UsersPage: React.FC = () => {
     ...userFilter,
   });
 
-  const { data: usersCount, isLoading: isLoadingCount } =
-    useGetAllUsers<FetchedUserCountType>({
+  const { data: usersCount, isLoading: isLoadingCount, isSuccess } =
+    useGetAllUsers<FetchedUserCountType | any>({
       q: value,
       ...dateFilter,
       ...userFilter,
@@ -151,6 +152,28 @@ export const UsersPage: React.FC = () => {
       },
     },
   ];
+
+  useEffect(() => {
+    if (component === "export" && !isLoadingCount && isSuccess) {
+      const handleXlsx = async () => {
+        // Map data to exclude fields like `avatar`
+        const formattedData = (usersCount as FetchedUsersType[]).map(({ ...rest }) => rest);
+
+        // Create a new workbook and worksheet
+        const worksheet = XLSX.utils.json_to_sheet(formattedData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
+
+        // Export to Excel
+        XLSX.writeFile(workbook, "users_data.xlsx");
+      }
+      const exportData = async () => {
+        await handleXlsx()
+        await setComponent("count")
+      }
+      exportData()
+    }
+  },[component, isLoadingCount, isSuccess, usersCount])
 
   useEffect(() => {
     getPaginationParams(location, setPage, () => {});

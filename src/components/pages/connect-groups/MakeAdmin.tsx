@@ -11,7 +11,7 @@ interface MakeAdminModalProps {
 }
 
 export const MakeAdminModal = ({ isOpen, onClose, member }: MakeAdminModalProps) => {
-  const { mutate, isPending } = useUpdateConnectGroupMember(`${member?.name} ${member?.status === 1 ? "suspended" : "approved"} successfully!`, () => onClose())
+  const { mutate, isPending } = useUpdateConnectGroupMember(`${member?.name} ${member?.is_admin === 0 ? "made admin" : "removed as admin"} successfully!`, () => onClose())
   return (
     <Dialog
       open={isOpen}
@@ -26,10 +26,10 @@ export const MakeAdminModal = ({ isOpen, onClose, member }: MakeAdminModalProps)
 
                     <div className="grid gap-2">
                         <DialogTitle className="font-bold text-xl text-text-primary">
-                          {member?.account_type === "member" ? "Make" : "Remove"} Admin?
+                          {member?.is_admin === 0 ? "Make" : "Remove"} Admin?
                         </DialogTitle>
                         <p className="text-sm text-text-secondary">
-                            This action would {member?.account_type === "member" ? "make" : "rescind"} {member?.name} as admin in this connect group
+                            This action would {member?.is_admin === 0 ? "make" : "rescind"} {member?.name} as admin in this connect group
                         </p>
                     </div>
 
@@ -37,8 +37,8 @@ export const MakeAdminModal = ({ isOpen, onClose, member }: MakeAdminModalProps)
                         <Button type="button" theme="tertiary" onClick={onClose} block>
                             Cancel
                         </Button>
-                        <Button type="button" theme="primary" loading={isPending} disabled={isPending} onClick={() => mutate({ id: member?.connect_group_id, status: member?.account_type === "member" ? "1" : "2", user_id: member?.user_id, request_type: "2" })} block>
-                            {member?.account_type === "member" ? "Make Admin" : "Remove Admin"}
+                        <Button type="button" theme="primary" loading={isPending} disabled={isPending} onClick={() => mutate({ id: member?.connect_group_id, status: member?.is_admin === 0 ? "1" : "2", user_id: member?.user_id, request_type: "2" })} block>
+                            {member?.is_admin === 0 ? "Make Admin" : "Remove Admin"}
                         </Button>
                     </div>
                 </DialogPanel>
