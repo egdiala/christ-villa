@@ -15,6 +15,7 @@ import {
   FetchedDepartmentsType,
 } from "@/types/departments";
 import { Loader } from "@/components/core/Button/Loader";
+import * as XLSX from "xlsx";
 
 export const DepartmentsPage: React.FC = () => {
   const { data: departmentsStatistics } =
@@ -48,6 +49,7 @@ export const DepartmentsPage: React.FC = () => {
   const { value, onChangeHandler } = useDebounce(300);
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [component, setComponent] = useState<"count" | "export">("count");
 
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
@@ -60,10 +62,10 @@ export const DepartmentsPage: React.FC = () => {
     item_per_page: itemsPerPage.toString(),
   });
 
-  const { data: departmentsCount, isLoading: isLoadingCount } =
-    useGetAllDepartments<FetchedDepartmentsCountType>({
+  const { data: departmentsCount, isLoading: isLoadingCount, isSuccess } =
+    useGetAllDepartments<FetchedDepartmentsCountType | any>({
       q: value,
-      component: "count",
+      component,
     });
 
   const columns = [
@@ -96,6 +98,28 @@ export const DepartmentsPage: React.FC = () => {
       accessorKey: "total_declined_req",
     },
   ];
+    
+  useEffect(() => {
+    if (component === "export" && !isLoadingCount && isSuccess) {
+      const handleXlsx = async () => {
+        // Map data to exclude fields like `avatar`
+        const formattedData = (departmentsCount as FetchedDepartmentsType[]).map(({ ...rest }) => rest);
+
+        // Create a new workbook and worksheet
+        const worksheet = XLSX.utils.json_to_sheet(formattedData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Departments");
+
+        // Export to Excel
+        XLSX.writeFile(workbook, "departments_data.xlsx");
+      }
+      const exportData = async () => {
+        await handleXlsx()
+        await setComponent("count")
+      }
+      exportData()
+    }
+  },[component, departmentsCount, isLoadingCount, isSuccess])
 
   const handlePageChange = (page: number) => {
     setPage(page);
@@ -141,7 +165,7 @@ export const DepartmentsPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto">
-          <TableAction theme="grey" block>
+          <TableAction theme="grey" type="button" block onClick={() => setComponent("export")}>
             Export
             <Icon
               icon="lucide:cloud-download"

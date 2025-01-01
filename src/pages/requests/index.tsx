@@ -30,11 +30,13 @@ import {
   type FetchedRequestCountType,
   type FetchedRequestType,
 } from "@/types/requests";
+import * as XLSX from "xlsx";
 
 export const RequestsPage: React.FC = () => {
   const location = useLocation();
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [component, setComponent] = useState<"count" | "export">("count");
   const [searchParams, setSearchParams] = useSearchParams();
   const [requestFilters, setRequestFilters] = useState({});
   const [dateFilters, setDateFilters] = useState({});
@@ -44,9 +46,9 @@ export const RequestsPage: React.FC = () => {
     ...requestFilters,
     ...dateFilters,
   });
-  const { data: requestsCount, isLoading: isLoadingCount } =
-    useGetRequests<FetchedRequestCountType>({
-      component: "count",
+  const { data: requestsCount, isLoading: isLoadingCount, isSuccess } =
+    useGetRequests<FetchedRequestCountType | any>({
+      component,
       ...requestFilters,
       ...dateFilters,
     });
@@ -191,6 +193,28 @@ export const RequestsPage: React.FC = () => {
       },
     },
   ];
+  
+    useEffect(() => {
+      if (component === "export" && !isLoadingCount && isSuccess) {
+        const handleXlsx = async () => {
+          // Map data to exclude fields like `avatar`
+          const formattedData = (requestsCount as FetchedRequestType[]).map(({ ...rest }) => rest);
+  
+          // Create a new workbook and worksheet
+          const worksheet = XLSX.utils.json_to_sheet(formattedData);
+          const workbook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(workbook, worksheet, "Requests");
+  
+          // Export to Excel
+          XLSX.writeFile(workbook, "requests_data.xlsx");
+        }
+        const exportData = async () => {
+          await handleXlsx()
+          await setComponent("count")
+        }
+        exportData()
+      }
+    },[component, isLoadingCount, isSuccess, requestsCount])
 
   const handlePageChange = (page: number) => {
     // in a real page, this function would paginate the data from the backend
@@ -257,7 +281,7 @@ export const RequestsPage: React.FC = () => {
             setFilters={setRequestFilters}
             isLoading={isLoading}
           />
-          <TableAction theme="grey" block>
+          <TableAction theme="grey" type="button" block onClick={() => setComponent("export")}>
             Export
             <Icon
               icon="lucide:cloud-download"

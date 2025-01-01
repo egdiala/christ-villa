@@ -2,7 +2,7 @@ export interface FetchDepartmentsQuery {
   q?: string; // Search for name
   page?: string;
   item_per_page?: string;
-  component?: "count" | "count-status" | "request-area";
+  component?: "count" | "count-status" | "request-area" | "export";
   department_id?: string;
 }
 

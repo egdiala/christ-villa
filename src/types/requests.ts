@@ -5,7 +5,7 @@ export interface FetchRequestsQuery {
     status?: string; // 0=Pending | 1=Completed | 2=Rejected
     page?: string;
     item_per_page?: string;
-    component?: "count" | "count-status";
+    component?: "count" | "count-status" | "export";
 }
 
 export type UpdateRequestStatusType = {
