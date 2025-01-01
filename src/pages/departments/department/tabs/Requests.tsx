@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 import blankImage from "@/assets/blank.svg";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
@@ -20,6 +20,7 @@ import { Loader } from "@/components/core/Button/Loader";
 import { format } from "date-fns";
 import { cn } from "@/libs/cn";
 import { RequestStatus } from "@/types/requests";
+import * as XLSX from "xlsx";
 
 export const RequestsTab: React.FC = () => {
   const { pathname } = useLocation();
@@ -28,6 +29,7 @@ export const RequestsTab: React.FC = () => {
 
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [component, setComponent] = useState<"count" | "export">("count");
 
   const [requestFilter, setRequestFilter] = useState({});
   const [dateFilter, setDateFilter] = useState({
@@ -49,11 +51,11 @@ export const RequestsTab: React.FC = () => {
     ...dateFilter,
   });
 
-  const { data: departmentRequestsCount, isLoading: isLoadingCount } =
-    useGetDepartmentRequests<{ total: number }>({
+  const { data: departmentRequestsCount, isLoading: isLoadingCount, isSuccess } =
+    useGetDepartmentRequests<{ total: number } | any>({
       q: value,
       department_id: departmentId,
-      component: "count",
+      component,
       ...requestFilter,
       ...dateFilter,
     });
@@ -161,6 +163,28 @@ export const RequestsTab: React.FC = () => {
       },
     },
   ];
+        
+  useEffect(() => {
+    if (component === "export" && !isLoadingCount && isSuccess) {
+      const handleXlsx = async () => {
+        // Map data to exclude fields like `avatar`
+        const formattedData = (departmentRequestsCount as FetchedDepartmentRequestType[]).map(({ ...rest }) => rest);
+
+        // Create a new workbook and worksheet
+        const worksheet = XLSX.utils.json_to_sheet(formattedData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Departments");
+
+        // Export to Excel
+        XLSX.writeFile(workbook, `${departmentRequests?.[0]?.department}_requests_data.xlsx`);
+      }
+      const exportData = async () => {
+        await handleXlsx()
+        await setComponent("count")
+      }
+      exportData()
+    }
+  },[component, departmentRequests, departmentRequestsCount, isLoadingCount, isSuccess])
 
   const handlePageChange = (page: number) => {
     setPage(page);
@@ -213,7 +237,7 @@ export const RequestsTab: React.FC = () => {
             setFilters={setRequestFilter}
             isLoading={isLoading}
           />
-          <TableAction theme="grey" block>
+          <TableAction theme="grey" type="button" block onClick={() => setComponent("export")}>
             Export
             <Icon
               icon="lucide:cloud-download"

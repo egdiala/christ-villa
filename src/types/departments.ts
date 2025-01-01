@@ -68,7 +68,7 @@ export interface FetchDepartmentRequestsQuery {
   status?: string;
   page?: string;
   item_per_page?: string;
-  component?: "count" | "count-status";
+  component?: "count" | "count-status" | "export";
   request_id?: string;
 }
 
@@ -107,7 +107,7 @@ export interface FetchUsersQuery {
   account_type?: string;
   page?: string;
   item_per_page?: string;
-  component?: "count" | "count-status" | "count-department";
+  component?: "count" | "count-status" | "count-department" | "export";
 }
 
 export type FetchedUsersStatisticsType = {

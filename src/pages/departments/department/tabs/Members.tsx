@@ -24,6 +24,7 @@ import {
 import { useDebounce } from "@/hooks/useDebounce";
 import { Loader } from "@/components/core/Button/Loader";
 import { UsersStatus } from "@/types/users";
+import * as XLSX from "xlsx";
 
 interface MembersTabProps {
   isChildrenDept?: boolean;
@@ -39,6 +40,7 @@ export const MembersTab: React.FC = ({
 
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [component, setComponent] = useState<"count" | "export">("count");
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -59,12 +61,12 @@ export const MembersTab: React.FC = ({
     ...userFilter,
   });
 
-  const { data: deptMembersCount, isLoading: isLoadingCount } =
-    useGetAllUsers<FetchedUserCountType>({
+  const { data: deptMembersCount, isLoading: isLoadingCount, isSuccess } =
+    useGetAllUsers<FetchedUserCountType | any>({
       q: value,
       department_id: departmentId,
       ...userFilter,
-      component: "count",
+      component,
     });
 
   const { data: deptMembersStatistics } =
@@ -261,6 +263,28 @@ export const MembersTab: React.FC = ({
       },
     },
   ];
+      
+  useEffect(() => {
+    if (component === "export" && !isLoadingCount && isSuccess) {
+      const handleXlsx = async () => {
+        // Map data to exclude fields like `avatar`
+        const formattedData = (deptMembersCount as FetchedUsersType[]).map(({ ...rest }) => rest);
+
+        // Create a new workbook and worksheet
+        const worksheet = XLSX.utils.json_to_sheet(formattedData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Departments");
+
+        // Export to Excel
+        XLSX.writeFile(workbook, `${deptMembersStatistics?.depart_data?.name}_members_data.xlsx`);
+      }
+      const exportData = async () => {
+        await handleXlsx()
+        await setComponent("count")
+      }
+      exportData()
+    }
+  },[component, deptMembersCount, deptMembersStatistics?.depart_data?.name, isLoadingCount, isSuccess])
 
   const location = useLocation();
 
@@ -308,7 +332,7 @@ export const MembersTab: React.FC = ({
             setFilters={setUserFilter}
             isLoading={isLoadingMembers}
           />
-          <TableAction theme="grey" block>
+          <TableAction theme="grey" type="button" block onClick={() => setComponent("export")}>
             Export
             <Icon
               icon="lucide:cloud-download"
