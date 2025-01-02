@@ -180,13 +180,6 @@ export const ActivitiesTab: React.FC = () => {
             setFilters={setActivitiesFilter}
             isLoading={isLoading}
           />
-          <TableAction theme="grey" block>
-            Export
-            <Icon
-              icon="lucide:cloud-download"
-              className="size-4 text-accent-primary"
-            />
-          </TableAction>
         </div>
       </div>
 
