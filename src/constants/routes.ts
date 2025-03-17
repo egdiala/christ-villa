@@ -15,4 +15,5 @@ export const setupRoutes = [
   { to: "/admin-accounts", name: "Admin Accounts", icon: "lucide:square-user" },
   { to: "/church-leaders", name: "Church Leaders", icon: "lucide:award" },
   { to: "/church-calendar", name: "Church Calendar", icon: "lucide:calendar" },
+  { to: "/sermon-notes", name: "Sermon Notes", icon: "lucide:book-open-text" },
 ];

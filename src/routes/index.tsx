@@ -17,6 +17,7 @@ import {
 import { AlertRecipientsPage } from "@/pages/alert-recipients";
 import { ChurchLeadershipPage } from "@/pages/church-leaders";
 import { ChurchCalendarPage } from "@/pages/church-calendar";
+import { SermonNotesPage } from "@/pages/sermon-notes";
 
 function LocationProvider({ children }: { children: ReactNode }) {
   return <AnimatePresence mode="wait">{children}</AnimatePresence>;
@@ -142,6 +143,16 @@ const Router = () => {
             <DashboardLayout>
               <LocationProvider>
                 <ChurchCalendarPage />
+              </LocationProvider>
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/sermon-notes"
+          element={
+            <DashboardLayout>
+              <LocationProvider>
+                <SermonNotesPage />
               </LocationProvider>
             </DashboardLayout>
           }

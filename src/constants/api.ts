@@ -13,6 +13,9 @@ export const DEPARTMENT_MATERIALS_API = "admin/users/department-materials";
 // Admins
 export const GET_ADMINS_API = "admin/ops/admin-users";
 
+// Sermon
+export const SERMON_API = "admin/ops/sermon-notes"
+
 // Calendar
 export const CALENDAR_API = "admin/ops/church-calendars"
 

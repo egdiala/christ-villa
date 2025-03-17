@@ -35,3 +35,6 @@ export const GET_DASHBOARD_STATISTICS = "get-dashboard-statistics";
 
 // Church Leaders
 export const GET_CHURCH_LEADERSHIP = "get-church-leadership";
+
+// Sermon
+export const GET_SERMON_NOTES = "get-sermon-notes"
