@@ -7,10 +7,10 @@ import { Loader } from "@/components/core/Button/Loader"
 import { useLocation, useSearchParams } from "react-router"
 import { useGetSermonNotes } from "@/services/hooks/queries"
 import { RenderIf, Table, TableAction } from "@/components/core"
-import { AdminsFilter } from "@/components/pages/admin-accounts"
 import { CreateSermonModal, DeleteSermonModal, EditSermonModal } from "@/components/pages/sermon-notes"
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams"
 import { Menu, MenuButton, MenuHeading, MenuItem, MenuItems, MenuSection } from "@headlessui/react"
+import { DateFilter } from "@/components/pages/requests"
 
 export const SermonNotesPage: React.FC = () => {
     const location = useLocation()
@@ -132,11 +132,12 @@ export const SermonNotesPage: React.FC = () => {
         <div className="flex flex-col gap-5 px-4 pt-3 md:pt-5 pb-5 md:pb-10 view-page-container overflow-y-scroll">
             <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-end">                
                 <div className="flex items-center gap-4 w-full sm:w-auto">
-                    <AdminsFilter setFilters={setFilters} isLoading={isLoading} />
-                    <TableAction theme="grey" block>
-                        Export
-                        <Icon icon="lucide:cloud-download" className="size-4 text-accent-primary" />
-                    </TableAction>
+                    
+                              <DateFilter
+                                theme="grey"
+                                setFilters={setFilters}
+                                isLoading={isLoading}
+                              />
                     <TableAction type="button" theme="primary" onClick={() => setToggleModals((prev) => ({ ...prev, openCreateAdmin: true }))} block>
                         <Icon icon="lucide:plus" className="size-4" />
                         Create Sermon
