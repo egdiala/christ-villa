@@ -11,6 +11,10 @@ export const PasswordSchema = Yup.string()
   .matches(DigitRegex, "Password must contain at least one digit")
   .required("Password is required");
 
+export const ConfirmPasswordSchema = Yup.string()
+  .oneOf([Yup.ref("new_password")], "Passwords must match")
+  .required("Confirm New Password is required");
+
 export const EmailSchema = Yup.string()
   .email("Should be a valid email")
   .matches(EmailRegex, "Email should be valid")
@@ -24,11 +28,18 @@ export const loginSchema = Yup.object().shape({
 export const changePasswordSchema = Yup.object().shape({
   old_password: PasswordSchema,
   new_password: PasswordSchema,
-  confirm_password: Yup.string()
-    .oneOf([Yup.ref("new_password")], "Passwords must match")
-    .required("Confirm New Password is required"),
+  confirm_password: ConfirmPasswordSchema,
 });
 
 export const forgotPasswordSchema = Yup.object().shape({
   email: EmailSchema,
+});
+
+export const resetPasswordSchema = Yup.object().shape({
+  email: EmailSchema,
+  new_password: PasswordSchema,
+  confirm_password: ConfirmPasswordSchema,
+  otp: Yup.string()
+    .min(5, "OTP must be at least 5 characters")
+    .required("OTP is required"),
 });

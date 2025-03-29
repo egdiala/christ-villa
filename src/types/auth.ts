@@ -43,3 +43,7 @@ export interface LoggedInUser {
   updatedAt: string;
   user_type: string;
 }
+
+export type ResetPasswordType = LoginType & {
+  otp: string;
+};

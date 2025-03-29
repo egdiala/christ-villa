@@ -22,7 +22,7 @@ export interface OtpInputProps
  * Otp Input component
  */
 export const OtpInput: React.FC<OtpInputProps> = (props) => {
-  const digitCount = 4;
+  const digitCount = 5;
   const RE_DIGIT = new RegExp(/^\d+$/);
 
   const valueItems = useMemo(() => {
@@ -39,6 +39,8 @@ export const OtpInput: React.FC<OtpInputProps> = (props) => {
     }
     return items;
   }, [props.value, RE_DIGIT]);
+
+  console.log({ valueItems });
 
   const focusToNextInput = (target: HTMLElement) => {
     const nextElementSibling = target.nextElementSibling;
@@ -136,27 +138,27 @@ export const OtpInput: React.FC<OtpInputProps> = (props) => {
     target.setSelectionRange(0, target.value.length);
   };
   return (
-    <div className='grid gap-2 content-start'>
-        <div className='flex items-center w-full gap-4'>
-            {valueItems.map((item, i) => (
-                <input
-                {...props}
-                key={i.toString()}
-                className='ego-otp-input'
-                type='text'
-                autoFocus={i === props.value.length}
-                inputMode='numeric'
-                // maxLength={1}
-                value={item.trim()}
-                onChange={(e) => inputOnChange(e, i)}
-                onKeyDown={(e) => inputOnKeyDown(e)}
-                onFocus={(e) => inputOnFocus(e)}
-                />
-            ))}
-        </div>
-        <RenderIf condition={!!props?.error}>
-            <span className='ego-input--error'>{props?.error}</span>
-        </RenderIf>
+    <div className="grid gap-2 content-start">
+      <div className="flex items-center w-full gap-4">
+        {valueItems.map((item, i) => (
+          <input
+            {...props}
+            key={i.toString()}
+            className="ego-otp-input"
+            type="text"
+            autoFocus={i === props.value.length}
+            inputMode="numeric"
+            // maxLength={1}
+            value={item.trim()}
+            onChange={(e) => inputOnChange(e, i)}
+            onKeyDown={(e) => inputOnKeyDown(e)}
+            onFocus={(e) => inputOnFocus(e)}
+          />
+        ))}
+      </div>
+      <RenderIf condition={!!props?.error}>
+        <span className="ego-input--error">{props?.error}</span>
+      </RenderIf>
     </div>
   );
 };
