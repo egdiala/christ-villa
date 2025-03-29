@@ -138,7 +138,7 @@ export const SermonNotesPage: React.FC = () => {
                                 setFilters={setFilters}
                                 isLoading={isLoading}
                               />
-                    <TableAction type="button" theme="primary" onClick={() => setToggleModals((prev) => ({ ...prev, openCreateAdmin: true }))} block>
+                    <TableAction type="button" theme="primary" onClick={() => setToggleModals((prev) => ({ ...prev, openCreateSermon: true }))} block>
                         <Icon icon="lucide:plus" className="size-4" />
                         Create Sermon
                     </TableAction>
@@ -160,7 +160,7 @@ export const SermonNotesPage: React.FC = () => {
                     <Loader className="spinner size-6 text-accent-primary" />
                 </div>
             </RenderIf>
-            <CreateSermonModal isOpen={toggleModals.openCreateSermon} onClose={() => setToggleModals((prev) => ({ ...prev, openCreateAdmin: false }))} />
+            <CreateSermonModal isOpen={toggleModals.openCreateSermon} onClose={() => setToggleModals((prev) => ({ ...prev, openCreateSermon: false }))} />
             <DeleteSermonModal isOpen={toggleModals.openDeleteSermon} onClose={() => toggleDeleteSermon(null)} sermon={toggleModals.activeSermon as FetchedSermonType} />
             <EditSermonModal isOpen={toggleModals.openEditSermon} onClose={() => toggleEditSermon(null)} sermon={toggleModals.activeSermon as FetchedSermonType} />
         </div>
