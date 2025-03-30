@@ -22,7 +22,7 @@ export const useLogin = (fn?: (v: any) => void) => {
   return useMutation({
     mutationFn: login,
     onSuccess: (response: any) => {
-      if (response.status === "ok" && response.data !== "201") {
+      if (response.status === "ok" && response.data !== 201) {
         if (!response?.data?.login_attempt?.account_disabled) {
           successToast({ message: "Logged In Successfully!" });
           onLoginSuccess(response?.data);

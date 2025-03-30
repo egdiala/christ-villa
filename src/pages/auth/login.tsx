@@ -10,7 +10,7 @@ export const LoginPage = () => {
   const navigate = useNavigate();
 
   const { mutate, isPending } = useLogin((res) => {
-    if (res.data === "201") {
+    if (res.data === 201) {
       localStorage.setItem("reset-password-email", loginValues.email);
       navigate("/auth/reset-password");
     }
