@@ -28,7 +28,7 @@ import { DateFilter } from "@/components/pages/requests";
 import { getAdminData } from "@/utils/authUtil";
 
 export const SermonNotesPage: React.FC = () => {
-  const { permission } = getAdminData();
+  const { permission, user_type } = getAdminData();
 
   const location = useLocation();
   const [page, setPage] = useState(1);
@@ -150,7 +150,12 @@ export const SermonNotesPage: React.FC = () => {
                     Actions
                   </MenuHeading>
                   <div className="grid gap-1">
-                    <RenderIf condition={permission.includes("update")}>
+                    <RenderIf
+                      condition={
+                        permission.includes("update") ||
+                        user_type?.toLowerCase() === "superadmin"
+                      }
+                    >
                       <MenuItem
                         as="button"
                         type="button"
@@ -161,7 +166,12 @@ export const SermonNotesPage: React.FC = () => {
                       </MenuItem>
                     </RenderIf>
 
-                    <RenderIf condition={permission.includes("delete")}>
+                    <RenderIf
+                      condition={
+                        permission.includes("delete") ||
+                        user_type?.toLowerCase() === "superadmin"
+                      }
+                    >
                       <MenuItem
                         as="button"
                         type="button"
@@ -201,7 +211,12 @@ export const SermonNotesPage: React.FC = () => {
             isLoading={isLoading}
           />
 
-          <RenderIf condition={permission.includes("create")}>
+          <RenderIf
+            condition={
+              permission.includes("create") ||
+              user_type?.toLowerCase() === "superadmin"
+            }
+          >
             <TableAction
               type="button"
               theme="primary"

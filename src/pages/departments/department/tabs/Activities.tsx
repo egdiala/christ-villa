@@ -13,7 +13,7 @@ import { DeleteActivityModal } from "@/components/pages/departments/department/D
 import { getAdminData } from "@/utils/authUtil";
 
 export const ActivitiesTab: React.FC = () => {
-  const { permission } = getAdminData();
+  const { permission, user_type } = getAdminData();
 
   const { id } = useParams();
   const departmentId = id as string;
@@ -58,7 +58,8 @@ export const ActivitiesTab: React.FC = () => {
       onClick: (item: FetchedDepartmentActivities) =>
         window.open(item?.url, "_blank"),
     },
-    ...(permission.includes("delete")
+    ...(permission.includes("delete") ||
+    user_type?.toLowerCase() === "superadmin"
       ? [
           {
             label: "Delete File",

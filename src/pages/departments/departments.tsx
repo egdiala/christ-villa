@@ -25,7 +25,7 @@ import { Loader } from "@/components/core/Button/Loader";
 import { getAdminData } from "@/utils/authUtil";
 
 export const DepartmentsPage: React.FC = () => {
-  const { permission } = getAdminData();
+  const { permission, user_type } = getAdminData();
 
   const { data: departmentsStatistics } =
     useGetAllDepartments<FetchedDepartmentsStatisticsType>({
@@ -192,7 +192,12 @@ export const DepartmentsPage: React.FC = () => {
             />
           </TableAction>
 
-          <RenderIf condition={permission.includes("create")}>
+          <RenderIf
+            condition={
+              permission.includes("create") ||
+              user_type?.toLowerCase() === "superadmin"
+            }
+          >
             <Button
               theme="primary"
               onClick={() => setOpenAddNewDepartmentModal(true)}

@@ -25,7 +25,7 @@ import {
 import { getAdminData } from "@/utils/authUtil";
 
 export const ChurchCalendarPage = () => {
-  const { permission } = getAdminData();
+  const { permission, user_type } = getAdminData();
 
   const location = useLocation();
   const [page, setPage] = useState(1);
@@ -106,7 +106,12 @@ export const ChurchCalendarPage = () => {
                       View
                     </MenuItem>
 
-                    <RenderIf condition={permission.includes("delete")}>
+                    <RenderIf
+                      condition={
+                        permission.includes("delete") ||
+                        user_type?.toLowerCase() === "superadmin"
+                      }
+                    >
                       <MenuItem
                         as="button"
                         type="button"
@@ -153,7 +158,12 @@ export const ChurchCalendarPage = () => {
             />
           </TableAction>
 
-          <RenderIf condition={permission.includes("create")}>
+          <RenderIf
+            condition={
+              permission.includes("create") ||
+              user_type?.toLowerCase() === "superadmin"
+            }
+          >
             <TableAction
               type="button"
               theme="primary"

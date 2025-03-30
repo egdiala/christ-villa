@@ -17,7 +17,7 @@ import { Loader } from "@/components/core/Button/Loader";
 import { getAdminData } from "@/utils/authUtil";
 
 export const UserPage: React.FC = () => {
-  const { permission } = getAdminData();
+  const { permission, user_type } = getAdminData();
 
   const { pathname } = useLocation();
   const userId = pathname.split("/")[2];
@@ -86,7 +86,12 @@ export const UserPage: React.FC = () => {
             </h2>
 
             <div className="flex gap-2">
-              <RenderIf condition={permission.includes("delete")}>
+              <RenderIf
+                condition={
+                  permission.includes("delete") ||
+                  user_type?.toLowerCase() === "superadmin"
+                }
+              >
                 <Button
                   theme="ghost"
                   className="!text-accent-primary sm:w-full md:w-unset"
@@ -100,7 +105,8 @@ export const UserPage: React.FC = () => {
               <RenderIf
                 condition={
                   userStatus?.toLowerCase() === "pending" &&
-                  permission.includes("update")
+                  (permission.includes("update") ||
+                    user_type?.toLowerCase() === "superadmin")
                 }
               >
                 <Button
@@ -117,7 +123,8 @@ export const UserPage: React.FC = () => {
                 condition={
                   (userStatus?.toLowerCase() === "active" ||
                     userStatus?.toLowerCase() === "suspended") &&
-                  permission.includes("update")
+                  (permission.includes("update") ||
+                    user_type?.toLowerCase() === "superadmin")
                 }
               >
                 <Button

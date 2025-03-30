@@ -34,7 +34,7 @@ import * as XLSX from "xlsx";
 import { getAdminData } from "@/utils/authUtil";
 
 export const RequestsPage: React.FC = () => {
-  const { permission } = getAdminData();
+  const { permission, user_type } = getAdminData();
 
   const location = useLocation();
   const [page, setPage] = useState(1);
@@ -177,7 +177,12 @@ export const RequestsPage: React.FC = () => {
                       View
                     </MenuItem>
 
-                    <RenderIf condition={permission.includes("update")}>
+                    <RenderIf
+                      condition={
+                        permission.includes("update") ||
+                        user_type?.toLowerCase() === "superadmin"
+                      }
+                    >
                       <MenuItem
                         as="button"
                         type="button"

@@ -22,7 +22,7 @@ import {
 import { getAdminData } from "@/utils/authUtil";
 
 export const EngagePage: React.FC = () => {
-  const { permission } = getAdminData();
+  const { permission, user_type } = getAdminData();
 
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -111,7 +111,12 @@ export const EngagePage: React.FC = () => {
             />
           </TableAction>
 
-          <RenderIf condition={permission.includes("create")}>
+          <RenderIf
+            condition={
+              permission.includes("create") ||
+              user_type?.toLowerCase() === "superadmin"
+            }
+          >
             <Button
               theme="primary"
               onClick={() => setOpenPostAnnouncementModal(true)}

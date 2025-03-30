@@ -30,7 +30,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { getAdminData } from "@/utils/authUtil";
 
 export const ChurchLeadershipPage: React.FC = () => {
-  const { permission } = getAdminData();
+  const { permission, user_type } = getAdminData();
 
   const location = useLocation();
   const [page, setPage] = useState(1);
@@ -70,7 +70,8 @@ export const ChurchLeadershipPage: React.FC = () => {
   const [openAddLeaderModal, setOpenAddLeaderModal] = useState(false);
 
   const actions = [
-    ...(permission.includes("update")
+    ...(permission.includes("update") ||
+    user_type?.toLowerCase() === "superadmin"
       ? [
           {
             label: "Update Leader",
@@ -200,7 +201,12 @@ export const ChurchLeadershipPage: React.FC = () => {
             />
           </TableAction>
 
-          <RenderIf condition={permission.includes("create")}>
+          <RenderIf
+            condition={
+              permission.includes("create") ||
+              user_type?.toLowerCase() === "superadmin"
+            }
+          >
             <TableAction
               type="button"
               theme="primary"

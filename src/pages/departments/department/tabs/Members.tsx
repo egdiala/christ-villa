@@ -34,7 +34,7 @@ interface MembersTabProps {
 export const MembersTab: React.FC = ({
   isChildrenDept = false,
 }: MembersTabProps) => {
-  const { permission } = getAdminData();
+  const { permission, user_type } = getAdminData();
 
   const { id } = useParams();
   const departmentId = id as string;
@@ -123,7 +123,8 @@ export const MembersTab: React.FC = ({
   });
 
   const actions = [
-    ...(permission.includes("update")
+    ...(permission.includes("update") ||
+    user_type?.toLowerCase() === "superadmin"
       ? [
           {
             label: (member: FetchedUsersType) => {
@@ -138,7 +139,8 @@ export const MembersTab: React.FC = ({
           },
         ]
       : []),
-    ...(permission.includes("delete")
+    ...(permission.includes("delete") ||
+    user_type?.toLowerCase() === "superadmin"
       ? [
           {
             label: () => {

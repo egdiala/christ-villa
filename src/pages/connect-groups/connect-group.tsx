@@ -28,7 +28,7 @@ import { format } from "date-fns";
 import { getAdminData } from "@/utils/authUtil";
 
 export const ConnectGroupPage: React.FC = () => {
-  const { permission } = getAdminData();
+  const { permission, user_type } = getAdminData();
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -146,7 +146,12 @@ export const ConnectGroupPage: React.FC = () => {
                     Actions
                   </MenuHeading>
                   <div className="grid gap-1">
-                    <RenderIf condition={permission.includes("update")}>
+                    <RenderIf
+                      condition={
+                        permission.includes("update") ||
+                        user_type?.toLowerCase() === "superadmin"
+                      }
+                    >
                       <MenuItem
                         as="button"
                         type="button"
@@ -163,7 +168,12 @@ export const ConnectGroupPage: React.FC = () => {
                       </MenuItem>
                     </RenderIf>
 
-                    <RenderIf condition={permission.includes("update")}>
+                    <RenderIf
+                      condition={
+                        permission.includes("update") ||
+                        user_type?.toLowerCase() === "superadmin"
+                      }
+                    >
                       <MenuItem
                         as="button"
                         type="button"
@@ -211,7 +221,12 @@ export const ConnectGroupPage: React.FC = () => {
             </h1>
             <div className="flex items-center flex-wrap gap-2">
               <div className="flex items-center gap-2 w-full sm:w-auto">
-                <RenderIf condition={permission.includes("delete")}>
+                <RenderIf
+                  condition={
+                    permission.includes("delete") ||
+                    user_type?.toLowerCase() === "superadmin"
+                  }
+                >
                   <TableAction
                     type="button"
                     theme="ghost"
@@ -234,7 +249,12 @@ export const ConnectGroupPage: React.FC = () => {
                   </TableAction>
                 </RenderIf>
 
-                <RenderIf condition={permission.includes("update")}>
+                <RenderIf
+                  condition={
+                    permission.includes("update") ||
+                    user_type?.toLowerCase() === "superadmin"
+                  }
+                >
                   <TableAction
                     type="button"
                     theme="grey"
