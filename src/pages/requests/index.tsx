@@ -31,8 +31,11 @@ import {
   type FetchedRequestType,
 } from "@/types/requests";
 import * as XLSX from "xlsx";
+import { getAdminData } from "@/utils/authUtil";
 
 export const RequestsPage: React.FC = () => {
+  const { permission } = getAdminData();
+
   const location = useLocation();
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -46,12 +49,15 @@ export const RequestsPage: React.FC = () => {
     ...requestFilters,
     ...dateFilters,
   });
-  const { data: requestsCount, isLoading: isLoadingCount, isSuccess } =
-    useGetRequests<FetchedRequestCountType | any>({
-      component,
-      ...requestFilters,
-      ...dateFilters,
-    });
+  const {
+    data: requestsCount,
+    isLoading: isLoadingCount,
+    isSuccess,
+  } = useGetRequests<FetchedRequestCountType | any>({
+    component,
+    ...requestFilters,
+    ...dateFilters,
+  });
   const { data: requestsCountStatus } =
     useGetRequests<FetchedRequestCountStatusType>({
       component: "count-status",
@@ -170,20 +176,23 @@ export const RequestsPage: React.FC = () => {
                     >
                       View
                     </MenuItem>
-                    <MenuItem
-                      as="button"
-                      type="button"
-                      className="flex items-center w-full rounded hover:bg-red-5 px-2 py-1.5 text-sm/6 text-text-secondary"
-                      onClick={() =>
-                        setToggleModals((prev) => ({
-                          ...prev,
-                          openRequestStatusModal: true,
-                          activeRequest: item,
-                        }))
-                      }
-                    >
-                      Update Status
-                    </MenuItem>
+
+                    <RenderIf condition={permission.includes("update")}>
+                      <MenuItem
+                        as="button"
+                        type="button"
+                        className="flex items-center w-full rounded hover:bg-red-5 px-2 py-1.5 text-sm/6 text-text-secondary"
+                        onClick={() =>
+                          setToggleModals((prev) => ({
+                            ...prev,
+                            openRequestStatusModal: true,
+                            activeRequest: item,
+                          }))
+                        }
+                      >
+                        Update Status
+                      </MenuItem>
+                    </RenderIf>
                   </div>
                 </MenuSection>
               </MenuItems>
@@ -193,28 +202,30 @@ export const RequestsPage: React.FC = () => {
       },
     },
   ];
-  
-    useEffect(() => {
-      if (component === "export" && !isLoadingCount && isSuccess) {
-        const handleXlsx = async () => {
-          // Map data to exclude fields like `avatar`
-          const formattedData = (requestsCount as FetchedRequestType[]).map(({ ...rest }) => rest);
-  
-          // Create a new workbook and worksheet
-          const worksheet = XLSX.utils.json_to_sheet(formattedData);
-          const workbook = XLSX.utils.book_new();
-          XLSX.utils.book_append_sheet(workbook, worksheet, "Requests");
-  
-          // Export to Excel
-          XLSX.writeFile(workbook, "requests_data.xlsx");
-        }
-        const exportData = async () => {
-          await handleXlsx()
-          await setComponent("count")
-        }
-        exportData()
-      }
-    },[component, isLoadingCount, isSuccess, requestsCount])
+
+  useEffect(() => {
+    if (component === "export" && !isLoadingCount && isSuccess) {
+      const handleXlsx = async () => {
+        // Map data to exclude fields like `avatar`
+        const formattedData = (requestsCount as FetchedRequestType[]).map(
+          ({ ...rest }) => rest
+        );
+
+        // Create a new workbook and worksheet
+        const worksheet = XLSX.utils.json_to_sheet(formattedData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Requests");
+
+        // Export to Excel
+        XLSX.writeFile(workbook, "requests_data.xlsx");
+      };
+      const exportData = async () => {
+        await handleXlsx();
+        await setComponent("count");
+      };
+      exportData();
+    }
+  }, [component, isLoadingCount, isSuccess, requestsCount]);
 
   const handlePageChange = (page: number) => {
     // in a real page, this function would paginate the data from the backend
@@ -281,7 +292,12 @@ export const RequestsPage: React.FC = () => {
             setFilters={setRequestFilters}
             isLoading={isLoading}
           />
-          <TableAction theme="grey" type="button" block onClick={() => setComponent("export")}>
+          <TableAction
+            theme="grey"
+            type="button"
+            block
+            onClick={() => setComponent("export")}
+          >
             Export
             <Icon
               icon="lucide:cloud-download"

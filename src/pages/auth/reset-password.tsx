@@ -7,10 +7,17 @@ import { resetPasswordSchema } from "@/validations/auth";
 import { useResetPassword } from "@/services/hooks/mutations";
 
 export const ResetPasswordPage = () => {
-  const { mutate, isPending } = useResetPassword();
+  const { mutate, isPending } = useResetPassword(() => {
+    localStorage.removeItem("reset-password-email");
+  });
   const email = localStorage.getItem("reset-password-email");
 
-  const { handleSubmit, register } = useFormikWrapper({
+  const {
+    handleSubmit,
+    register,
+    values: resetPasswordValues,
+    setFieldValue,
+  } = useFormikWrapper({
     validateOnMount: true,
     initialValues: {
       otp: "",
@@ -49,7 +56,10 @@ export const ResetPasswordPage = () => {
         <div className="grid gap-6">
           <div className="grid gap-y-2 w-full">
             <h4 className="ego-input--label">Otp</h4>
-            <OtpInput {...register("otp")} />
+            <OtpInput
+              value={resetPasswordValues.otp}
+              onChange={(e) => setFieldValue("otp", e)}
+            />
           </div>
 
           <PasswordInput

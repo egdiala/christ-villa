@@ -14,8 +14,11 @@ import { format } from "date-fns";
 import { userProfileStatus } from "@/constants/status";
 import { FetchedUserType } from "@/types/users";
 import { Loader } from "@/components/core/Button/Loader";
+import { getAdminData } from "@/utils/authUtil";
 
 export const UserPage: React.FC = () => {
+  const { permission } = getAdminData();
+
   const { pathname } = useLocation();
   const userId = pathname.split("/")[2];
 
@@ -83,16 +86,23 @@ export const UserPage: React.FC = () => {
             </h2>
 
             <div className="flex gap-2">
-              <Button
-                theme="ghost"
-                className="!text-accent-primary sm:w-full md:w-unset"
-                onClick={() => setOpenDeleteUserModal(true)}
-              >
-                <Icon icon="lucide:trash" className="size-4" />
-                Delete User
-              </Button>
+              <RenderIf condition={permission.includes("delete")}>
+                <Button
+                  theme="ghost"
+                  className="!text-accent-primary sm:w-full md:w-unset"
+                  onClick={() => setOpenDeleteUserModal(true)}
+                >
+                  <Icon icon="lucide:trash" className="size-4" />
+                  Delete User
+                </Button>
+              </RenderIf>
 
-              <RenderIf condition={userStatus?.toLowerCase() === "pending"}>
+              <RenderIf
+                condition={
+                  userStatus?.toLowerCase() === "pending" &&
+                  permission.includes("update")
+                }
+              >
                 <Button
                   theme="primary"
                   className="!text-sm w-full md:w-unset !px-1 md:!px-4"
@@ -105,8 +115,9 @@ export const UserPage: React.FC = () => {
 
               <RenderIf
                 condition={
-                  userStatus?.toLowerCase() === "active" ||
-                  userStatus?.toLowerCase() === "suspended"
+                  (userStatus?.toLowerCase() === "active" ||
+                    userStatus?.toLowerCase() === "suspended") &&
+                  permission.includes("update")
                 }
               >
                 <Button

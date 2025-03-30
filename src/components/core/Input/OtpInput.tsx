@@ -40,8 +40,6 @@ export const OtpInput: React.FC<OtpInputProps> = (props) => {
     return items;
   }, [props.value, RE_DIGIT]);
 
-  console.log({ valueItems });
-
   const focusToNextInput = (target: HTMLElement) => {
     const nextElementSibling = target.nextElementSibling;
 

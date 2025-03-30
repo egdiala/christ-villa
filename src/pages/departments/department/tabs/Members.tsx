@@ -25,6 +25,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { Loader } from "@/components/core/Button/Loader";
 import { UsersStatus } from "@/types/users";
 import * as XLSX from "xlsx";
+import { getAdminData } from "@/utils/authUtil";
 
 interface MembersTabProps {
   isChildrenDept?: boolean;
@@ -33,6 +34,8 @@ interface MembersTabProps {
 export const MembersTab: React.FC = ({
   isChildrenDept = false,
 }: MembersTabProps) => {
+  const { permission } = getAdminData();
+
   const { id } = useParams();
   const departmentId = id as string;
 
@@ -61,13 +64,16 @@ export const MembersTab: React.FC = ({
     ...userFilter,
   });
 
-  const { data: deptMembersCount, isLoading: isLoadingCount, isSuccess } =
-    useGetAllUsers<FetchedUserCountType | any>({
-      q: value,
-      department_id: departmentId,
-      ...userFilter,
-      component,
-    });
+  const {
+    data: deptMembersCount,
+    isLoading: isLoadingCount,
+    isSuccess,
+  } = useGetAllUsers<FetchedUserCountType | any>({
+    q: value,
+    department_id: departmentId,
+    ...userFilter,
+    component,
+  });
 
   const { data: deptMembersStatistics } =
     useGetAllUsers<FetchedUsersStatisticsType>({
@@ -117,28 +123,36 @@ export const MembersTab: React.FC = ({
   });
 
   const actions = [
-    {
-      label: (member: FetchedUsersType) => {
-        return member.status !== 1 ? "Approve" : "Suspend";
-      },
-      onClick: (member: FetchedUsersType) =>
-        setOpenApproveMemberRequestModal({
-          isOpen: true,
-          member: member,
-          deptId: departmentId,
-        }),
-    },
-    {
-      label: () => {
-        return "Remove";
-      },
-      onClick: (member: FetchedUsersType) =>
-        setOpenRemoveMemberModal({
-          isOpen: true,
-          member: member,
-          deptId: departmentId,
-        }),
-    },
+    ...(permission.includes("update")
+      ? [
+          {
+            label: (member: FetchedUsersType) => {
+              return member.status !== 1 ? "Approve" : "Suspend";
+            },
+            onClick: (member: FetchedUsersType) =>
+              setOpenApproveMemberRequestModal({
+                isOpen: true,
+                member: member,
+                deptId: departmentId,
+              }),
+          },
+        ]
+      : []),
+    ...(permission.includes("delete")
+      ? [
+          {
+            label: () => {
+              return "Remove";
+            },
+            onClick: (member: FetchedUsersType) =>
+              setOpenRemoveMemberModal({
+                isOpen: true,
+                member: member,
+                deptId: departmentId,
+              }),
+          },
+        ]
+      : []),
   ];
 
   const columns = [
@@ -263,12 +277,14 @@ export const MembersTab: React.FC = ({
       },
     },
   ];
-      
+
   useEffect(() => {
     if (component === "export" && !isLoadingCount && isSuccess) {
       const handleXlsx = async () => {
         // Map data to exclude fields like `avatar`
-        const formattedData = (deptMembersCount as FetchedUsersType[]).map(({ ...rest }) => rest);
+        const formattedData = (deptMembersCount as FetchedUsersType[]).map(
+          ({ ...rest }) => rest
+        );
 
         // Create a new workbook and worksheet
         const worksheet = XLSX.utils.json_to_sheet(formattedData);
@@ -276,15 +292,24 @@ export const MembersTab: React.FC = ({
         XLSX.utils.book_append_sheet(workbook, worksheet, "Departments");
 
         // Export to Excel
-        XLSX.writeFile(workbook, `${deptMembersStatistics?.depart_data?.name}_members_data.xlsx`);
-      }
+        XLSX.writeFile(
+          workbook,
+          `${deptMembersStatistics?.depart_data?.name}_members_data.xlsx`
+        );
+      };
       const exportData = async () => {
-        await handleXlsx()
-        await setComponent("count")
-      }
-      exportData()
+        await handleXlsx();
+        await setComponent("count");
+      };
+      exportData();
     }
-  },[component, deptMembersCount, deptMembersStatistics?.depart_data?.name, isLoadingCount, isSuccess])
+  }, [
+    component,
+    deptMembersCount,
+    deptMembersStatistics?.depart_data?.name,
+    isLoadingCount,
+    isSuccess,
+  ]);
 
   const location = useLocation();
 
@@ -332,7 +357,12 @@ export const MembersTab: React.FC = ({
             setFilters={setUserFilter}
             isLoading={isLoadingMembers}
           />
-          <TableAction theme="grey" type="button" block onClick={() => setComponent("export")}>
+          <TableAction
+            theme="grey"
+            type="button"
+            block
+            onClick={() => setComponent("export")}
+          >
             Export
             <Icon
               icon="lucide:cloud-download"

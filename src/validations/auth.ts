@@ -36,7 +36,6 @@ export const forgotPasswordSchema = Yup.object().shape({
 });
 
 export const resetPasswordSchema = Yup.object().shape({
-  email: EmailSchema,
   new_password: PasswordSchema,
   confirm_password: ConfirmPasswordSchema,
   otp: Yup.string()
