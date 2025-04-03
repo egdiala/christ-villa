@@ -10,8 +10,11 @@ import { DateFilter, RequestsFilter } from "@/components/pages/requests";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { useGetDepartmentMaterials } from "@/services/hooks/queries/useDepartments";
 import { DeleteActivityModal } from "@/components/pages/departments/department/DeleteActivity";
+import { getAdminData } from "@/utils/authUtil";
 
 export const ActivitiesTab: React.FC = () => {
+  const { permission, user_type } = getAdminData();
+
   const { id } = useParams();
   const departmentId = id as string;
 
@@ -55,15 +58,20 @@ export const ActivitiesTab: React.FC = () => {
       onClick: (item: FetchedDepartmentActivities) =>
         window.open(item?.url, "_blank"),
     },
-    {
-      label: "Delete File",
-      onClick: (item: FetchedDepartmentActivities) =>
-        setToggleModals((prev) => ({
-          ...prev,
-          openDeleteFileModal: true,
-          activeItem: item,
-        })),
-    },
+    ...(permission.includes("delete") ||
+    user_type?.toLowerCase() === "superadmin"
+      ? [
+          {
+            label: "Delete File",
+            onClick: (item: FetchedDepartmentActivities) =>
+              setToggleModals((prev) => ({
+                ...prev,
+                openDeleteFileModal: true,
+                activeItem: item,
+              })),
+          },
+        ]
+      : []),
   ];
 
   const columns = [

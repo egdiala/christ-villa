@@ -39,7 +39,7 @@
 }
 
 .ego-otp-input {
-  @apply rounded-md w-full lg:w-20 lg:h-20 text-3xl font-semibold text-center py-5 px-5 border border-grey-dark-3 bg-white focus:border-light-blue-1 focus:bg-light-blue-4 text-text-primary placeholder:text-text-tertiary disabled:bg-grey-dark-4 disabled:border-transparent disabled:text-text-tertiary caret-text-primary transition-all duration-300 ease-out !important;
+  @apply rounded-md w-full lg:w-20 h-fit lg:h-20 text-3xl font-semibold text-center py-2 sm:py-5 px-5 border border-grey-dark-3 bg-white focus:border-light-blue-1 focus:bg-light-blue-4 text-text-primary placeholder:text-text-tertiary disabled:bg-grey-dark-4 disabled:border-transparent disabled:text-text-tertiary caret-text-primary transition-all duration-300 ease-out !important;
 }
 
 .ego-search-input {

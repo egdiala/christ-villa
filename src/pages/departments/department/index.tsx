@@ -10,8 +10,11 @@ import { cn } from "@/libs/cn";
 import { NavLink, Outlet, useLocation } from "react-router";
 import { useGetSingleDepartment } from "@/services/hooks/queries/useDepartments";
 import { FetchedDepartmentType } from "@/types/departments";
+import { getAdminData } from "@/utils/authUtil";
 
 export const DepartmentPage: React.FC = () => {
+  const { permission } = getAdminData();
+
   const { pathname } = useLocation();
   const pathArray = pathname.split("/");
   const departmentId = pathArray[2];
@@ -56,32 +59,38 @@ export const DepartmentPage: React.FC = () => {
         </h4>
 
         <div className="flex flex-col md:flex-row gap-2">
-          <Button
-            theme="ghost"
-            className="!text-accent-primary w-full md:unset"
-            onClick={() => setOpenDeleteDeptModal(true)}
-          >
-            <Icon icon="lucide:trash" className="size-4" />
-            Delete
-          </Button>
+          <RenderIf condition={permission.includes("delete")}>
+            <Button
+              theme="ghost"
+              className="!text-accent-primary w-full md:unset"
+              onClick={() => setOpenDeleteDeptModal(true)}
+            >
+              <Icon icon="lucide:trash" className="size-4" />
+              Delete
+            </Button>
+          </RenderIf>
 
-          <Button
-            theme="grey"
-            onClick={() => setOpenEditDepartmentModal(true)}
-            className="!text-sm w-full md:unset"
-          >
-            <Icon icon="lucide:edit-2" className="size-4" />
-            Edit
-          </Button>
+          <RenderIf condition={permission.includes("update")}>
+            <Button
+              theme="grey"
+              onClick={() => setOpenEditDepartmentModal(true)}
+              className="!text-sm w-full md:unset"
+            >
+              <Icon icon="lucide:edit-2" className="size-4" />
+              Edit
+            </Button>
+          </RenderIf>
 
-          <Button
-            theme="primary"
-            onClick={() => setOpenAddHODModal(true)}
-            className="!text-sm w-full md:unset"
-          >
-            <Icon icon="lucide:plus" className="size-4" />
-            Add Request Area
-          </Button>
+          <RenderIf condition={permission.includes("create")}>
+            <Button
+              theme="primary"
+              onClick={() => setOpenAddHODModal(true)}
+              className="!text-sm w-full md:unset"
+            >
+              <Icon icon="lucide:plus" className="size-4" />
+              Add Request Area
+            </Button>
+          </RenderIf>
         </div>
       </div>
 

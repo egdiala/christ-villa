@@ -4,7 +4,13 @@ import { Icon } from "@iconify/react";
 import blankImage from "@/assets/blank.svg";
 import { useDebounce } from "@/hooks/useDebounce";
 import { Loader } from "@/components/core/Button/Loader";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import {
+  EmptyState,
+  RenderIf,
+  SearchInput,
+  Table,
+  TableAction,
+} from "@/components/core";
 import {
   getPaginationParams,
   setPaginationParams,
@@ -21,12 +27,15 @@ import {
   DeleteChurchLeaderModal,
 } from "@/components/pages/church-leaders";
 import { AnimatePresence, motion } from "motion/react";
+import { getAdminData } from "@/utils/authUtil";
 
 export const ChurchLeadershipPage: React.FC = () => {
+  const { permission, user_type } = getAdminData();
+
   const location = useLocation();
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [isGridView, setIsGridView] = useState(true)
+  const [isGridView, setIsGridView] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const { value, onChangeHandler } = useDebounce(300);
 
@@ -61,18 +70,27 @@ export const ChurchLeadershipPage: React.FC = () => {
   const [openAddLeaderModal, setOpenAddLeaderModal] = useState(false);
 
   const actions = [
-    {
-      label: "Update Leader",
-      icon: "lucide:pencil-line",
-      onClick: (leader: FetchedChurchLeadersType) =>
-        setOpenUpdateLeaderModal({ leader: leader, isOpen: true }),
-    },
-    {
-      label: "Delete Leader",
-      icon: "lucide:trash-2",
-      onClick: (leader: FetchedChurchLeadersType) =>
-        setOpenDeleteLeaderModal({ leader: leader, isOpen: true }),
-    },
+    ...(permission.includes("update") ||
+    user_type?.toLowerCase() === "superadmin"
+      ? [
+          {
+            label: "Update Leader",
+            icon: "lucide:pencil-line",
+            onClick: (leader: FetchedChurchLeadersType) =>
+              setOpenUpdateLeaderModal({ leader: leader, isOpen: true }),
+          },
+        ]
+      : []),
+    ...(permission.includes("delete")
+      ? [
+          {
+            label: "Delete Leader",
+            icon: "lucide:trash-2",
+            onClick: (leader: FetchedChurchLeadersType) =>
+              setOpenDeleteLeaderModal({ leader: leader, isOpen: true }),
+          },
+        ]
+      : []),
   ];
 
   const columns = [
@@ -102,11 +120,7 @@ export const ChurchLeadershipPage: React.FC = () => {
       accessorKey: "leader_position",
       cell: ({ row }: { row: any }) => {
         const item = row?.original;
-        return (
-          <div className="capitalize">
-            {item?.leader_position}
-          </div>
-        );
+        return <div className="capitalize">{item?.leader_position}</div>;
       },
     },
     {
@@ -186,59 +200,96 @@ export const ChurchLeadershipPage: React.FC = () => {
               className="size-4 text-accent-primary"
             />
           </TableAction>
-          <TableAction
-            type="button"
-            theme="primary"
-            onClick={() => setOpenAddLeaderModal(true)}
-            block
+
+          <RenderIf
+            condition={
+              permission.includes("create") ||
+              user_type?.toLowerCase() === "superadmin"
+            }
           >
-            <Icon icon="lucide:plus" className="size-4" />
-            Add Leader
-          </TableAction>
+            <TableAction
+              type="button"
+              theme="primary"
+              onClick={() => setOpenAddLeaderModal(true)}
+              block
+            >
+              <Icon icon="lucide:plus" className="size-4" />
+              Add Leader
+            </TableAction>
+          </RenderIf>
         </div>
       </div>
       <RenderIf condition={!isLoading && !loadingLeadersCount}>
         <AnimatePresence>
-          {
-            isGridView ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {
-                  data?.map((leader) =>
-                    <div key={leader?.request_id} className="flex flex-col justify-start items-center gap-4">
+          {isGridView ? (
+            <>
+              <RenderIf condition={data ? data.length > 0 : false}>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                >
+                  {data?.map((leader) => (
+                    <div
+                      key={leader?.request_id}
+                      className="flex flex-col justify-start items-center gap-4"
+                    >
                       <div className="size-40 rounded-full overflow-hidden">
-                        <img src={leader?.url} alt={leader?.leader_name} className="size-40 object-cover" />
+                        <img
+                          src={leader?.url}
+                          alt={leader?.leader_name}
+                          className="size-40 object-cover"
+                        />
                       </div>
                       <div className="flex flex-col items-center gap-2">
-                        <h2 className="text-grey-dark-1 text-xl font-medium line-clamp-1">{leader?.leader_name}</h2>
-                        <p className="text-grey-dark-2 text-base">{leader?.leader_position}</p>
+                        <h2 className="text-grey-dark-1 text-xl font-medium line-clamp-1">
+                          {leader?.leader_name}
+                        </h2>
+                        <p className="text-grey-dark-2 text-base">
+                          {leader?.leader_position}
+                        </p>
                       </div>
                       <div className="flex items-center gap-2 justify-center">
-                      {
-                        actions.map((action) =>
-                          <button key={action?.label} type="button" onClick={() => action?.onClick(leader)} className="size-8 p-2 grid place-content-center text-grey-dark-3 hover:text-grey-dark-1 hover:bg-grey-dark-4 rounded-full ease-out duration-300 transition-all">
+                        {actions.map((action) => (
+                          <button
+                            key={action?.label}
+                            type="button"
+                            onClick={() => action?.onClick(leader)}
+                            className="size-8 p-2 grid place-content-center text-grey-dark-3 hover:text-grey-dark-1 hover:bg-grey-dark-4 rounded-full ease-out duration-300 transition-all"
+                          >
                             <Icon icon={action?.icon} />
                           </button>
-                        )
-                      }
+                        ))}
                       </div>
                     </div>
-                  )
-                }
-              </motion.div>
-            ) : (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <Table
-                  columns={columns}
-                  data={data ?? []}
-                  page={page}
-                  perPage={itemsPerPage}
-                  totalCount={leadersCount?.total}
-                  onPageChange={handlePageChange}
-                  emptyStateText="We couldn't find any leader."
-                />
-              </motion.div>
-            )
-          }
+                  ))}
+                </motion.div>
+              </RenderIf>
+
+              <RenderIf condition={data ? data.length < 1 : false}>
+                <div className="flex items-center justify-center h-screen">
+                  <EmptyState emptyStateText="We couldn't find any leader." />
+                </div>
+              </RenderIf>
+            </>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Table
+                columns={columns}
+                data={data ?? []}
+                page={page}
+                perPage={itemsPerPage}
+                totalCount={leadersCount?.total}
+                onPageChange={handlePageChange}
+                emptyStateText="We couldn't find any leader."
+              />
+            </motion.div>
+          )}
         </AnimatePresence>
       </RenderIf>
       <RenderIf condition={isLoading || loadingLeadersCount}>

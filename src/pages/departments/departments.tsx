@@ -1,7 +1,14 @@
+import * as XLSX from "xlsx";
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
-import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import {
+  Button,
+  RenderIf,
+  SearchInput,
+  Table,
+  TableAction,
+} from "@/components/core";
 import {
   getPaginationParams,
   setPaginationParams,
@@ -15,9 +22,11 @@ import {
   FetchedDepartmentsType,
 } from "@/types/departments";
 import { Loader } from "@/components/core/Button/Loader";
-import * as XLSX from "xlsx";
+import { getAdminData } from "@/utils/authUtil";
 
 export const DepartmentsPage: React.FC = () => {
+  const { permission, user_type } = getAdminData();
+
   const { data: departmentsStatistics } =
     useGetAllDepartments<FetchedDepartmentsStatisticsType>({
       component: "count-status",
@@ -62,11 +71,14 @@ export const DepartmentsPage: React.FC = () => {
     item_per_page: itemsPerPage.toString(),
   });
 
-  const { data: departmentsCount, isLoading: isLoadingCount, isSuccess } =
-    useGetAllDepartments<FetchedDepartmentsCountType | any>({
-      q: value,
-      component,
-    });
+  const {
+    data: departmentsCount,
+    isLoading: isLoadingCount,
+    isSuccess,
+  } = useGetAllDepartments<FetchedDepartmentsCountType | any>({
+    q: value,
+    component,
+  });
 
   const columns = [
     {
@@ -98,12 +110,14 @@ export const DepartmentsPage: React.FC = () => {
       accessorKey: "total_declined_req",
     },
   ];
-    
+
   useEffect(() => {
     if (component === "export" && !isLoadingCount && isSuccess) {
       const handleXlsx = async () => {
         // Map data to exclude fields like `avatar`
-        const formattedData = (departmentsCount as FetchedDepartmentsType[]).map(({ ...rest }) => rest);
+        const formattedData = (
+          departmentsCount as FetchedDepartmentsType[]
+        ).map(({ ...rest }) => rest);
 
         // Create a new workbook and worksheet
         const worksheet = XLSX.utils.json_to_sheet(formattedData);
@@ -112,14 +126,14 @@ export const DepartmentsPage: React.FC = () => {
 
         // Export to Excel
         XLSX.writeFile(workbook, "departments_data.xlsx");
-      }
+      };
       const exportData = async () => {
-        await handleXlsx()
-        await setComponent("count")
-      }
-      exportData()
+        await handleXlsx();
+        await setComponent("count");
+      };
+      exportData();
     }
-  },[component, departmentsCount, isLoadingCount, isSuccess])
+  }, [component, departmentsCount, isLoadingCount, isSuccess]);
 
   const handlePageChange = (page: number) => {
     setPage(page);
@@ -165,20 +179,33 @@ export const DepartmentsPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4 w-full sm:w-auto">
-          <TableAction theme="grey" type="button" block onClick={() => setComponent("export")}>
+          <TableAction
+            theme="grey"
+            type="button"
+            block
+            onClick={() => setComponent("export")}
+          >
             Export
             <Icon
               icon="lucide:cloud-download"
               className="size-4 text-accent-primary"
             />
           </TableAction>
-          <Button
-            theme="primary"
-            onClick={() => setOpenAddNewDepartmentModal(true)}
+
+          <RenderIf
+            condition={
+              permission.includes("create") ||
+              user_type?.toLowerCase() === "superadmin"
+            }
           >
-            <Icon icon="lucide:plus" className="" />
-            Add Department
-          </Button>
+            <Button
+              theme="primary"
+              onClick={() => setOpenAddNewDepartmentModal(true)}
+            >
+              <Icon icon="lucide:plus" className="" />
+              Add Department
+            </Button>
+          </RenderIf>
         </div>
       </div>
 
@@ -199,9 +226,9 @@ export const DepartmentsPage: React.FC = () => {
           />
         </RenderIf>
         <RenderIf condition={isLoading || isLoadingCount}>
-            <div className="flex w-full h-96 items-center justify-center">
-                <Loader className="spinner size-6 text-accent-primary" />
-            </div>
+          <div className="flex w-full h-96 items-center justify-center">
+            <Loader className="spinner size-6 text-accent-primary" />
+          </div>
         </RenderIf>
       </div>
 
